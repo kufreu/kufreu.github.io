@@ -1,37 +1,9 @@
-## Welcome to GitHub Pages
+# open source geographic information science.
 
-You can use the [editor on GitHub](https://github.com/kufreu/kufreu.github.io/edit/master/index.md) to maintain and preview the content for your website in Markdown files.
+### volunteered geographic information and urban resilience. 
+In their (2019) work presented at FOSS4G 2019 Bucharest, Sauter, Feldmeyer, and Birkmann explored the applicability of Volunteered Geographical Information technologies, particularly OpenStreetMap, as a data source with a reasonable degree of standardization from which indicators of urban resilience could be derived. Stuttgart was chosen for this analysis given the high spatial coverage of the urban area on OSM and therefore its ability to have enough data to compare with four resilience indicators calculated at the municipal level, these indicators being feeling of belonging, demographic age structure, business tax revenue, and unemployment rate (p. 213-14). Sauter et al. sought to identify the spatial characteristics which explain these four indicators after first developing a method to collect features from OSM to be used for statistical learning and testing methods to find the indicators from the OSM data (p. 214). The OSM data used in this exploratory study were preprocessed using a PostgreSQL database with POSTGIS, delivering, as stated in the research, a “. . . table with the predictors for modelling the response variables” to be processed using R with R Studio, applying developed statistical methods such as regression trees, pruned trees, and random forest models (p. 214). The variables from the OSM data which were compared against the resilience indicators were community connectivity, social capital, economic strength, and spatial justice. Both the results of the random forest models for each of the variables were mapped and the statistical data for the resilience indicators were mapped using QGIS and compared, these maps visualizing a correlation between the data with some instances of disagreement. Such a discrepancy can be seen in several of the random forest models where values are underestimated in the Northeast (p. 218). Despite this shortcoming, the research demonstrates that spatial indicators obtained from points, lines, and polygons have the capacity to supplement or be used in place of conventional indicators of urban resilience (p. 219). The importance of this research however, lies in the fact that these spatial indicators are derived from data and processed using programs which are open to all.  
+  
+ In situations where statistical data is unreliable, unavailable to the public, or altogether nonexistent, geodata from volunteered geographic information technologies like OpenStreetMap can be used to somewhat effectively mirror indicators gleaned from data sources conventionally relied on to measure urban resilience. A reliance on institutional or commercial data can be a hinderance in areas where the institutions are not in place to collect statistical data necessary to conduct research or when the data is behind a paywall. In addition, one is not limited to using proprietary software in order to manipulate the data considering that one’s ability to afford such software can also be limiting factor in what research approaches are available bearing in mind the steep pricing of proprietary licensing.
+Open source software and data level the playing field and provide open access to much needed tools for research. The success of the approach used by Sauter et al., specifically the use of OpenStreetMap to obtain geodata, is wholly dependent on the spatial coverage of the area to be examined on. A low number of contributions in a given area results in insufficient data for analysis. The research can also be limited by computer performance. Nonetheless, I think it is significant that the technologies used by Sauter et al. were open source, demonstrating not only that these tools are effective in measuring urban resilience, but also that these capable tools are available to the public for free use. 
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/kufreu/kufreu.github.io/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+Sauter, H., Feldmeyer, D., & Birkmann, J. (2019). Exploratory study of urban resilience in the region of Stuttgart based on OpenStreetMap and literature resilience indicators. _ISPRS - International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences, XLII-4/W14_, 213–220. https://doi.org/10.5194/isprs-archives-XLII-4-W14-213-2019
