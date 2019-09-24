@@ -1,4 +1,4 @@
-# first qgis models.
+# qgis models.
 ### models.
 [calculates distance and direction from a point.](distDirFromPoint.model3)
 
