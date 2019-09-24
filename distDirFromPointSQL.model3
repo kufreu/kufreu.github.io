@@ -1,0 +1,332 @@
+<!DOCTYPE model>
+<Option type="Map">
+  <Option name="children" type="Map">
+    <Option name="native:centroids_1" type="Map">
+      <Option value="true" name="active" type="bool"/>
+      <Option name="alg_config"/>
+      <Option value="native:centroids" name="alg_id" type="QString"/>
+      <Option value="Centroids" name="component_description" type="QString"/>
+      <Option value="788.7699153812924" name="component_pos_x" type="double"/>
+      <Option value="213.39758560177162" name="component_pos_y" type="double"/>
+      <Option name="dependencies"/>
+      <Option value="native:centroids_1" name="id" type="QString"/>
+      <Option name="outputs"/>
+      <Option value="true" name="outputs_collapsed" type="bool"/>
+      <Option value="true" name="parameters_collapsed" type="bool"/>
+      <Option name="params" type="Map">
+        <Option name="ALL_PARTS" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="false" name="static_value" type="bool"/>
+          </Option>
+        </Option>
+        <Option name="INPUT" type="List">
+          <Option type="Map">
+            <Option value="citycenter" name="parameter_name" type="QString"/>
+            <Option value="0" name="source" type="int"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+    <Option name="native:meancoordinates_1" type="Map">
+      <Option value="true" name="active" type="bool"/>
+      <Option name="alg_config"/>
+      <Option value="native:meancoordinates" name="alg_id" type="QString"/>
+      <Option value="Mean coordinate(s)" name="component_description" type="QString"/>
+      <Option value="808.4345393104659" name="component_pos_x" type="double"/>
+      <Option value="391.8358397739015" name="component_pos_y" type="double"/>
+      <Option name="dependencies"/>
+      <Option value="native:meancoordinates_1" name="id" type="QString"/>
+      <Option name="outputs"/>
+      <Option value="true" name="outputs_collapsed" type="bool"/>
+      <Option value="true" name="parameters_collapsed" type="bool"/>
+      <Option name="params" type="Map">
+        <Option name="INPUT" type="List">
+          <Option type="Map">
+            <Option value="native:centroids_1" name="child_id" type="QString"/>
+            <Option value="OUTPUT" name="output_name" type="QString"/>
+            <Option value="1" name="source" type="int"/>
+          </Option>
+        </Option>
+        <Option name="UID" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option name="static_value" type="invalid"/>
+          </Option>
+        </Option>
+        <Option name="WEIGHT" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option name="static_value" type="invalid"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+    <Option name="qgis:executesql_1" type="Map">
+      <Option value="true" name="active" type="bool"/>
+      <Option name="alg_config"/>
+      <Option value="qgis:executesql" name="alg_id" type="QString"/>
+      <Option value="Execute SQL (distance)" name="component_description" type="QString"/>
+      <Option value="461.29879297545455" name="component_pos_x" type="double"/>
+      <Option value="312.69712154955914" name="component_pos_y" type="double"/>
+      <Option name="dependencies"/>
+      <Option value="qgis:executesql_1" name="id" type="QString"/>
+      <Option name="outputs"/>
+      <Option value="true" name="outputs_collapsed" type="bool"/>
+      <Option value="true" name="parameters_collapsed" type="bool"/>
+      <Option name="params" type="Map">
+        <Option name="INPUT_DATASOURCES" type="List">
+          <Option type="Map">
+            <Option value="citycenter" name="parameter_name" type="QString"/>
+            <Option value="0" name="source" type="int"/>
+          </Option>
+          <Option type="Map">
+            <Option value="inputfeatures2" name="parameter_name" type="QString"/>
+            <Option value="0" name="source" type="int"/>
+          </Option>
+        </Option>
+        <Option name="INPUT_GEOMETRY_CRS" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option name="static_value" type="invalid"/>
+          </Option>
+        </Option>
+        <Option name="INPUT_GEOMETRY_FIELD" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="" name="static_value" type="QString"/>
+          </Option>
+        </Option>
+        <Option name="INPUT_GEOMETRY_TYPE" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option name="static_value" type="invalid"/>
+          </Option>
+        </Option>
+        <Option name="INPUT_QUERY" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="select *, distance(centroid(transform((geometry),4326)) ,  transform((select geometry from input1),4326), true) as [%concat(@fieldnameprefix , 'Dist')%]&#xa;from input2" name="static_value" type="QString"/>
+          </Option>
+        </Option>
+        <Option name="INPUT_UID_FIELD" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="" name="static_value" type="QString"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+    <Option name="qgis:fieldcalculator_2" type="Map">
+      <Option value="true" name="active" type="bool"/>
+      <Option name="alg_config"/>
+      <Option value="qgis:fieldcalculator" name="alg_id" type="QString"/>
+      <Option value="Field calculator (direction)" name="component_description" type="QString"/>
+      <Option value="464.82494621056355" name="component_pos_x" type="double"/>
+      <Option value="431.44148355202594" name="component_pos_y" type="double"/>
+      <Option name="dependencies" type="StringList">
+        <Option value="native:meancoordinates_1" type="QString"/>
+      </Option>
+      <Option value="qgis:fieldcalculator_2" name="id" type="QString"/>
+      <Option name="outputs"/>
+      <Option value="true" name="outputs_collapsed" type="bool"/>
+      <Option value="true" name="parameters_collapsed" type="bool"/>
+      <Option name="params" type="Map">
+        <Option name="FIELD_LENGTH" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="10" name="static_value" type="int"/>
+          </Option>
+        </Option>
+        <Option name="FIELD_NAME" type="List">
+          <Option type="Map">
+            <Option value="concat( @fieldnameprefix , 'Dir')" name="expression" type="QString"/>
+            <Option value="3" name="source" type="int"/>
+          </Option>
+        </Option>
+        <Option name="FIELD_PRECISION" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="3" name="static_value" type="int"/>
+          </Option>
+        </Option>
+        <Option name="FIELD_TYPE" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="0" name="static_value" type="int"/>
+          </Option>
+        </Option>
+        <Option name="FORMULA" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="degrees(azimuth(  &#xd;&#xa;&#xd;&#xa;transform( make_point(  @Mean_coordinate_s__OUTPUT_maxx ,  @Mean_coordinate_s__OUTPUT_maxy ) ,  layer_property( @citycenter, 'crs') , 'EPSG:54004') , &#xd;&#xa;transform(centroid($geometry) , layer_property (@inputfeatures2, 'crs') , 'EPSG:54004')))" name="static_value" type="QString"/>
+          </Option>
+        </Option>
+        <Option name="INPUT" type="List">
+          <Option type="Map">
+            <Option value="qgis:executesql_1" name="child_id" type="QString"/>
+            <Option value="OUTPUT" name="output_name" type="QString"/>
+            <Option value="1" name="source" type="int"/>
+          </Option>
+        </Option>
+        <Option name="NEW_FIELD" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="true" name="static_value" type="bool"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+    <Option name="qgis:fieldcalculator_3" type="Map">
+      <Option value="true" name="active" type="bool"/>
+      <Option name="alg_config"/>
+      <Option value="qgis:fieldcalculator" name="alg_id" type="QString"/>
+      <Option value="Field calculator(cardinal and ordinal direction)" name="component_description" type="QString"/>
+      <Option value="490.0009425525554" name="component_pos_x" type="double"/>
+      <Option value="546.1269544010919" name="component_pos_y" type="double"/>
+      <Option name="dependencies" type="StringList">
+        <Option value="qgis:fieldcalculator_2" type="QString"/>
+      </Option>
+      <Option value="qgis:fieldcalculator_3" name="id" type="QString"/>
+      <Option name="outputs" type="Map">
+        <Option name="Direction Distance Output" type="Map">
+          <Option value="qgis:fieldcalculator_3" name="child_id" type="QString"/>
+          <Option value="Direction Distance Output" name="component_description" type="QString"/>
+          <Option value="690.0009425525554" name="component_pos_x" type="double"/>
+          <Option value="591.1269544010919" name="component_pos_y" type="double"/>
+          <Option name="default_value" type="invalid"/>
+          <Option value="false" name="mandatory" type="bool"/>
+          <Option value="Direction Distance Output" name="name" type="QString"/>
+          <Option value="OUTPUT" name="output_name" type="QString"/>
+        </Option>
+      </Option>
+      <Option value="true" name="outputs_collapsed" type="bool"/>
+      <Option value="true" name="parameters_collapsed" type="bool"/>
+      <Option name="params" type="Map">
+        <Option name="FIELD_LENGTH" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="10" name="static_value" type="int"/>
+          </Option>
+        </Option>
+        <Option name="FIELD_NAME" type="List">
+          <Option type="Map">
+            <Option value="concat( @fieldnameprefix , 'CardOrd')" name="expression" type="QString"/>
+            <Option value="3" name="source" type="int"/>
+          </Option>
+        </Option>
+        <Option name="FIELD_PRECISION" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="3" name="static_value" type="int"/>
+          </Option>
+        </Option>
+        <Option name="FIELD_TYPE" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="2" name="static_value" type="int"/>
+          </Option>
+        </Option>
+        <Option name="FORMULA" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="CASE&#xd;&#xa;WHEN attribute(concat(@fieldnameprefix, 'Dir'))&lt;=22.5 or attribute(concat(@fieldnameprefix, 'Dir'))>=337.5 THEN 'N'&#xd;&#xa;WHEN attribute(concat(@fieldnameprefix, 'Dir'))&lt;=67.5 and attribute(concat(@fieldnameprefix, 'Dir'))>=22.5 THEN 'NE'&#xd;&#xa;WHEN attribute(concat(@fieldnameprefix, 'Dir'))&lt;=(135-22.5) and attribute(concat(@fieldnameprefix, 'Dir'))>=(45+22.5) THEN 'E'&#xd;&#xa;WHEN attribute(concat(@fieldnameprefix, 'Dir'))&lt;=157.5 and attribute(concat(@fieldnameprefix, 'Dir'))>=112.5THEN 'SE'&#xd;&#xa;WHEN attribute(concat(@fieldnameprefix, 'Dir'))&lt;=292.5 and attribute(concat(@fieldnameprefix, 'Dir'))>=247.5 THEN 'W'&#xd;&#xa;WHEN attribute(concat(@fieldnameprefix, 'Dir'))&lt;=247.5 and attribute(concat(@fieldnameprefix, 'Dir'))>=202.5 THEN 'SW'&#xd;&#xa;WHEN attribute(concat(@fieldnameprefix, 'Dir'))&lt;=337.5 and attribute(concat(@fieldnameprefix, 'Dir'))>=292.5 THEN 'NW'&#xd;&#xa;WHEN attribute(concat(@fieldnameprefix, 'Dir'))&lt;=202.5and attribute(concat(@fieldnameprefix, 'Dir'))>=157.5 THEN 'S'&#xd;&#xa;END&#xd;&#xa;&#xd;&#xa;" name="static_value" type="QString"/>
+          </Option>
+        </Option>
+        <Option name="INPUT" type="List">
+          <Option type="Map">
+            <Option value="qgis:fieldcalculator_2" name="child_id" type="QString"/>
+            <Option value="OUTPUT" name="output_name" type="QString"/>
+            <Option value="1" name="source" type="int"/>
+          </Option>
+        </Option>
+        <Option name="NEW_FIELD" type="List">
+          <Option type="Map">
+            <Option value="2" name="source" type="int"/>
+            <Option value="true" name="static_value" type="bool"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+  </Option>
+  <Option name="help" type="Map">
+    <Option value="" name="ALG_CREATOR" type="QString"/>
+    <Option value="This model calculates distance and direction from a given point." name="ALG_DESC" type="QString"/>
+    <Option value="" name="ALG_HELP_CREATOR" type="QString"/>
+    <Option value="" name="ALG_VERSION" type="QString"/>
+    <Option value="kufreu.github.io" name="HELP_URL" type="QString"/>
+    <Option value="" name="SHORT_DESCRIPTION" type="QString"/>
+    <Option value="The city center is the point from which distance and direction will be calculated. An existing point should be used as the city center. The output from Create CBD/City Center can be used here. " name="citycenter" type="QString"/>
+    <Option value="This prefix will be added to the new distance and direction fields." name="fieldnameprefix" type="QString"/>
+    <Option value="Direction and distance from the city center will be calculated for this layer. " name="inputfeatures2" type="QString"/>
+    <Option value="This layer has new fields for distance and direction from the city center. " name="qgis:fieldcalculator_2:Direction Distance Output" type="QString"/>
+    <Option value="This layer has new fields for direction in degrees, distance in meters, and cardinal and ordinal directions  " name="qgis:fieldcalculator_3:Direction Distance Output" type="QString"/>
+  </Option>
+  <Option name="modelVariables"/>
+  <Option value="Middlebury" name="model_group" type="QString"/>
+  <Option value="Distance and Direction from Point (SQL)" name="model_name" type="QString"/>
+  <Option name="parameterDefinitions" type="Map">
+    <Option name="citycenter" type="Map">
+      <Option name="data_types" type="List">
+        <Option value="5" type="int"/>
+      </Option>
+      <Option name="default" type="invalid"/>
+      <Option value="City Center" name="description" type="QString"/>
+      <Option value="0" name="flags" type="int"/>
+      <Option name="metadata"/>
+      <Option value="citycenter" name="name" type="QString"/>
+      <Option value="source" name="parameter_type" type="QString"/>
+    </Option>
+    <Option name="fieldnameprefix" type="Map">
+      <Option value="cbd" name="default" type="QString"/>
+      <Option value="Field Name Prefix" name="description" type="QString"/>
+      <Option value="0" name="flags" type="int"/>
+      <Option name="metadata"/>
+      <Option value="false" name="multiline" type="bool"/>
+      <Option value="fieldnameprefix" name="name" type="QString"/>
+      <Option value="string" name="parameter_type" type="QString"/>
+    </Option>
+    <Option name="inputfeatures2" type="Map">
+      <Option name="data_types" type="List">
+        <Option value="2" type="int"/>
+      </Option>
+      <Option name="default" type="invalid"/>
+      <Option value="Input Features " name="description" type="QString"/>
+      <Option value="0" name="flags" type="int"/>
+      <Option name="metadata"/>
+      <Option value="inputfeatures2" name="name" type="QString"/>
+      <Option value="source" name="parameter_type" type="QString"/>
+    </Option>
+    <Option name="qgis:fieldcalculator_3:Direction Distance Output" type="Map">
+      <Option value="true" name="create_by_default" type="bool"/>
+      <Option value="-1" name="data_type" type="int"/>
+      <Option name="default" type="invalid"/>
+      <Option value="Direction Distance Output" name="description" type="QString"/>
+      <Option value="0" name="flags" type="int"/>
+      <Option name="metadata"/>
+      <Option value="qgis:fieldcalculator_3:Direction Distance Output" name="name" type="QString"/>
+      <Option value="sink" name="parameter_type" type="QString"/>
+      <Option value="true" name="supports_non_file_outputs" type="bool"/>
+    </Option>
+  </Option>
+  <Option name="parameters" type="Map">
+    <Option name="citycenter" type="Map">
+      <Option value="citycenter" name="component_description" type="QString"/>
+      <Option value="636.1594414748555" name="component_pos_x" type="double"/>
+      <Option value="39.342511181411595" name="component_pos_y" type="double"/>
+      <Option value="citycenter" name="name" type="QString"/>
+    </Option>
+    <Option name="fieldnameprefix" type="Map">
+      <Option value="fieldnameprefix" name="component_description" type="QString"/>
+      <Option value="152.85436893203882" name="component_pos_x" type="double"/>
+      <Option value="434.33009708737853" name="component_pos_y" type="double"/>
+      <Option value="fieldnameprefix" name="name" type="QString"/>
+    </Option>
+    <Option name="inputfeatures2" type="Map">
+      <Option value="inputfeatures2" name="component_description" type="QString"/>
+      <Option value="187.3398058252427" name="component_pos_x" type="double"/>
+      <Option value="158.44660194174753" name="component_pos_y" type="double"/>
+      <Option value="inputfeatures2" name="name" type="QString"/>
+    </Option>
+  </Option>
+</Option>
