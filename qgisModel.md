@@ -10,6 +10,6 @@
 
 [direction of tracts from detroit cbd in wayne county and percentage black.](pctBlackWayne.html)
 
-[distance (m) of tracts from detroit cbd in wayne county and gross median ren.](grossMedianRentWayne.html)
+[distance (m) of tracts from detroit cbd in wayne county and median gross rent.](medianGrossRentWayne.html)
 
 
