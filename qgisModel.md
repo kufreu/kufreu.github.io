@@ -1,5 +1,6 @@
 # qgis models
 ### about
+to be completed 25.09.2019
 
 ### models
 [calculates distance and direction from a point](distDirFromPoint.model3)
