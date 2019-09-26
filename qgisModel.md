@@ -12,7 +12,7 @@ to be completed ~~25.09.2019~~ 26.09.2019 (hopefully)
 ![SQL model](distDirSQL.PNG)
 
 ### models
-~~[calculates distance and direction from a point](distDirFromPoint.model3)~~ *broken*
+~~[calculates distance and direction from a point](distDirFromPoint.model3)~~ **broken**
 
 [this improved version calculates distance using sql](qgisModelSQL.md)
 
