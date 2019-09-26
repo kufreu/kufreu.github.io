@@ -3,7 +3,7 @@
 ![mosaic](mosaic.PNG)
 ![hillshade](hillshade.PNG)
 ![sink route](sinkRoute.PNG)
-![sink route close-up](sinkRouteClose.PNG)
+![sink route close-up](sinkRouteClose.png)
 ![no sinks](mosaicNoSinks.PNG)
 ![flow accumulation](flowAccumulation.PNG)
 ![channel network](channelNetwork.PNG)
