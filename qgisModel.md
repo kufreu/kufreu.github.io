@@ -16,4 +16,6 @@ to be completed 25.09.2019
 
 [distance (m) of tracts from detroit cbd in wayne county and median gross rent](medianGrossRentWayne.html)
 
+### data
+[census tracts for michigan with outputs for kent, washtenaw, and wayne counties](censussMI.gpkg)
 
