@@ -1,7 +1,8 @@
 # qgis models
 ### about
-to be completed 25.09.2019
-![distance calcualated for wayne county, michigan](wayneDirMI.png)
+to be completed ~~25.09.2019~~ 26.09.2019 (hopefully)
+![distance calculated for wayne county, michigan](wayneDistMI.png)
+![direction calculated for wayne county, michigan](wayneDirMI.png)
 
 ### models
 [calculates distance and direction from a point](distDirFromPoint.model3)
