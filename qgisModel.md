@@ -6,6 +6,7 @@ to be completed ~~25.09.2019~~ 26.09.2019 (hopefully)
 
 ### how the models work and shortcomings
 #### original model
+![original model](distDir.PNG)
 
 #### sql version
 ![SQL model](distDirSQL.PNG)
@@ -26,3 +27,4 @@ to be completed ~~25.09.2019~~ 26.09.2019 (hopefully)
 ### data
 [census tracts for michigan with outputs for kent, washtenaw, and wayne counties](censusMI.gpkg)
 
+[qgis project file](censusMI.qgz)
