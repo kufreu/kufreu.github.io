@@ -5,7 +5,7 @@ to be completed ~~25.09.2019~~ 26.09.2019 (hopefully)
 ![direction calculated for wayne county, michigan](wayneDirMI.png)
 
 ### how the models work and shortcomings
-#### orginal model
+#### original model
 
 #### sql version
 ![SQL model](distDirSQL.PNG)
