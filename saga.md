@@ -1,6 +1,7 @@
 # saga
 ### terrain analysis of kilimanjaro
-#### inputting data in saga
+#### opening data in saga
+![adding data](addingData.png)
 #### creating a mosaic
 ![mosaic](mosaic.PNG)
 #### making a hillshade from mosaic
