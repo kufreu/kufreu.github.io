@@ -31,7 +31,7 @@ This model differs from the original with its use of the Execute SQL tool to cal
 ### models
 ~~[calculates distance and direction from a point](distDirFromPoint.model3)~~ **semi-functional**
 
-[this improved and ***functional*** version partially uses sql and calculates distance and direction from a point](qgisModelSQL.md)
+[this ***improved*** and ***functional*** version partially uses sql and calculates distance and direction from a point](qgisModelSQL.md)
 
 ### mapped outputs
 ![distance calculated for wayne county, michigan](wayneDistMI.png)
