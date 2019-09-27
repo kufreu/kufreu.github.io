@@ -5,6 +5,7 @@ to be completed ~~25.09.2019~~ ~~26.09.2019~~ ***as soon as possible***
 ### how the models work and shortcomings
 #### original model
 ![original model](distDir.PNG)
+
 #### calculating distance with field calculator 
 ![distance](distance.PNG)
 
@@ -12,6 +13,7 @@ Distance is calculated using the distance() function within the field calculator
 
 #### calculating direction with field calculator
 ![direction](direction.PNG)
+
 Direction is calculated using the azimuth() function. Direction is calculated from a point made using the mean x and y coordinates of the city center to centroids created on the input features. Like when calculating distance, the geometries used here are transformed to a different CRS in order to accurately calculate direction and prevent error. Unlike when calculating distance, however, the geometries are transformed to World Mercator. Since azimuth() calculates direction in radians, the degrees() is used in the calculation to convert direction from radians to degrees.  
 
 #### assigning cardinal and ordinal direction to degree ranges with field calculator
