@@ -5,15 +5,15 @@ to be completed ~~25.09.2019~~ ~~26.09.2019~~ ***as soon as possible***
 ### how the models work and shortcomings
 #### original model
 ![original model](distDir.PNG)
-##### calculating distance
+#### calculating distance with field calculator 
 ![distance](distance.PNG)
-##### calculating direction
+#### calculating direction with field calculator
 ![direction](direction.PNG)
-##### assigning cardinal and ordinal direction to degree ranges
+#### assigning cardinal and ordinal direction to degree ranges with field calculator
 ![cardinal](cardOrd.PNG)
 
 ### sql version
-##### execute sql
+#### calculating distance with execute sql
 ![SQL model](distDirSQL2.PNG)
 
 ![SQL in model](SQL.PNG)
