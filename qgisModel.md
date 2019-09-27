@@ -1,7 +1,6 @@
 # qgis models
 ### about
-to be completed ~~25.09.2019~~ 26.09.2019 (hopefully)
-
+to be completed ~~25.09.2019~~ ~~26.09.2019~~ ***as soon as possible***
 ### how the models work and shortcomings
 #### original model
 ![original model](distDir.PNG)
