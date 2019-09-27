@@ -7,6 +7,9 @@ to be completed ~~25.09.2019~~ ~~26.09.2019~~ ***as soon as possible***
 ![original model](distDir.PNG)
 #### calculating distance with field calculator 
 ![distance](distance.PNG)
+
+Distance is calculated using the distance() function within the field calculator. The distance between centroids created on the input features and a point made from the mean coordinates of the city center input is what is calculated. Before the distance is calculated, both points are transformed to WGS 84, the World Geodetic System 1984, to ensure that distance is accurately calculated and to prevent errors which may arise from using the CRS of the input features. Due to the function Layer_Properties() not being designed for use in models, the intended functionality of the original model to allow for users to create a point to be used as the city center from selected features, although it worked initially, now results in null values. The model also now calculates distance in decimal degrees rather than meters. The centroid tool is of no use in the model, though it remains in the original. Mean coordinates, as stated before, are still used in the model.
+
 #### calculating direction with field calculator
 ![direction](direction.PNG)
 #### assigning cardinal and ordinal direction to degree ranges with field calculator
@@ -22,7 +25,7 @@ This model differs from the original with its use of the Execute SQL tool to cal
 ### models
 ~~[calculates distance and direction from a point](distDirFromPoint.model3)~~ **semi-functional**
 
-[this improved and *functional* version partially uses sql and calculates distance and direction from a point](qgisModelSQL.md)
+[this improved and ***functional*** version partially uses sql and calculates distance and direction from a point](qgisModelSQL.md)
 
 ### mapped outputs
 ![distance calculated for wayne county, michigan](wayneDistMI.png)
