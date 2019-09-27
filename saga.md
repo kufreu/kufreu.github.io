@@ -14,5 +14,7 @@
 ![flow accumulation](flowAccumulation.PNG)
 #### using flow accumulation to create a channel network
 ![channel network](channelNetwork.PNG)
+##### close-up of channel network in black
+![channel network black](channelNetworkClose.png)
 ##### channel network overlaid on mosaic
 ![channel netowork on mosaic](mosaicChannel.PNG)
