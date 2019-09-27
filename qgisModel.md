@@ -19,7 +19,7 @@ Direction is calculated using the azimuth() function. Direction is calculated fr
 #### assigning cardinal and ordinal direction to degree ranges with field calculator
 ![cardinal](cardOrd.PNG)
 
-Direction is calculated using the azimuth() function. Direction is calculated from a point made using the mean x and y coordinates of the city center to centroids created on the input features. Like when calculating distance, the geometries used here are transformed to a different CRS in order to accurately calculate direction and prevent error. Unlike when calculating distance, however, the geometries are transformed to World Mercator. Since azimuth() calculates direction in radians, the degrees() is used in the calculation to convert direction from radians to degrees.  
+The results from the direction field calculation are divided into 22.5° sectors and assigned cardinal and ordinal in this field calculation using the CASE expression. The attribute() function returns In the case of this calculation, attribute() returned the name of the field direction field, concat(@fieldnameprefix, ‘Dir’). The name of the field is the concat() function used to concatenate the customizable field name prefix with Dir, a shortened name for direction.  
 
 ### sql version
 ![SQL model](distDirSQL2.PNG)
