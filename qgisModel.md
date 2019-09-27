@@ -5,7 +5,7 @@ to be completed ~~25.09.2019~~ 26.09.2019 (hopefully)
 ### how the models work and shortcomings
 #### original model
 ![original model](distDir.PNG)
-![distance]
+![distance](distance.PNG)
 ![direction](direction.PNG)
 ![cardinal](cardOrd.PNG)
 #### sql version
