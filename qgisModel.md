@@ -42,6 +42,9 @@ This model differs from the original with its use of the Execute SQL tool to cal
 ![direction calculated for wayne county, michigan](wayneDirMI.png)
 ![ethnic enclaves](wayneEnclaveMI.png)
 *Data Sources: U.S. Census Bureau;2018 Census Tracts for Michigan, 2017 American Community Survey 5-Year Estimates, Tables B25064 and B03002*
+#### enclave classification 
+![enclave fields](enclavesField.PNG)
+
 #### graphs made using outputs of model
 
 [direction of tracts from detroit cbd in wayne county and percentage white](pctWhiteWayne.html)
