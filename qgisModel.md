@@ -40,7 +40,7 @@ This model differs from the original with its use of the Execute SQL tool to cal
 #### mapped outputs
 ![distance calculated for wayne county, michigan](wayneDistMI.png)
 ![direction calculated for wayne county, michigan](wayneDirMI.png)
-![ethnic enclaves](enclavesField.PNG)
+![ethnic enclaves](wayneEnclaveMI.png)
 *Data Sources: U.S. Census Bureau;2018 Census Tracts for Michigan, 2017 American Community Survey 5-Year Estimates, Tables B25064 and B03002*
 #### graphs made using outputs of model
 
