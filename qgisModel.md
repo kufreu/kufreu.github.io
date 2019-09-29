@@ -55,6 +55,7 @@ Poulsen, M., Johnston, R., & Forrest, J. (2001). Intraurban Ethnic Enclaves: Int
 [direction of tracts from detroit cbd in wayne county and percentage black](pctBlackWayne.html)
 
 [distance (m) of tracts from detroit cbd in wayne county and median gross rent](medianGrossRentWayne.html)
+[direction of tracts from detroid cbd in wayne county and median gross rent](medianGrossRentDirWayne.html)
 
 #### data
 [census tracts for michigan with outputs for kent, washtenaw, and wayne counties](censusMI.gpkg)
