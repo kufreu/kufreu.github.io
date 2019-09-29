@@ -45,6 +45,9 @@ This model differs from the original with its use of the Execute SQL tool to cal
 #### enclave classification 
 ![enclave fields](enclavesField.PNG)
 
+Poulsen, M., Johnston, R., & Forrest, J. (2001). Intraurban Ethnic Enclaves: Introducing a Knowledge-Based Classification Method. *Environment and Planning A: Economy and Space*, 33(11), 2071–2082. [https://doi.org/10.1068/a34124](https://doi.org/10.1068/a34124)
+
+
 #### graphs made using outputs of model
 
 [direction of tracts from detroit cbd in wayne county and percentage white](pctWhiteWayne.html)
