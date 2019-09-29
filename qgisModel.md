@@ -36,11 +36,12 @@ This model differs from the original with its use of the Execute SQL tool to cal
 
 [this ***improved*** and ***functional*** version partially uses sql and calculates distance and direction from a point](qgisModelSQL.md)
 
-### mapped outputs
+### case study using sql model
+#### mapped outputs
 ![distance calculated for wayne county, michigan](wayneDistMI.png)
 ![direction calculated for wayne county, michigan](wayneDirMI.png)
 *Data Sources: U.S. Census Bureau;2018 Census Tracts for Michigan, 2017 American Community Survey 5-Year Estimates, Tables B25064 and B03002*
-### graphs made using outputs of models
+#### graphs made using outputs of model
 
 [direction of tracts from detroit cbd in wayne county and percentage white](pctWhiteWayne.html)
 
@@ -48,7 +49,7 @@ This model differs from the original with its use of the Execute SQL tool to cal
 
 [distance (m) of tracts from detroit cbd in wayne county and median gross rent](medianGrossRentWayne.html)
 
-### data
+#### data
 [census tracts for michigan with outputs for kent, washtenaw, and wayne counties](censusMI.gpkg)
 
 [qgis project file](censusMI.qgz)
