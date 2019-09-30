@@ -1,9 +1,10 @@
 # qgis models
 
 ### about
-to be completed ~~25.09.2019~~ ~~26.09.2019~~ ***as soon as possible***
-
 Using the QGIS Processing Modeler, I created models which can be used in QGIS to calculate distance and direction from a given point. The intended application of the model is to calculate the distance and direction of features within a city from the city center or central business district, though the models’ use is not limited to this scenario. The models, maps and graphs which display outputs of the model, as well as the data and .qgz file used to employ the models can be found towards the bottom of this page. 
+
+### what does it matter?
+to be completed ~~25.09.2019~~ ~~26.09.2019~~ ***as soon as possible***
 
 ### how the models work and shortcomings
 #### original model
@@ -37,6 +38,8 @@ This model differs from the original with its use of the Execute SQL tool to cal
 [this ***improved*** and ***functional*** version partially uses sql and calculates distance and direction from a point](qgisModelSQL.md)
 
 ### case study using sql model
+Using data from the Census, I analyzed the racial composition and gross median rent of census tracts in Wayne County, Michigan. The model aided in this brief analysis of the spatial distribution of ethnic enclaves within the county.
+
 #### mapped outputs
 ![distance calculated for wayne county, michigan](wayneDistMI.png)
 ![direction calculated for wayne county, michigan](wayneDirMI.png)
