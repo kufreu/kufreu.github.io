@@ -1,2 +1,2 @@
 # saga
-[terrain analysis](terrain.md)
+[channelization analysis](channelization.md)
