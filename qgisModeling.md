@@ -1,4 +1,4 @@
-# qgis models
+# qgis modeling
 
 ### about
 Using the QGIS Processing Modeler, I created models which can be used in QGIS to calculate distance and direction from a given point. The intended application of the model is to calculate the distance and direction of features within a city from the city center or central business district, though the models’ use is not limited to this scenario. The models, maps and graphs which display outputs of the model, as well as the data and .qgz file used to employ the models can be found towards the bottom of this page. 
