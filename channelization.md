@@ -22,4 +22,5 @@ Data: NASA JPL. NASA Shuttle Radar Topography Mission Global 1 arc second. 2013,
 ![channel network black](channelNetworkClose.png)
 ##### channel network overlaid on mosaic
 ![channel netowork on mosaic](mosaicChannel.PNG)
-
+##### hillshade and channel network
+![hillshade network](hillshadeChannelNetwork.png)
