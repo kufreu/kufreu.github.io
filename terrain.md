@@ -1,5 +1,5 @@
 # saga
-### terrain analysis of kilimanjaro
+### channelization analysis of kilimanjaro
 Data: NASA JPL. NASA Shuttle Radar Topography Mission Global 1 arc second. 2013, distributed by NASA EOSDIS Land Processes DAAC, [https://doi.org/10.5067/MEaSUREs/SRTM/SRTMGL1.003]( https://doi.org/10.5067/MEaSUREs/SRTM/SRTMGL1.003)
 
 #### opening data in saga
