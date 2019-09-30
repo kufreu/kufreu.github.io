@@ -38,7 +38,7 @@ This model differs from the original with its use of the Execute SQL tool to cal
 [this ***improved*** and ***functional*** version partially uses sql and calculates distance and direction from a point](qgisModelSQL.md)
 
 ### case study using sql model
-Using data from the Census, I analyzed the racial composition and gross median rent of census tracts in Wayne County, Michigan. The model aided in this brief analysis of the spatial distribution of ethnic enclaves within the county.
+Using data from the Census, I analyzed the racial composition and gross median rent of census tracts in Wayne County, Michigan. The model aided in thebrief analysis of the spatial distribution of ethnic enclaves within Michigan's most populous county.
 
 #### mapped outputs
 ![distance calculated for wayne county, michigan](wayneDistMI.png)
