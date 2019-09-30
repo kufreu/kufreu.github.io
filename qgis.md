@@ -1,2 +1,2 @@
 # qgis
-[qgis models](qgisModel.md)
+[qgis modeling](qgisModeling.md)
