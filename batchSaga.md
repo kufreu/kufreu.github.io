@@ -1,1 +1,1 @@
-# batch scripts and saga
+# batch scripting and saga
