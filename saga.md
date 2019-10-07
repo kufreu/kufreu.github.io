@@ -1,4 +1,4 @@
 # saga
 [channelization analysis](channelization.md)
 
-[batch processing](batchSaga.md)
+[batch scripting](batchSaga.md)
