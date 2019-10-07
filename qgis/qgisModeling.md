@@ -43,7 +43,7 @@ Using data from the Census, I analyzed the racial composition and gross median r
 #### mapped outputs
 ![distance calculated for wayne county, michigan](images/wayneDistMI.png)
 ![direction calculated for wayne county, michigan](images/wayneDirMI.png)
-![ethnic enclaves](wayneEnclaveMI.png)
+![ethnic enclaves](images/wayneEnclaveMI.png)
 
 #### enclave classification 
 ![enclave fields](images/enclavesField.PNG)
