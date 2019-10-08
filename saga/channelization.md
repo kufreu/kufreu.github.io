@@ -27,3 +27,19 @@ SAGA was used in this project to derive channel networks and other terrain produ
 
 ### data source
 NASA JPL. NASA Shuttle Radar Topography Mission Global 1 arc second. 2013, distributed by NASA EOSDIS Land Processes DAAC, [https://doi.org/10.5067/MEaSUREs/SRTM/SRTMGL1.003]( https://doi.org/10.5067/MEaSUREs/SRTM/SRTMGL1.003)
+
+### data (.sgrid)
+[SRTM tiles](channelization/data/rawData.zip)
+
+[mosaic projected in UTM](channelization/data/mosaicUTM.zip)
+
+[analytical hillshade](channelization/data/hillshade.zip)
+
+[sink route detection](channelization/data/sinkRoute.zip)
+
+[mosaic with sinks removed](channelization/data/mosaicNoSinks.zip)
+
+[flow accumulation](channelization/data/flowAccumulation.zip)
+
+[channel network (in .sgrid and shapfile)](channelization/data/channelNetwork.zip)
+
