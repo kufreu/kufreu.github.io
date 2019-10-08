@@ -24,3 +24,6 @@ SAGA was used in this project to derive channel networks and other terrain produ
 ![channel netowork on mosaic](channelization/images/mosaicChannel.PNG)
 ##### hillshade and channel network
 ![hillshade network](channelization/images/hillshadeChannelNetwork.png)
+
+### data source
+NASA JPL. NASA Shuttle Radar Topography Mission Global 1 arc second. 2013, distributed by NASA EOSDIS Land Processes DAAC, [https://doi.org/10.5067/MEaSUREs/SRTM/SRTMGL1.003]( https://doi.org/10.5067/MEaSUREs/SRTM/SRTMGL1.003)
