@@ -1,5 +1,5 @@
 # open source geographic information science
-[foss4g](foss4g.md)
+[foss4g](articles/foss4g.md)
 
 [qgis](qgis/qgis.md)
 
