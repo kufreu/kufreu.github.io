@@ -2,6 +2,8 @@
 ### channelization analysis of kilimanjaro
 SAGA was used in this project to derive channel networks and other terrain products from global elevation models obtained from NASA’s Shuttle Radar Topography Mission. Shown below are the steps taken to process the data.
 
+[unalterted data](channelization/data/rawData)
+
 #### opening data in saga
 ![adding data](channelization/images/addingData.png)
 #### creating a mosaic using mosaicking tool and reprojecting in utm
