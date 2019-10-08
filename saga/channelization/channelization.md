@@ -1,6 +1,6 @@
 # saga
 ### channelization analysis of kilimanjaro
-SAGA was used in this project to derive channel networks and other terrain products from global elevation models obtained from NASA’s Shuttle Radar Topography Mission. Shown below are the steps taken to process the data. Zip files can also be found on this page. 
+SAGA was used in this project to derive channel networks and other terrain products from global elevation models obtained from NASA’s Shuttle Radar Topography Mission. Shown below are the steps taken to process the data. Zip files with tool outputs can also be found on this page. 
 
 #### opening data in saga
 ![adding data](images/addingData.png)
@@ -41,5 +41,5 @@ NASA JPL. NASA Shuttle Radar Topography Mission Global 1 arc second. 2013, distr
 
 [flow accumulation](data/flowAccumulation.zip)
 
-[channel network (in .sgrid and shapfile)](data/channelNetwork.zip)
+[channel network (.sgrid and shapfile)](data/channelNetwork.zip)
 
