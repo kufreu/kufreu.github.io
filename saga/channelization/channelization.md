@@ -41,5 +41,5 @@ NASA JPL. NASA Shuttle Radar Topography Mission Global 1 arc second. 2013, distr
 
 [flow accumulation](data/flowAccumulation.zip)
 
-[channel network (.sgrid and shapfile)](data/channelNetwork.zip)
+[channel network (.sgrid and shapefile)](data/channelNetwork.zip)
 
