@@ -1,4 +1,4 @@
 # saga
-[hydrology analysis](channelization/hydrology.md)
+[hydrology analysis](hydrology/hydrology.md)
 
 [batch scripting](batch/batchSAGA.md)
