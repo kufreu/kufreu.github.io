@@ -48,6 +48,9 @@ saga_cmd ta_channels 0 -ELEVATION=%od%\%pre%mosaicNoSinks.sgrd -INIT_GRID=%od%\%
 ECHO completed.
 PAUSE
 ```
+### data soure
+NASA/METI/AIST/Japan Spacesystems, and U.S./Japan ASTER Science Team. ASTER Global Digital Elevation Model V003. 2019, distributed by NASA EOSDIS Land Processes DAAC, https://doi.org/10.5067/ASTER/ASTGTM.003. 
+ 
 ### input data of andes mountains
 [ASTER DEMs in .sgrid](andesASTER.zip)
 
