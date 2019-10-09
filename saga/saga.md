@@ -3,4 +3,4 @@
 
 [batch scripting](batch/batchSAGA.md)
 
-[aster & srtm](batch/ASTER&SRTM.md)
+[aster & srtm](error/ASTER&SRTM.md)
