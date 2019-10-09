@@ -13,7 +13,7 @@ SET PATH=%PATH%;c:\saga6
 SET pre=andesASTER
 
 ::set the directory in which you want the outputs to be saved, example directory shown here
-SET od=W:\GIScience\lab04\channelizationAnalysis\%pre%
+SET od=W:\GIScience\hydrologyAnalysis\%pre%
 
 ::this creates the output directory if it doesn't exist already
 if not exist %od% mkdir %od%
