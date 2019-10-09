@@ -1,0 +1,1 @@
+# comparing aster & srtm data
