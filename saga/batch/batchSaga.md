@@ -8,8 +8,8 @@ I used batch processing for tools in SAGA in order to automate the channelizatio
 
 :: this script automates a hydrology analysis in SAGA using .sgrd or .hgt files with elevation data
 :: files used in analysis should be placed in folder with batch script in order to run
-:: tools can be skipped using two colons ()
-:: non-essential tool parameters can be added, deleted. and or edited
+:: tools can be skipped using two colons (::)
+:: non-essential tool parameters can be added, deleted, and or edited
 
 ::set the path to your SAGA program
 SET PATH=%PATH%;c:\saga6
@@ -23,7 +23,7 @@ SET od=W:\GIScience\lab04\channelizationAnalysis\%pre%
 ::this creates the output directory if it doesn't exist already
 if not exist %od% mkdir %od%
 
-:: Run Mosaicking tool, with consideration for the input -GRIDS, the -RESAMPLING
+:: Run Mosaicking tool, with consideration for the inputs -GRIDS and -RESAMPLING
 saga_cmd grid_tools 3 -GRIDS=ASTGTMV003_S34W070_dem.sgrd;ASTGTMV003_S34W071_dem.sgrd;ASTGTMV003_S35W070_dem.sgrd;ASTGTMV003_S35W071_dem.sgrd -NAME=%pre%Mosaic -TYPE=9 -RESAMPLING=0 -OVERLAP=1 -MATCH=0 -TARGET_OUT_GRID=%od%\%pre%mosaic.sgrd
 
 :: Run UTM Projection
@@ -49,4 +49,4 @@ saga_cmd ta_channels 0 -ELEVATION=%od%\%pre%mosaicNoSinks.sgrd -INIT_GRID=%od%\%
 ECHO completed.
 PAUSE
 ```
-[script](channelizationAnalysis.bat)
+[script](hydrologyAnalysis.bat)
