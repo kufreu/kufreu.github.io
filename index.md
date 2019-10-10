@@ -5,4 +5,4 @@
 
 [saga](saga/saga.md)
 
-![what is it?](gis.png)
+[what's gis?](gis.md)
