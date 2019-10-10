@@ -125,4 +125,4 @@ class DistanceAndDirectionFromPointSql(QgsProcessingAlgorithm):
     def createInstance(self):
         return DistanceAndDirectionFromPointSql()
 ```
-[python script](models/disDirFromPoint.py)
+[python script](models/disDirFromPointSQL.py)
