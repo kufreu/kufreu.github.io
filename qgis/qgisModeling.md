@@ -4,7 +4,10 @@
 Using the QGIS Processing Modeler, I created models which can be used in QGIS to calculate distance and direction from a given point. The intended application of the model is to calculate the distance and direction of features within a city from the city center or central business district, though the models’ use is not limited to this scenario. The models, maps and graphs which display outputs of the model, as well as the data and .qgz file used to employ the models can be found towards the bottom of this page. 
 
 ### what does it matter?
-to be completed ~~25.09.2019~~ ~~26.09.2019~~ ***as soon as possible***
+QGIS and other open source GIS software allow users to truly adopt GIS as their own, and through the making of this model, I have attempted to do the same. GIS is far from being a singular technology along a singular path, and the opening of this technology, the possibilities it presents to users as well as the implications it has on human geography, is something to be welcomed with open arms.  
+
+St Martin, K., & Wing, J. (2007). The Discourse and Discipline of GIS. Cartographica, 42, 235–248. [https://doi.org/10.3138/carto.42.3.235]( https://doi.org/10.3138/carto.42.3.235)
+
 
 ### how the models work and shortcomings
 #### original model
