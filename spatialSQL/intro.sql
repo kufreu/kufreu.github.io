@@ -1,22 +1,22 @@
 /*finding possible join fields and determining how to join*/
-SELECT COUNT(DISTINCT gisjoin),COUNT(gisjoin) FROM table1940
+select count(distinct gisjoin),count(gisjoin) from table1940
 
-SELECT COUNT(DISTINCT gisjoin),COUNT(gisjoin) FROM tracts1940
+select count(distinct, gisjoin),count(gisjoin) from tracts1940
 
 /*joining table1940 to tracts1940*/
 select*
-from tracts1940 AS a left outer join table1940 AS b
+from tracts1940 AS a left outer join table1940 as b
 on a.gisjoin = b.gisjoin
 
 /*joining table1940 to tracts1940 while selecting only new fields from table1940 to prevent duplicates
 joins are given aliases (a and b)*/
-SELECT a.*, b.poptotal, b.white, b.nonwhite, b.medgrossrent
-FROM tracts1940 AS a left outer join table1940 AS b
+select a.*, b.poptotal, b.white, b.nonwhite, b.medgrossrent
+from tracts1940 as a left outer join table1940 AS b
 on a.gisjoin = b.gisjoin
 
 /*ordering results*/
-SELECT a.*, b.poptotal, b.white, b.nonwhite, b.medgrossrent
-FROM tracts1940 AS a left outer join table1940 AS b
+select a.*, b.poptotal, b.white, b.nonwhite, b.medgrossrent
+from tracts1940 AS a left outer join table1940 as b
 on a.gisjoin = b.gisjoin
 order by medgrossrent desc
 
@@ -28,11 +28,11 @@ where medgrossrent>0
 order by medgrossrent desc
 
 /*creating a view of the query which can be viewed in qgis*/
-create view join1940 AS
+create view join1940 as
 select a.*, b.poptotal, b.white, b.nonwhite, b.medgrossrent
-FROM tracts1940 AS a LEFT OUTER JOIN table1940 AS b
+from tracts1940 as a LEFT OUTER join table1940 as b
 on a.gisjoin = b.gisjoin
-WHERE medgrossrent>0
+where medgrossrent>0
 order by medgrossrent desc
 
 /*calculating direction*/
