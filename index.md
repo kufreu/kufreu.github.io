@@ -5,4 +5,6 @@
 
 [saga](saga/saga.md)
 
+[spatial sql](spatialSQL/spatialSQL.md)
+
 [what's gis?](gis.md)
