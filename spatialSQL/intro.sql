@@ -11,7 +11,7 @@ on a.gisjoin = b.gisjoin
 /*joining table1940 to tracts1940 while selecting only new fields from table1940 to prevent duplicates
 joins are given aliases (a and b)*/
 select a.*, b.poptotal, b.white, b.nonwhite, b.medgrossrent
-from tracts1940 as a left outer join table1940 AS b
+from tracts1940 as a left outer join table1940 as b
 on a.gisjoin = b.gisjoin
 
 /*ordering results*/
