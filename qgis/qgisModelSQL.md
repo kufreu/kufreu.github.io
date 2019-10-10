@@ -3,7 +3,7 @@
 
 [accompanying model to calculate cbd/city center](models/createCBD.model3)
 
-### sql distance/direction model as python script
+### sql distance/direction model as python script (exported from qgis)
 ```python
 from qgis.core import QgsProcessing
 from qgis.core import QgsProcessingAlgorithm
@@ -125,4 +125,4 @@ class DistanceAndDirectionFromPointSql(QgsProcessingAlgorithm):
     def createInstance(self):
         return DistanceAndDirectionFromPointSql()
 ```
-[python script](models/disDirFromPointSQL.py)
+[python script](models/distDirFromPointSQL.py)
