@@ -89,4 +89,5 @@ from cbd1940
 ```
 ### data
 [tracts1940 / chicago census tracts in 1940](chicagoCensusTracts1940.zip)
+
 [table1940 / table with 1940 census data](popHousing1940.csv)
