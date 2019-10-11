@@ -87,3 +87,6 @@ create view agg_cbd1940 as
 select 1 as id, count(id) as countID, min(medgrossrent) as minRent, avg(medgrossrent) as avgRent, max(medgrossrent) as maxRent, st_union(geom) as geom
 from cbd1940
 ```
+### data
+[tracts1940 / chicago census tracts in 1940](chicagoCensusTracts1940.zip)
+[table1940 / table with 1940 census data](popHousing1940.csv)
