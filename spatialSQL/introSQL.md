@@ -1,6 +1,5 @@
-# intro
-In lab I used the database manager of QGIS to execute queries on data held on a PostgreSQL database with the PostGIS extension. 
-### queries 
+# introduction to postgresql / postgis  using qgis db manager 
+### queries executed 
 ```sql
 /*finding possible join fields and determining how to join*/
 select count(distinct gisjoin),count(gisjoin) from table1940
