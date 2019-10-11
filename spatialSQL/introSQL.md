@@ -48,7 +48,7 @@ select *,
 st_distance((select st_centroid(geography(st_transform(geom, 4326))) from cbd), st_centroid(geography(st_transform(geom,4326)))) as cbddist
 from tracts1940
 
-/*switching around the poings for whatever reason while calculating distance*/
+/*switching around the points for whatever reason while calculating distance*/
 select *,
 st_distance(st_centroid(geography(st_transform(geom,4326))),(select st_centroid(geography(ST_TRANSFORM(geom, 4326))) from cbd)) as cbddist
 from tracts1940
