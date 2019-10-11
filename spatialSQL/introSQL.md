@@ -1,5 +1,5 @@
 # introduction to postgresql / postgis  using qgis db manager 
-### queries executed 
+### [queries executed](intro.sql) 
 ```sql
 /*finding possible join fields and determining how to join*/
 select count(distinct gisjoin),count(gisjoin) from table1940
