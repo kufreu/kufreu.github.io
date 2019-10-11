@@ -1,4 +1,5 @@
 # intro
+In lab I used the database manager of QGIS to execute queries on data held on a PostgreSQL database with the PostGIS extension. 
 ### queries 
 ```sql
 /*finding possible join fields and determining how to join*/
