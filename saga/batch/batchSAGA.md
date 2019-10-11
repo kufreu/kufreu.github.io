@@ -1,7 +1,7 @@
 # batch scripting in saga
 ### about
 I used batch processing for tools in SAGA 6.2 to automate the hydrology analysis done on Mount Kilimanjaro. ASTER global elevation models of the Andes Mountains east of Santiago were chosen as an alternative study region and data set for this analysis. Both the batch file and the inputs for the script can be found on this page.
-### script
+### [script](hydrologyAnalysis.bat)
 ```bat
 :: hydrology analysis script
 :: created by kufre u.
@@ -48,7 +48,7 @@ saga_cmd ta_channels 0 -ELEVATION=%od%\%pre%mosaicNoSinks.sgrd -INIT_GRID=%od%\%
 ECHO completed.
 PAUSE
 ```
-[batch file](hydrologyAnalysis.bat)
+
 ### data source
 NASA/METI/AIST/Japan Spacesystems, and U.S./Japan ASTER Science Team. ASTER Global Digital Elevation Model V003. 2019, distributed by NASA EOSDIS Land Processes DAAC, [https://doi.org/10.5067/ASTER/ASTGTM.0030](https://doi.org/10.5067/ASTER/ASTGTM.0030) 
  
