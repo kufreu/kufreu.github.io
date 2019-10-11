@@ -1,4 +1,4 @@
-# introduction to postgresql / postgis  using qgis db manager 
+# introduction to postgresql/postgis  using qgis db manager 
 ### [queries executed](intro.sql) 
 ```sql
 /*finding possible join fields and determining how to join*/
