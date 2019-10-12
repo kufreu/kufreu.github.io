@@ -1,4 +1,5 @@
 # comparing aster & srtm data for andes mountains 
+files will be added as well as *writing*
 ### visualizations of .num files
 #### aster
 ![aster .num](images/numASTER.png)
@@ -12,7 +13,7 @@
 ![difference](images/diffASTER_SRTM.png)
 ![difference legend](images/diffASTER_SRTM_legend.png)
 
-### files
+### files 
 
 #### unedited num
 
