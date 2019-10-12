@@ -10,5 +10,5 @@
 
 ### difference between aster and srtm mosaic 
 ![difference](images/diffASTER_SRTM.png)
-![difference legend](images/diffASTER_STRM_legend.png)
+![difference legend](images/diffASTER_SRTM_legend.png)
 
