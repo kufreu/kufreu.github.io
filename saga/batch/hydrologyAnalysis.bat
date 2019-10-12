@@ -1,7 +1,7 @@
 :: hydrology analysis script
 :: created by kufre u.
 
-:: this script automates a hydrology analysis in SAGA using .sgrd or .hgt files with elevation data
+:: this script automates a hydrology analysis in SAGA using .sgrd, .hgt, or .tif files with elevation data
 :: files used in analysis should be placed in folder with batch script in order to run
 :: tools can be skipped using two colons (::)
 :: non-essential tool parameters can be added, deleted, and or edited
