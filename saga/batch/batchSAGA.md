@@ -55,5 +55,5 @@ NASA/METI/AIST/Japan Spacesystems, and U.S./Japan ASTER Science Team. ASTER Glob
 ### input data of andes mountains
 [ASTER DEMs in .sgrid](andesASTER.zip)
 
-[SRTM DEMs in
+[SRTM DEMs in .hgt](andesSRTM.zip) *grids for mosaicking tool need to be changed in batch script for SRTM*
 
