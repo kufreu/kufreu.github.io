@@ -1,4 +1,4 @@
-# comparing aster & srtm data using .num files
+# comparing aster & srtm data
 empty and forgotten
 
 🤷🏿
