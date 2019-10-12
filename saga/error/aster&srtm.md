@@ -12,3 +12,11 @@
 ![difference](images/diffASTER_SRTM.png)
 ![difference legend](images/diffASTER_SRTM_legend.png)
 
+### files
+
+#### unedited num
+
+#### num files in utm and .sgrd
+
+
+
