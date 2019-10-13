@@ -58,5 +58,6 @@ NASA JPL. NASA Shuttle Radar Topography Mission Global 1 arc second. 2013, distr
 [ASTER DEMs in .sgrd](andesASTER.zip)
 
 [SRTM DEMs in .hgt](andesSRTM.zip) 
+
 *grids for mosaicking tool need to be changed in batch script for SRTM*
 
