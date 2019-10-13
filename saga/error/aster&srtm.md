@@ -14,10 +14,9 @@ files will be added as well as *writing*
 ![difference legend](images/diffASTER_SRTM_legend.png)
 
 ### files 
-
-
-#### num files in .sgrd with .sprm (for classification and colors)
+#### num files in .sgrd with .sprm (for classifications)
 [ASTER](data/numASTER.zip)
+
 [SRTM](data/numSRTM.zip)
 
 
