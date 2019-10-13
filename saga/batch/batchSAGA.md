@@ -53,7 +53,7 @@ PAUSE
 NASA/METI/AIST/Japan Spacesystems, and U.S./Japan ASTER Science Team. ASTER Global Digital Elevation Model V003. 2019, distributed by NASA EOSDIS Land Processes DAAC, [https://doi.org/10.5067/ASTER/ASTGTM.0030](https://doi.org/10.5067/ASTER/ASTGTM.0030) 
  
 ### input data of andes mountains
-[ASTER DEMs in .sgrid](andesASTER.zip)
+[ASTER DEMs in .sgrd](andesASTER.zip)
 
 [SRTM DEMs in .hgt](andesSRTM.zip) *grids for mosaicking tool need to be changed in batch script for SRTM*
 
