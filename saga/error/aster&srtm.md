@@ -13,15 +13,12 @@ files will be added as well as *writing*
 ![difference](images/diffASTER_SRTM.png)
 ![difference legend](images/diffASTER_SRTM_legend.png)
 
-### difference between .tif and .sgrd mosaic for aster
-
-### difference between .hgt and .sgrd mosaic for srtm
-
 ### files 
 
-#### unedited num
 
-#### num files in utm and .sgrd
+#### num files in .sgrd with .sprm (for classification and colors)
+[ASTER](data/numASTER.zip)
+[SRTM](data/numSRTM.zip)
 
 
 
