@@ -55,8 +55,9 @@ NASA/METI/AIST/Japan Spacesystems, and U.S./Japan ASTER Science Team. ASTER Glob
 NASA JPL. NASA Shuttle Radar Topography Mission Global 1 arc second. 2013, distributed by NASA EOSDIS Land Processes DAAC, [https://doi.org/10.5067/MEaSUREs/SRTM/SRTMGL1.003](https://doi.org/10.5067/MEaSUREs/SRTM/SRTMGL1.003)
  
 ### input data of andes mountains
-[ASTER DEMs in .sgrd](andesASTER.zip) / [.tif](data/tifASTER.zip)
+[ASTER DEMs in .sgrd](andesASTER.zip)
 
 [SRTM DEMs in .hgt](andesSRTM.zip) 
-*grids for mosaicking tool need to be changed in batch script for SRTM and ASTER .tif files*
+
+*grids for mosaicking tool need to be changed in batch script for SRTM*
 
