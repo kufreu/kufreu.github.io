@@ -3,16 +3,14 @@ Here I looked at the reference data for the study area using NUM (number of scen
 
 ### visualizations of .num files
 #### aster
+The reference data for ASTER much of the data for this region came solely from the ASTER GDEM V3, which is the third version of the ASTER global digital elevation model. There are areas dispersed across the region which were either interpolated or came from SRTM. The individual tiles can still be seen after being mosaicked because data along the tile borders were obtained from the USGS National Elevation Dataset (NED), SRTM, and other sources.
 ![aster .num](images/numASTER.png)
 ![aster legend](images/numASTER_legend.png)
 
-The reference data for ASTER much of the data for this region came solely from the ASTER GDEM V3, which is the third version of the ASTER global digital elevation model. There are areas dispersed across the region which were either interpolated or came from SRTM. The individual tiles can still be seen after being mosaicked because data along the tile borders were obtained from the USGS National Elevation Dataset (NED), SRTM, and other sources.
-
 #### srtm
+A considerable amount of data in the Andes came ASTER, much more than data ASTER used from SRTM. The data for the valleys on other side of the mountain range were obtained from the shuttle mission. 
 ![srtm .num](images/numSRTM.png)
 ![srtm legend](images/numSRTM_legend.png)
-
-A considerable amount of data in the Andes came ASTER, much more than data ASTER used from SRTM. The data for the valleys on other side of the mountain range were obtained from the shuttle mission. 
 
 ### difference between aster and srtm elevation data
 ![difference](images/diffASTER_SRTM.png)
