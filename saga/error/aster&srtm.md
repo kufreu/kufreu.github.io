@@ -14,7 +14,7 @@ files will be added as well as *writing*
 ![difference legend](images/diffASTER_SRTM_legend.png)
 
 ### channel network difference 
-![channel networks](images/asterSRTM.png)
+![channel networks](images/aster&srtm.png)
 
 ### files 
 [diffrence .sgrd](data/diffASTER_SRTM.zip)
