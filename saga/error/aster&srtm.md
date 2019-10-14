@@ -12,7 +12,7 @@ The reference data for ASTER much of the data for this region came solely from t
 ![srtm .num](images/numSRTM.png)
 ![srtm legend](images/numSRTM_legend.png)
 
-A considerable amount of data in the Andes came ASTER, much more than data ASTER used from SRTM. The data for the valleys on other side of the mountain range were obtained from the shuttle mission. 
+A considerable amount of data in the Andes came ASTER, much more than data ASTER used from SRTM. The data for the valleys were obtained from the shuttle mission. 
 
 ### difference between aster and srtm elevation data
 ![difference](images/diffASTER_SRTM.png)
@@ -20,11 +20,12 @@ A considerable amount of data in the Andes came ASTER, much more than data ASTER
 
 ### channel network difference 
 ![channel networks](images/channels.png)
+The channel networks derived from ASTER and SRTM data are somewhat identical in the mountains, with the SRTM channel network almost completely masking the ASTER network. The channel networks begin to differ in the valleys on either side of the range. In these areas the orange of the ASTER layer is visible as the SRTM channel network is lacking.
 
 ### files 
 [diffrence .sgrd](data/diffASTER_SRTM.zip)
 
-[qgis project file and shapefiles](data/channelNetworks.zip)
+[qgis project file and shapefiles for channel networks](data/channelNetworks.zip)
 
 #### num files in .sgrd with .sprm (for classifications)
 [ASTER](data/numASTER.zip)
