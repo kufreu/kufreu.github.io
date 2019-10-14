@@ -9,7 +9,7 @@ files will be added as well as *writing*
 ![srtm .num](images/numSRTM.png)
 ![srtm legend](images/numSRTM_legend.png)
 
-### difference between aster and srtm mosaic 
+### difference between aster and srtm elevation data
 ![difference](images/diffASTER_SRTM.png)
 ![difference legend](images/diffASTER_SRTM_legend.png)
 
