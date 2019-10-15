@@ -20,7 +20,7 @@ A considerable amount of data in the Andes came ASTER, much more than data ASTER
 
 ### channel network difference 
 ![channel networks](images/channels.png)
-The channel networks derived from ASTER and SRTM data are somewhat identical in the mountains, with the SRTM channel network almost completely masking the ASTER network. The channel networks begin to differ in the valleys on either side of the range. In these areas, the orange of the ASTER layer is visible as the SRTM channel network becomes disjointed. This is expected considering that much of the SRTM data for the Andes Mountain came from ASTER. 
+The channel networks derived from ASTER and SRTM data are somewhat identical in the mountains, with the SRTM channel network almost completely masking the ASTER network. The channel networks begin to differ in the valleys on either side of the range. In these areas, the orange of the ASTER layer is visible as the SRTM channel network becomes disjointed. Santiago, a place of such discontinuity, can be seen in the top left of this image. This is expected after viewing the .num files for SRTM.
 
 ### files 
 [diffrence .sgrd](data/diffASTER_SRTM.zip)
