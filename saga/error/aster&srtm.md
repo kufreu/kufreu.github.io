@@ -14,13 +14,13 @@ The reference data for ASTER much of the data for this region came solely from t
 
 A considerable amount of data in the Andes came ASTER, much more than data ASTER used from SRTM. The data for the valleys were obtained from the shuttle mission. 
 
-### difference between aster and srtm elevation data
+### difference between aster and srtm elevation data using grid diffrence tool in saga
 ![difference](images/diffASTER_SRTM.png)
 ![difference legend](images/diffASTER_SRTM_legend.png)
 
 ### channel network difference 
 ![channel networks](images/channels.png)
-The channel networks derived from ASTER and SRTM data are somewhat identical in the mountains, with the SRTM channel network almost completely masking the ASTER network. The channel networks begin to differ in the valleys on either side of the range. In these areas, the orange of the ASTER layer is visible as the SRTM channel network becomes disjointed.
+The channel networks derived from ASTER and SRTM data are somewhat identical in the mountains, with the SRTM channel network almost completely masking the ASTER network. The channel networks begin to differ in the valleys on either side of the range. In these areas, the orange of the ASTER layer is visible as the SRTM channel network becomes disjointed. This is expected considering that much of the SRTM data for the Andes Mountain came from ASTER. 
 
 ### files 
 [diffrence .sgrd](data/diffASTER_SRTM.zip)
