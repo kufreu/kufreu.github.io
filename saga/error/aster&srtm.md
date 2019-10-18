@@ -22,6 +22,11 @@ A considerable amount of data in the Andes came ASTER, much more than data ASTER
 ![channel networks](images/channels.png)
 The channel networks derived from ASTER and SRTM data are somewhat identical in the mountains, with the SRTM channel network almost completely masking the ASTER network. The channel networks begin to differ in the valleys on either side of the range. In these areas, the orange of the ASTER layer is visible as the SRTM channel network becomes disjointed. Santiago, a place of such discontinuity, can be seen in the top left of this image. This is expected after viewing the .num files for SRTM.
 
+### data sources
+NASA/METI/AIST/Japan Spacesystems, and U.S./Japan ASTER Science Team. ASTER Global Digital Elevation Model V003. 2019, distributed by NASA EOSDIS Land Processes DAAC, [https://doi.org/10.5067/ASTER/ASTGTM.0030](https://doi.org/10.5067/ASTER/ASTGTM.0030) 
+
+NASA JPL. NASA Shuttle Radar Topography Mission Global 1 arc second. 2013, distributed by NASA EOSDIS Land Processes DAAC, [https://doi.org/10.5067/MEaSUREs/SRTM/SRTMGL1.003](https://doi.org/10.5067/MEaSUREs/SRTM/SRTMGL1.003)
+ 
 ### files 
 [diffrence .sgrd](data/diffASTER_SRTM.zip)
 
