@@ -2,7 +2,7 @@
 more to be added.
 ### [queries executed](waste&drains.sql)
 ```sql
-/*fixing geometries and changing projection*/
+/*fixing geometries and reprojecting*/
 create table wards37s as
 select id, fid, ward_name,
 st_makevalid(st_transform(geom,32737)) as geom
