@@ -102,11 +102,6 @@ set avgmindist=subwardminavg.avg
 from subwardminavg
 where subwards37s.fid=subwardminavg.subward
 
-/*removing nulls*/
-update subwards37s
-set avgmindist=50
-where avgmindist is null
-
 /*adding columns*/
 alter table wards37s
 add column wastesites float8,
@@ -131,9 +126,4 @@ update wards37s
 set avgmindist=wardminavg.avg
 from wardminavg
 where wards37s.ward_name=wardminavg.ward
-
-/*removing zeros*/
-update wards37s
-set avgmindist=50
-where avgmindist=0
 ```
