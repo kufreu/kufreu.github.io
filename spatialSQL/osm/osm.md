@@ -1,4 +1,5 @@
-###[queries executed](waste&drains.sql)
+# processing data from openstreetmap using postgis 
+### [queries executed](waste&drains.sql)
 ```sql
 /*fixing geometries and making utm*/
 create table wards37s as
