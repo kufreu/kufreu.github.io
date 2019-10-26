@@ -126,7 +126,7 @@ select count(drains37s.id)
 from drains37s
 where wards37s.ward_name=drains37s.ward)
 
-/*adding average minimum distance to subwards*/
+/*adding average minimum distance to wards*/
 update wards37s
 set avgmindist=wardminavg.avg
 from wardminavg
