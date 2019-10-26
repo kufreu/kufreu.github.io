@@ -1,4 +1,5 @@
 # processing data from openstreetmap using postgis 
+more to be added.
 ### [queries executed](waste&drains.sql)
 ```sql
 /*fixing geometries and making utm*/
