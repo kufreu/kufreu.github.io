@@ -1,4 +1,4 @@
-/*fixing geometries and making utm*/
+/*fixing geometries and changing projection*/
 create table wards37s as
 select id, fid, ward_name,
 st_makevalid(st_transform(geom,32737)) as geom
