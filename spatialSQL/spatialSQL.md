@@ -1,1 +1,1 @@
-[intro to postgresql / postgis](introSQL.md) 
+[intro to postgresql / postgis](intro/introSQL.md) 
