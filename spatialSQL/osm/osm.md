@@ -18,8 +18,6 @@ select id,
 st_transform(geom, 32737) as geom
 from waste
 
-select populate_geometry_columns()
-
 create table drains37s as
 select id,
 st_transform(geom,32737) as geom
