@@ -226,7 +226,7 @@
     <Option type="QString" name="ALG_DESC" value="This model calculates distance and direction from a given point."/>
     <Option type="QString" name="ALG_HELP_CREATOR" value=""/>
     <Option type="QString" name="ALG_VERSION" value=""/>
-    <Option type="QString" name="HELP_URL" value="kufreu.github.io"/>
+    <Option type="QString" name="HELP_URL" value="https://kufreu.github.io"/>
     <Option type="QString" name="SHORT_DESCRIPTION" value=""/>
     <Option type="QString" name="citycenter" value="The city center is the point from which distance and direction will be calculated. An existing point should be used as the city center. The output from Create CBD/City Center can be used here. "/>
     <Option type="QString" name="fieldnameprefix" value="This prefix will be added to the new distance and direction fields."/>
