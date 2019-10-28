@@ -4,7 +4,7 @@ I used OpenStreetMap data collected through the Rumani Huria Project to analyze 
 ### sql and map
 [average minimum distance between drains and subwards in Dar es Salaam](drains/index.html)
 
-#### [queries executed](waste&drains.sql)
+[queries executed](waste&drains.sql)
 ```sql
 /*fixing geometries and reprojecting*/
 create table wards37s as
