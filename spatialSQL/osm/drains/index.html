@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-measure.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet-measure.js"></script>
+        <script src="data/averageminimumdistancebetweendrainsandwastesites_1.js"></script>
+        <script src="data/wastesites_2.js"></script>
+        <script src="data/drains_3.js"></script>
+        <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+            highlightLayer.openPopup();
+        }
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:19, minZoom:6
+        }).fitBounds([[-6.943313795775532,39.12561501142444],[-6.672235739011999,39.35434714689474]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>');
+        var measureControl = new L.Control.Measure({
+            position: 'topleft',
+            primaryLengthUnit: 'meters',
+            secondaryLengthUnit: 'kilometers',
+            primaryAreaUnit: 'sqmeters',
+            secondaryAreaUnit: 'hectares'
+        });
+        measureControl.addTo(map);
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .innerHTML = '';
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .className += ' fas fa-ruler';
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+            map.setMaxBounds(map.getBounds());
+        }
+        var layer_OSMStandard_0 = L.tileLayer('http://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            opacity: 1.0,
+            attribution: '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors, CC-BY-SA</a>',
+        });
+        layer_OSMStandard_0;
+        map.addLayer(layer_OSMStandard_0);
+        function pop_averageminimumdistancebetweendrainsandwastesites_1(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['avgmindist'] !== null ? Autolinker.link(String(feature.properties['avgmindist'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_averageminimumdistancebetweendrainsandwastesites_1_0(feature) {
+            if (feature.properties['avgmindist'] >= 3.08017355 && feature.properties['avgmindist'] <= 10.580112 ) {
+                return {
+                pane: 'pane_averageminimumdistancebetweendrainsandwastesites_1',
+                opacity: 1,
+                color: 'rgba(227,227,227,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0,
+                fill: true,
+                fillOpacity: .50,
+                fillColor: 'rgba(103,0,13,1.0)',
+            }
+            }
+            if (feature.properties['avgmindist'] >= 10.580112 && feature.properties['avgmindist'] <= 18.080050 ) {
+                return {
+                pane: 'pane_averageminimumdistancebetweendrainsandwastesites_1',
+                opacity: 1,
+                color: 'rgba(227,227,227,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0,
+                fill: true,
+                fillOpacity: .50,
+                fillColor: 'rgba(212,32,32,1.0)',
+            }
+            }
+            if (feature.properties['avgmindist'] >= 18.080050 && feature.properties['avgmindist'] <= 25.579988 ) {
+                return {
+                pane: 'pane_averageminimumdistancebetweendrainsandwastesites_1',
+                opacity: 1,
+                color: 'rgba(227,227,227,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0,
+                fill: true,
+                fillOpacity: .50,
+                fillColor: 'rgba(252,112,80,1.0)',
+            }
+            }
+            if (feature.properties['avgmindist'] >= 25.579988 && feature.properties['avgmindist'] <= 33.079926 ) {
+                return {
+                pane: 'pane_averageminimumdistancebetweendrainsandwastesites_1',
+                opacity: 1,
+                color: 'rgba(227,227,227,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0,
+                fill: true,
+                fillOpacity: .50,
+                fillColor: 'rgba(253,190,165,1.0)',
+            }
+            }
+            if (feature.properties['avgmindist'] >= 33.079926 && feature.properties['avgmindist'] <= 40.579864092 ) {
+                return {
+                pane: 'pane_averageminimumdistancebetweendrainsandwastesites_1',
+                opacity: 1,
+                color: 'rgba(227,227,227,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0,
+                fill: true,
+                fillOpacity: .50,
+                fillColor: 'rgba(255,245,240,1.0)',
+            }
+            }
+        }
+        map.createPane('pane_averageminimumdistancebetweendrainsandwastesites_1');
+        map.getPane('pane_averageminimumdistancebetweendrainsandwastesites_1').style.zIndex = 401;
+        map.getPane('pane_averageminimumdistancebetweendrainsandwastesites_1').style['mix-blend-mode'] = 'normal';
+        var layer_averageminimumdistancebetweendrainsandwastesites_1 = new L.geoJson(json_averageminimumdistancebetweendrainsandwastesites_1, {
+            attribution: '',
+            pane: 'pane_averageminimumdistancebetweendrainsandwastesites_1',
+            onEachFeature: pop_averageminimumdistancebetweendrainsandwastesites_1,
+            style: style_averageminimumdistancebetweendrainsandwastesites_1_0,
+        });
+        bounds_group.addLayer(layer_averageminimumdistancebetweendrainsandwastesites_1);
+        map.addLayer(layer_averageminimumdistancebetweendrainsandwastesites_1);
+        function pop_wastesites_2(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+        }
+
+        function style_wastesites_2_0() {
+            return {
+                pane: 'pane_wastesites_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(0,0,0,1.0)',
+            }
+        }
+        map.createPane('pane_wastesites_2');
+        map.getPane('pane_wastesites_2').style.zIndex = 402;
+        map.getPane('pane_wastesites_2').style['mix-blend-mode'] = 'normal';
+        var layer_wastesites_2 = new L.geoJson(json_wastesites_2, {
+            attribution: '',
+            pane: 'pane_wastesites_2',
+            onEachFeature: pop_wastesites_2,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_wastesites_2_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_wastesites_2);
+        function pop_drains_3(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+        }
+
+        function style_drains_3_0() {
+            return {
+                pane: 'pane_drains_3',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(161,161,161,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,255,255,1.0)',
+            }
+        }
+        map.createPane('pane_drains_3');
+        map.getPane('pane_drains_3').style.zIndex = 403;
+        map.getPane('pane_drains_3').style['mix-blend-mode'] = 'normal';
+        var layer_drains_3 = new L.geoJson(json_drains_3, {
+            attribution: '',
+            pane: 'pane_drains_3',
+            onEachFeature: pop_drains_3,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_drains_3_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_drains_3);
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'<img src="legend/drains_3.png" /> drains': layer_drains_3,'<img src="legend/wastesites_2.png" /> waste sites': layer_wastesites_2,'average minimum distance between drains and waste sites<br /><table><tr><td style="text-align: center;"><img src="legend/averageminimumdistancebetweendrainsandwastesites_1_308021058010.png" /></td><td>3.0802 - 10.5801</td></tr><tr><td style="text-align: center;"><img src="legend/averageminimumdistancebetweendrainsandwastesites_1_1058011808001.png" /></td><td>10.5801 - 18.0800</td></tr><tr><td style="text-align: center;"><img src="legend/averageminimumdistancebetweendrainsandwastesites_1_1808002558002.png" /></td><td>18.0800 - 25.5800</td></tr><tr><td style="text-align: center;"><img src="legend/averageminimumdistancebetweendrainsandwastesites_1_2558003307993.png" /></td><td>25.5800 - 33.0799</td></tr><tr><td style="text-align: center;"><img src="legend/averageminimumdistancebetweendrainsandwastesites_1_3307994057994.png" /></td><td>33.0799 - 40.5799</td></tr></table>': layer_averageminimumdistancebetweendrainsandwastesites_1,"OSM Standard": layer_OSMStandard_0,},{collapsed:false}).addTo(map);
+        setBounds();
+        </script>
+    </body>
+</html>
