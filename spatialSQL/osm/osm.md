@@ -1,6 +1,10 @@
 # processing data from openstreetmap using postgis 
-more to be added.
-### [queries executed](waste&drains.sql)
+### about
+I used OpenStreetMap data collected through the Rumani Huria Project to analyze the spatial relationship between drains and waste sites in Dar es Salaam. PostGIS and the DB Manager of QGIS were used to find the average distance from drains to the nearest waste sites within a 50 m buffer by subward. Leaflet was used to visualize the output. 
+### sql and map
+[average minimum distance between drains and subwards in Dar es Salaam](drains/index.html)
+
+#### [queries executed](waste&drains.sql)
 ```sql
 /*fixing geometries and reprojecting*/
 create table wards37s as
