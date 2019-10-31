@@ -14,7 +14,7 @@ from wards;
 
 create table subwards37s as
 select fid,
-st_makevalid(st_transform(geom,32737)) as geom
+st_transform(geom,32737) as geom
 from subwards;
 
 create table waste37s as
@@ -28,6 +28,23 @@ st_transform(geom,32737) as geom
 from drains;
 
 select populate_geometry_columns();
+
+/*adding spatial indices*/
+create index sidx_wards37s_geom
+on wards37s
+using GIST(geom);
+
+create index sidx_subwards37s_geom
+on subwards37s
+using GIST(geom);
+
+create index sidx_drains37s_geom
+on drains37s
+using GIST(geom);
+
+create index sidx_waste37s_geom
+on waste37s
+using GIST(geom);
 
 /*assigning drains and waste sites to wards and subwards*/
 alter table drains37s add column ward text;
@@ -43,6 +60,14 @@ update drains37s
 set subward=subwards37s.fid
 from subwards37s
 where st_intersects(drains37s.geom,subwards37s.geom);
+
+alter table waste37s add column ward text;
+
+update waste37s
+set ward=wards37s.ward_name
+from wards37s
+where st_intersects(waste37s.geom,wards37s.geom);
+
 
 alter table waste37s add column subward float8;
 
