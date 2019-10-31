@@ -29,7 +29,7 @@ from drains;
 
 select populate_geometry_columns();
 
-/*adding spatial indices*/
+/*creating spatial indices*/
 create index sidx_wards37s_geom
 on wards37s
 using GIST(geom);
