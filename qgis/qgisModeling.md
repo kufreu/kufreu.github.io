@@ -62,7 +62,7 @@ from input2) as distDir
 
 [partially uses sql to calculate distance and direction from a point](qgisModelSQL.md) **functional**
 
-[uses sql to caluclate distance and direction (cardinal and degrees) from a point](models/updatedDistDir.model3) **functional**
+[uses sql to caluclate distance and direction (cardinal and degrees) from a point](models/updatedDistDirSQL.model3) **functional**
 
 ### case study using sql model
 Using data from the Census, I analyzed the racial composition and gross median rent of census tracts in Wayne County, Michigan. The model aided in the brief study of the spatial distribution of ethnic enclaves within Michigan's most populous county.
