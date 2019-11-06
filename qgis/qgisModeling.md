@@ -49,8 +49,8 @@ WHEN [% @Prefix %]Dir<=337.5 and [% @Prefix %]Dir>=292.5 THEN 'NW'
 WHEN [% @Prefix %]Dir<=202.5 and [% @Prefix %]Dir>=157.5 THEN 'S'
 END [% @Prefix %]CardOrd
 from (select *,
-distance(centroid(transform( (geometry),4326) ),transform((select geometry from input1),4326), true) as [% @Prefix %]Dist,
-degrees(azimuth(transform( (select geometry from input1),3395), centroid(transform( (geometry),3395) ))) as [% @Prefix %]Dir
+distance(centroid(transform((geometry),4326)),transform((select geometry from input1),4326), true) as [% @Prefix %]Dist,
+degrees(azimuth(transform((select geometry from input1),3395),centroid(transform((geometry),3395)))) as [% @Prefix %]Dir
 from input2) as distDir
 ```
 
