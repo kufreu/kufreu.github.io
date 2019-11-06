@@ -41,19 +41,19 @@ This model differs from the original with its use of the Execute SQL tool to cal
 #### sql used in model 
 ```sql
 select distDir.*,
-CASE
-WHEN [% @Prefix %]Dir<=22.5 or [% @Prefix %]Dir>=337.5 THEN 'N'
-WHEN [% @Prefix %]Dir<=67.5 and [% @Prefix %]Dir>=22.5 THEN 'NE'
-WHEN [% @Prefix %]Dir<=122.5 and [% @Prefix %]Dir>=67.5 THEN 'E'
-WHEN [% @Prefix %]Dir<=157.5 and [% @Prefix %]Dir>=112.5 THEN 'SE'
-WHEN [% @Prefix %]Dir<=292.5 and [% @Prefix %]Dir>=247.5 THEN 'W'
-WHEN [% @Prefix %]Dir<=247.5 and [% @Prefix %]Dir>=202.5 THEN 'SW'
-WHEN [% @Prefix %]Dir<=337.5 and [% @Prefix %]Dir>=292.5 THEN 'NW'
-WHEN [% @Prefix %]Dir<=202.5 and [% @Prefix %]Dir>=157.5 THEN 'S'
-END [% @Prefix %]CardOrd
+case
+when [% @Prefix %]Dir<=22.5 or [% @Prefix %]Dir>=337.5 then 'N'
+when [% @Prefix %]Dir<=67.5 and [% @Prefix %]Dir>=22.5 then 'NE'
+when [% @Prefix %]Dir<=122.5 and [% @Prefix %]Dir>=67.5 then 'E'
+when [% @Prefix %]Dir<=157.5 and [% @Prefix %]Dir>=112.5 then 'SE'
+when [% @Prefix %]Dir<=292.5 and [% @Prefix %]Dir>=247.5 then 'W'
+when [% @Prefix %]Dir<=247.5 and [% @Prefix %]Dir>=202.5 then 'SW'
+when [% @Prefix %]Dir<=337.5 and [% @Prefix %]Dir>=292.5 then 'NW'
+when [% @Prefix %]Dir<=202.5 and [% @Prefix %]Dir>=157.5 then 'S'
+end [% @Prefix %]CardOrd
 from (select *,
-distance(centroid(transform((geometry),4326)),transform((select geometry from input1),4326), true) as [% @Prefix %]Dist,
-degrees(azimuth(transform((select geometry from input1),3395),centroid(transform((geometry),3395)))) as [% @Prefix %]Dir
+distance(centroid(transform((geometry),4326) ),transform((select geometry from input1),4326), true) as [% @Prefix %]Dist,
+degrees(azimuth(transform((select geometry from input1),3395), centroid(transform((geometry),3395)))) as [% @Prefix %]Dir
 from input2) as distDir
 ```
 
