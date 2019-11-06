@@ -14,7 +14,7 @@ I used batch processing for tools in SAGA 6.2 to automate the hydrology analysis
 ::set the path to your SAGA program
 SET PATH=%PATH%;c:\saga6
 
-::set the prefix to be use for all names and outputs
+::set the prefix to be used for all names and outputs
 SET pre=andesASTER
 
 ::set the directory in which you want the outputs to be saved, example directory shown here
