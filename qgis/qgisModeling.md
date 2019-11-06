@@ -41,12 +41,12 @@ select distDir.*,
 CASE
 WHEN [% @Prefix %]Dir<=22.5 or [% @Prefix %]Dir>=337.5 THEN 'N'
 WHEN [% @Prefix %]Dir<=67.5 and [% @Prefix %]Dir>=22.5 THEN 'NE'
-WHEN [% @Prefix %]Dir<=122.5 and [% @Prefix %]Dir >=67.5 THEN 'E'
+WHEN [% @Prefix %]Dir<=122.5 and [% @Prefix %]Dir>=67.5 THEN 'E'
 WHEN [% @Prefix %]Dir<=157.5 and [% @Prefix %]Dir>=112.5 THEN 'SE'
-WHEN [% @Prefix %]Dir<=292.5 and [% @Prefix %]Dir >=247.5 THEN 'W'
-WHEN [% @Prefix %]Dir <=247.5 and [% @Prefix %]Dir >=202.5 THEN 'SW'
-WHEN [% @Prefix %]Dir <=337.5 and [% @Prefix %]Dir  >=292.5 THEN 'NW'
-WHEN [% @Prefix %]Dir <=202.5 and [% @Prefix %]Dir >=157.5 THEN 'S'
+WHEN [% @Prefix %]Dir<=292.5 and [% @Prefix %]Dir>=247.5 THEN 'W'
+WHEN [% @Prefix %]Dir<=247.5 and [% @Prefix %]Dir>=202.5 THEN 'SW'
+WHEN [% @Prefix %]Dir<=337.5 and [% @Prefix %]Dir>=292.5 THEN 'NW'
+WHEN [% @Prefix %]Dir<=202.5 and [% @Prefix %]Dir>=157.5 THEN 'S'
 END [% @Prefix %]CardOrd
 from (select *,
 distance(centroid(transform( (geometry),4326) ),transform((select geometry from input1),4326), true) as [% @Prefix %]Dist,
