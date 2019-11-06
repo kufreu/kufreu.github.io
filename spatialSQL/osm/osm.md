@@ -1,6 +1,6 @@
 # processing data from openstreetmap using postgis 
 ### about
-I used OpenStreetMap data collected through the Rumani Huria Project to analyze the spatial relationship between drains and waste sites in Dar es Salaam. In which areas are drains more likely to be clogged due to being in close proximity to waste sites? PostGIS and the DB Manager of QGIS were used to find the average distance from drains to the nearest waste sites within a 50 m buffer by subward. Leaflet was used to visualize the output. The qgis2web plugin in QGIS allowed for the creation of the leaflet map.  
+I used OpenStreetMap data collected through the Rumani Huria Project to analyze the spatial relationship between drains and waste sites in Dar es Salaam. In which subwards are drains more likely to be clogged due to being in close proximity to waste sites? PostGIS and the DB Manager of QGIS were used to find the average distance from drains to the nearest waste sites within a 50 m buffer by subward. Leaflet was used to visualize the output. The qgis2web plugin in QGIS allowed for the creation of the leaflet map.  
 ### sql and map
 [average minimum distance between drains and subwards in Dar es Salaam](drains/index.html)
 
