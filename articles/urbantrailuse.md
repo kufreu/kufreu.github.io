@@ -1,5 +1,7 @@
 # social media and urban trail use
 
+*to be completed soon*
+
 In their (2017) work, Wu, Wood, Fisher, and Lindsey evaluate the viability of using geotagged posts from social media, particularly Flickr and Twitter, as proxies for urban trail use. The City of Minneapolis was used as the study area of this research.  This study leans towards the deductive, first presenting the question of whether social media can be used to estimate trail traffic and then going on to answering the question through research, concluding that although the correlation between social media posts and trail use is weak, social media can still be used for general planning (p. 802).  
 
 Wu et al. used the application program interfaces (APIs) of Twitter and Flickr to query for geotagged images posted during 2013, utilizing the latitude/longitude coordinates associated with the posts for analysis (p. 792). The parameters used for these queries are not described in this article nor are the program(s) used to interact with the APIs listed. A GIS was used to create 200-foot buffers along 80 miles of trails split into mile-long segments and the number of photos contained within these buffers were counted (p.792). Proxies for trail demand were created based on the unique combinations of users and the date which they posted an image or tweet (p. 792-3). These counts were then compared to estimates of trail traffic reported in a previous study and statistical models were used to see if there was any correlation between social media data. STATA was used for all statistical models (p.794). 
