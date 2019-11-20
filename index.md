@@ -3,6 +3,8 @@
 
 [social media and urban trail use](articles/urbantrailuse.md)
 
+[thoughts on studies](articles.md)
+
 [qgis](qgis/qgisModeling.md)
 
 [saga](saga/saga.md)
