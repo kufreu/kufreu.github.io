@@ -8,4 +8,4 @@
 
 [spatial sql](spatialSQL/spatialSQL.md)
 
-[what's gis?](gis.md)
+[what's gis?](stuff/gis.md)
