@@ -1,6 +1,6 @@
 # open source geographic information science
 
-[thoughts on studies](articles/articles.md)
+[study commentary](articles/articles.md)
 
 [qgis](qgis/qgisModeling.md)
 
