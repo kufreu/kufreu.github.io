@@ -1,6 +1,6 @@
 #### final project ####
 
-# with this project, I attempted to replicate the distance and direction model that I created in the QGIS modeler using SQL
+# with this project, I attempted to replicate the distance and direction model that I created in the QGIS modeler using R
 
 # this is the SQL used in the original/updated model to calculate distance and direction from a point.
 
@@ -683,9 +683,6 @@ distdir_from_point <- function (layer, center) {
 #### testing out final? funciton ####
 test <- distdir_from_point(tractsMI)
 
-
-trishasingh.github.io
-clairegomba.wixsite.com / portfolio
 
 
 
