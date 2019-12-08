@@ -10,10 +10,13 @@ distdir_from_point <- function (layer, center) {
       st_transform(4326)
     cbd <-
       layer %>%
+      st_transform(3395) %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_sf %>%
       mutate(nichts = "nichts") %>%
       group_by(nichts) %>%
       summarize %>%
-      st_transform(3395) %>%
       st_geometry %>%
       st_centroid %>%
       st_transform(4326)
@@ -33,10 +36,13 @@ distdir_from_point <- function (layer, center) {
       st_transform(4326)
     cbd <-
       center %>%
+      st_transform(3395) %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_sf %>%
       mutate(nichts = "nichts") %>%
       group_by(nichts) %>%
       summarize %>%
-      st_transform(3395) %>%
       st_geometry %>%
       st_centroid %>%
       st_transform(4326)
