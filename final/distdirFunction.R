@@ -1,4 +1,5 @@
-# commentted code and other things should be added soon?
+# commented code and other things should be added soon?
+# this function is dependent on geosphere, tidyverse, and sf
 distdir_from_point <- function (layer, center) {
   if (missing(center)) {
     wgs84 <-
