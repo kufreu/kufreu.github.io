@@ -8,4 +8,10 @@
 
 [spatial sql](spatialSQL/spatialSQL.md)
 
+[reproducibility & replicability]
+
+[r]
+
+[final project](final/final.md)
+
 [what's gis?](stuff/gis.md)
