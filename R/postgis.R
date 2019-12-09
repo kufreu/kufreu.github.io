@@ -1,4 +1,4 @@
-##### script used to load data into database  
+##### script used to load data into database #####  
 
 #install package for twitter and initialize the library
 install.packages("tidycensus")
