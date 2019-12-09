@@ -8,9 +8,9 @@
 
 [spatial sql](spatialSQL/spatialSQL.md)
 
-[reproducibility & replicability]
+[reproducibility & replicability](r&r/r&r.md)
 
-[r]
+[big data](R/twitter.md)
 
 [final project](final/final.md)
 
