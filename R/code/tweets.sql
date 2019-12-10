@@ -100,9 +100,9 @@ delete from counties
 /* normalizing tweets */ 
 alter table counties add column tweetrate float8;
  
- update counties 
- set tweetrate=(dcount/10000)
- 
+update counties 
+set tweetrate = (dcount/(pop/10000))*1.0
+
  
  /*calculating normalized tweet difference index */
  alter table counties add column ndti float8;
