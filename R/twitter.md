@@ -1,3 +1,3 @@
-# analysis of twitter data using r and postgis 
+# analysis of tweets during hurricane dorian using r and postgis 
 ### about
 
