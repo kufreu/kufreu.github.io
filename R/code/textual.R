@@ -1,5 +1,5 @@
 #### textual analysis of dorian twitter data ####
-# script adapted from Dr. Joseph Holler 
+# script adapted from an analysis made by Dr. Joseph Holler
 
 install.packages(c("rtweet","dplyr","tidytext","tm","tidyr","ggraph", "ggplot2"))
 
