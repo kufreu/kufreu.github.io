@@ -1,6 +1,6 @@
 #### final project ####
 
-# with this project, I attempted to replicate the distance and direction model that I created in the QGIS modeler using R
+# with this project, I attempted to replicate the distance and direction model that I created in the QGIS modeler using SQL
 
 # this is the SQL used in the original/updated model to calculate distance and direction from a point.
 
@@ -21,15 +21,20 @@
 #       from input2) as distDir
 
 
+#https://bakaniko.github.io/FOSS4G2019_Geoprocessing_with_R_workshop/
+
 #### getting things in order ####
 install.packages("tidyverse")
 install.packages("sf")
+install.packages("sp")
 install.packages("RcolorBrewer")
 install.packages("geosphere")
 install.packages("viridis")
 
+
 library(tidyverse)
 library(sf)
+library(sp)
 library(RColorBrewer)
 library(geosphere)
 library(viridis)
@@ -52,6 +57,10 @@ chicagoCBD <- st_read(dsn = "chicago.gpkg", layer = "CBD")
 ggplot(tractsMI) +
   geom_sf()
 
+ggplot() +
+  geom_sf(data = chicago) +
+  geom_sf(data = chicagoCBD)
+
 #### SQL / first batch of things to be converted ####
 #distance(centroid(transform((geometry),4326)),transform((select geometry from input1),4326), true) as [% @Prefix %]Dist,
 #degrees(azimuth(transform((select geometry from input1),3395), centroid(transform((geometry),3395)))) as [% @Prefix %]Dir
@@ -64,8 +73,9 @@ View(tractsMI %>%
        st_transform(4326))
 
 #### learning how to dissolve  from Phil Mike Jones####
+#https://philmikejones.me/tutorials/2015-09-03-dissolve-polygons-in-r/
+# At first I thought it would be best to dissolve the inputs of the functions rather than try to calculate mean coordinates 
 
-# I though it would be best to dissolve the inputs of the functions rather than try to make the
 tractsMI$area <- st_area(tractsMI)
 
 michigan <-
@@ -76,13 +86,13 @@ ggplot(michigan2) + geom_sf()
 
 # OR
 
-michigan2 <-
+michigan <-
   tractsMI %>%
   mutate(state = "michigan") %>%
   group_by(state) %>%
   summarize()
 
-ggplot(michigan2) + geom_sf()
+ggplot(michigan) + geom_sf()
 
 # Phil Mike Jones: create a column to group_by() so that the features (rows) that are to be grouped together are given the same data if you don’t have or want data to save the dissolve
 
@@ -90,6 +100,8 @@ ggplot(michigan2) + geom_sf()
 centroidTracts <- st_centroid(tractsMI)
 ggplot() +
   geom_sf(data = centroidTracts)
+
+# went on and ignored the warning 
 
 #### making a centroid on a dissolved shape ####
 # from sf package
@@ -104,7 +116,7 @@ center <-
   tractsMI %>%
   mutate(area = st_area(tractsMI)) %>%
   summarize(area = sum(area)) %>%
-  # geosphere uses objects with "spatial" class from the sp package, which I'm not using to work with spatial data
+  # geosphere uses objects with "spatial" class from the sp package, which I'm not using 
   # I need to convert my objects because of this before making a centroid
   as_Spatial() %>%
   centroid()
@@ -147,7 +159,7 @@ distTest <- function(layer) {
 ggplot() +
   geom_sf(data = test, aes(fill = cut_number(dist, 7)), color = "grey") +
   scale_fill_brewer(palette = "YlGnBu") +
-  guides(fill = guide_legend(title = "Distance?")) +
+  guides(fill = guide_legend(title = "distance in meters")) +
   labs(title = "distance test",
        subtitle = "distTest()") +
   theme(
@@ -198,7 +210,7 @@ distTest2 <- function (layer, center) {
   }
 }
 
-# making  various centers to test new argument
+# making  various centers to test new argument and just to see counties in Michigan I like 
 tracts2 <- tractsMI %>%
   # making factors characters to make them easier to work with
   mutate(fips = as.character(COUNTYFP))
@@ -213,6 +225,26 @@ berrien <- tracts2[tracts2$fips == "021",]
 ggplot() +
   geom_sf(data = berrien)
 
+gogebic <- tracts2[tracts2$fips == "053",]
+
+ggplot() +
+  geom_sf(data = gogebic)
+
+ontonagon <- tracts2[tracts2$fips == "131",]
+
+ggplot() +
+  geom_sf(data = ontonagon)
+
+charlevoix <- tracts2[tracts2$fips == "029",]
+
+ggplot() +
+  geom_sf(data = charlevoix)
+
+alger <- tracts2[tracts2$fips == "003",]
+
+ggplot() +
+  geom_sf(data = alger)
+
 #### mapping tests with/without center ####
 test <- distTest2(tractsMI)
 
@@ -220,9 +252,18 @@ test <- distTest2(tractsMI, delta)
 
 test <- distTest2(tractsMI, berrien)
 
-ggplot(data = test) +
-  geom_sf(aes(fill = dist))
+test <- distTest2(tractsMI, gogebic)
 
+test <- distTest2(tractsMI, ontonagon)
+
+test <- distTest2(tractsMI, charlevoix)
+
+test <- distTest2(tractsMI, alger)
+                
+ggplot(data = test) +
+  geom_sf(aes(fill = dist), color = NA) 
+  
+  
 #### making dist_from_point ####
 dist_from_point <- function (layer, center) {
   if (missing(center)) {
@@ -344,11 +385,11 @@ dirtesting <- dirTest(tractsMI, berrien)
 ggplot() +
   geom_sf(data = dirtesting, aes(fill = cut_number(direction, 4)), color = "grey") +
   scale_fill_brewer(palette = "YlGnBu") +
-  guides(fill = guide_legend(title = "Direction?")) +
+  guides(fill = guide_legend(title = "direction in degrees")) +
   labs(title = "direction test",
-       subtitle = "dirTest()") +
+       subtitle = "dirTest(tractsMI, berrien)") +
   theme(
-    plot.title = element_text(hjust = 0.5),
+    plot.title = element_text(hjust = 0),
     axis.title.x = element_blank(),
     axis.title.y = element_blank()
   )
@@ -370,7 +411,7 @@ distdir_from_point <- function (layer, center) {
       mutate(
         dist_unit = st_distance(st_centroid(wgs84), cbd),
         dist_double = as.double(st_distance(st_centroid(wgs84), cbd)),
-        dir = (bearing(
+        dir_degrees = (bearing(
           as_Spatial(cbd), as_Spatial(st_centroid(wgs84))
         ) + 360) %% 360
       )
@@ -387,7 +428,7 @@ distdir_from_point <- function (layer, center) {
       mutate(
         dist_unit = st_distance(st_centroid(wgs84), cbd),
         dist_double = as.double(st_distance(st_centroid(wgs84), cbd)),
-        direction = (bearing(
+        dir_degrees = (bearing(
           as_Spatial(cbd), as_Spatial(st_centroid(wgs84))
         ) + 360) %% 360
       )
@@ -413,35 +454,35 @@ distdir_from_point <- function (layer, center) {
 dirtesting <- distdir_from_point(tractsMI)
 View(dirtesting %>%
        mutate(card_ord = ifelse(
-         direction <= 22.5 |
-           direction >= 337.5,
+         dir_degrees <= 22.5 |
+           dir_degrees >= 337.5,
          "N",
          ifelse(
-           direction <= 67.5 &
-             direction >= 22.5,
+           dir_degrees <= 67.5 &
+             dir_degrees >= 22.5,
            "NE",
            ifelse(
-             direction <= 122.5 &
-               direction >= 67.5,
+             dir_degrees <= 122.5 &
+               dir_degrees >= 67.5,
              "E",
              ifelse(
-               direction <= 157.5 &
-                 direction >= 112.5,
+               dir_degrees <= 157.5 &
+                 dir_degrees >= 112.5,
                "SE",
                ifelse(
-                 direction <= 292.5 &
-                   direction >= 247.5,
+                 dir_degrees <= 292.5 &
+                   dir_degrees >= 247.5,
                  "W",
                  ifelse(
-                   direction <= 247.5 &
-                     direction >= 202.5,
+                   dir_degrees <= 247.5 &
+                     dir_degrees >= 202.5,
                    "SW",
                    ifelse(
-                     direction <= 337.5 &
-                       direction >= 292.5,
+                     dir_degrees <= 337.5 &
+                       dir_degrees >= 292.5,
                      "NW",
-                     ifelse(direction <= 202.5 &
-                              direction >= 157.5, "S", "nichts")
+                     ifelse(dir_degrees <= 202.5 &
+                              dir_degrees >= 157.5, "S", "nichts")
                    )
                  )
                )
@@ -452,8 +493,8 @@ View(dirtesting %>%
 # if{}else
 View(dirtesting %>%
        mutate(card_ord =
-                if ('direction' <= 22.5 |
-                    'direction' >= 337.5) {
+                if ('dir_degrees' <= 22.5 |
+                    'dir_degrees' >= 337.5) {
                   "N"
                 } else {
                   "warum"
@@ -476,7 +517,7 @@ distdir_from_point <- function (layer, center) {
       mutate(
         dist_unit = st_distance(st_centroid(wgs84), cbd),
         dist_double = as.double(st_distance(st_centroid(wgs84), cbd)),
-        direction = (bearing(
+        dir_degrees = (bearing(
           as_Spatial(cbd), as_Spatial(st_centroid(wgs84))
         ) + 360) %% 360
       )
@@ -493,42 +534,42 @@ distdir_from_point <- function (layer, center) {
       mutate(
         dist_unit = st_distance(st_centroid(wgs84), cbd),
         dist_double = as.double(st_distance(st_centroid(wgs84), cbd)),
-        direction = (bearing(
+        dir_degrees = (bearing(
           as_Spatial(cbd), as_Spatial(st_centroid(wgs84))
         ) + 360) %% 360
       )
   }
   result <- int %>%
     mutate(card_ord = ifelse(
-      direction <= 22.5 |
-        direction >= 337.5,
+      dir_degrees <= 22.5 |
+        dir_degrees >= 337.5,
       "N",
       ifelse(
-        direction <= 67.5 &
-          direction >= 22.5,
+        dir_degrees <= 67.5 &
+          dir_degrees >= 22.5,
         "NE",
         ifelse(
-          direction <= 122.5 &
-            direction >= 67.5,
+          dir_degrees <= 122.5 &
+            dir_degrees >= 67.5,
           "E",
           ifelse(
-            direction <= 157.5 &
-              direction >= 112.5,
+            dir_degrees <= 157.5 &
+              dir_degrees >= 112.5,
             "SE",
             ifelse(
-              direction <= 292.5 &
-                direction >= 247.5,
+              dir_degrees <= 292.5 &
+                dir_degrees >= 247.5,
               "W",
               ifelse(
-                direction <= 247.5 &
-                  direction >= 202.5,
+                dir_degrees <= 247.5 &
+                  dir_degrees >= 202.5,
                 "SW",
                 ifelse(
-                  direction <= 337.5 &
-                    direction >= 292.5,
+                  dir_degrees <= 337.5 &
+                    dir_degrees >= 292.5,
                   "NW",
-                  ifelse(direction <= 202.5 &
-                           direction >= 157.5, "S", "nichts")
+                  ifelse(dir_degrees <= 202.5 &
+                           dir_degrees >= 157.5, "S", "nichts")
                 )
               )
             )
@@ -537,19 +578,19 @@ distdir_from_point <- function (layer, center) {
       )
     ))
 }
-# this works, though there are some warning messages with st_centroid which I've mostly ignored and some things can be changed
+# this works, though there are some warning messages with st_centroid which I've mostly ignored and some other things that can be changed
 
-#### mapping for distance and direction funciton result  ####
+#### mapping for distance and direction function result  ####
 test <- distdir_from_point(tractsMI)
 
 ggplot() +
   geom_sf(data = test, aes(fill = card_ord), color = "grey") +
   scale_fill_brewer(palette = "YlGnBu") +
-  guides(fill = guide_legend(title = "Direction?")) +
+  guides(fill = guide_legend(title = "direction in degrees")) +
   labs(title = "direction test",
        subtitle = "distdir_from_point()") +
   theme(
-    plot.title = element_text(hjust = 0.5),
+    plot.title = element_text(hjust = 0),
     axis.title.x = element_blank(),
     axis.title.y = element_blank()
   )
@@ -571,6 +612,7 @@ test <- tractsMI %>%
 ggplot() +
   geom_sf(data = test)
 
+# seing if it projected correctly
 st_crs(test)
 
 # testing st_centroid with projected mercator, adding st_geometry, and using an alternative way to dissolve
@@ -615,7 +657,7 @@ distdir_from_point <- function (layer, center) {
       mutate(
         dist_unit = st_distance(wgs84, cbd),
         dist_double = as.double(st_distance(wgs84, cbd)),
-        direction = (bearing(as_Spatial(cbd), as_Spatial(wgs84)) + 360) %% 360
+        dir_degrees = (bearing(as_Spatial(cbd), as_Spatial(wgs84)) + 360) %% 360
       )
   } else {
     wgs84 <-
@@ -637,40 +679,40 @@ distdir_from_point <- function (layer, center) {
       mutate(
         dist_unit = st_distance(wgs84, cbd),
         dist_double = as.double(st_distance(wgs84, cbd)),
-        direction = (bearing(as_Spatial(cbd), as_Spatial(wgs84)) + 360) %% 360
+        dir_degrees = (bearing(as_Spatial(cbd), as_Spatial(wgs84)) + 360) %% 360
       )
   }
   result <- int %>%
     mutate(card_ord = ifelse(
-      direction <= 22.5 |
-        direction >= 337.5,
+      dir_degrees <= 22.5 |
+        dir_degrees >= 337.5,
       "N",
       ifelse(
-        direction <= 67.5 &
-          direction >= 22.5,
+        dir_degrees <= 67.5 &
+          dir_degrees >= 22.5,
         "NE",
         ifelse(
-          direction <= 122.5 &
-            direction >= 67.5,
+          dir_degrees <= 122.5 &
+            dir_degrees >= 67.5,
           "E",
           ifelse(
-            direction <= 157.5 &
-              direction >= 112.5,
+            dir_degrees <= 157.5 &
+              dir_degrees >= 112.5,
             "SE",
             ifelse(
-              direction <= 292.5 &
-                direction >= 247.5,
+              dir_degrees <= 292.5 &
+                dir_degrees >= 247.5,
               "W",
               ifelse(
-                direction <= 247.5 &
-                  direction >= 202.5,
+                dir_degrees <= 247.5 &
+                  dir_degrees >= 202.5,
                 "SW",
                 ifelse(
-                  direction <= 337.5 &
-                    direction >= 292.5,
+                  dir_degrees <= 337.5 &
+                    dir_degrees >= 292.5,
                   "NW",
-                  ifelse(direction <= 202.5 &
-                           direction >= 157.5, "S", "nichts")
+                  ifelse(dir_degrees <= 202.5 &
+                           dir_degrees >= 157.5, "S", "nichts")
                 )
               )
             )
@@ -680,24 +722,20 @@ distdir_from_point <- function (layer, center) {
     ))
 }
 
-#### testing out final? funciton ####
+#### testing out final? functioon ####
 test <- distdir_from_point(tractsMI)
 
-
-
-
 ggplot() +
-  geom_sf(data = chicagoTest, aes(fill = cut_number(dist_double, 6), color = "grey")) +
+  geom_sf(data = test, aes(fill = cut_number(dist_double, 6), color = "grey")) +
   scale_fill_brewer(palette = "YlGnBu") +
-  guides(fill = guide_legend(title = "Direction?")) +
-  labs(title = "direction test",
-       subtitle = "distdir_from_point()") +
+  guides(fill = guide_legend(title = "distance in meters")) +
+  labs(title = "distance test",
+       subtitle = "distdir_from_point(tractsMI)") +
   theme(
     plot.title = element_text(hjust = 0.5),
     axis.title.x = element_blank(),
     axis.title.y = element_blank()
   )
-
 
 #### final function? ####
 distdir_from_point <- function (layer, center) {
@@ -722,7 +760,7 @@ distdir_from_point <- function (layer, center) {
       mutate(
         dist_unit = st_distance(wgs84, cbd),
         dist_double = as.double(st_distance(wgs84, cbd)),
-        direction = (bearing(as_Spatial(cbd), as_Spatial(wgs84)) + 360) %% 360
+        dir_degrees = (bearing(as_Spatial(cbd), as_Spatial(wgs84)) + 360) %% 360
       )
   } else {
     wgs84 <-
@@ -744,40 +782,40 @@ distdir_from_point <- function (layer, center) {
       mutate(
         dist_unit = st_distance(wgs84, cbd),
         dist_double = as.double(st_distance(wgs84, cbd)),
-        direction = (bearing(as_Spatial(cbd), as_Spatial(wgs84)) + 360) %% 360
+        dir_degrees = (bearing(as_Spatial(cbd), as_Spatial(wgs84)) + 360) %% 360
       )
   }
   result <- int %>%
     mutate(card_ord = ifelse(
-      direction <= 22.5 |
-        direction >= 337.5,
+      dir_degrees <= 22.5 |
+        dir_degrees >= 337.5,
       "N",
       ifelse(
-        direction <= 67.5 &
-          direction >= 22.5,
+        dir_degrees <= 67.5 &
+          dir_degrees >= 22.5,
         "NE",
         ifelse(
-          direction <= 122.5 &
-            direction >= 67.5,
+          dir_degrees <= 122.5 &
+            dir_degrees >= 67.5,
           "E",
           ifelse(
-            direction <= 157.5 &
-              direction >= 112.5,
+            dir_degrees <= 157.5 &
+              dir_degrees >= 112.5,
             "SE",
             ifelse(
-              direction <= 292.5 &
-                direction >= 247.5,
+              dir_degrees <= 292.5 &
+                dir_degrees >= 247.5,
               "W",
               ifelse(
-                direction <= 247.5 &
-                  direction >= 202.5,
+                dir_degrees <= 247.5 &
+                  dir_degrees >= 202.5,
                 "SW",
                 ifelse(
-                  direction <= 337.5 &
-                    direction >= 292.5,
+                  dir_degrees <= 337.5 &
+                    dir_degrees >= 292.5,
                   "NW",
-                  ifelse(direction <= 202.5 &
-                           direction >= 157.5, "S", "nichts")
+                  ifelse(dir_degrees <= 202.5 &
+                           dir_degrees >= 157.5, "S", "nichts")
                 )
               )
             )
@@ -796,17 +834,17 @@ centroidsDelta <- delta %>%
   transform(3395) %>%
   st_centroid
 
-point_test <- distdir_from_point(tractsMI, centroidDelta)
+point_test <- distdir_from_point(tractsMI, centroidsDelta)
 
 
 ggplot() +
-  geom_sf(data = point_test, aes(fill = cut_number(dist_double, 10)), color = "grey") +
+  geom_sf(data = point_test, aes(fill = cut_number(dist_double, 5)), color = "grey") +
   scale_fill_brewer(palette = "YlGnBu") +
-  guides(fill = guide_legend(title = "Distance?")) +
+  guides(fill = guide_legend(title = "distance in meters")) +
   labs(title = "distance test",
        subtitle = "distTest()") +
   theme(
-    plot.title = element_text(hjust = 0.5),
+    plot.title = element_text(hjust = 1),
     axis.title.x = element_blank(),
     axis.title.y = element_blank()
   )
@@ -814,11 +852,11 @@ ggplot() +
 ggplot() +
   geom_sf(data = point_test, aes(fill = card_ord), color = "grey") +
   scale_fill_brewer(palette = "YlGnBu") +
-  guides(fill = guide_legend(title = "Direction?")) +
+  guides(fill = guide_legend(title = "Direction")) +
   labs(title = "direction test",
        subtitle = "distdir_from_point()") +
   theme(
-    plot.title = element_text(hjust = 0.5),
+    plot.title = element_text(hjust = 0),
     axis.title.x = element_blank(),
     axis.title.y = element_blank()
   )
@@ -834,7 +872,7 @@ ggplot() +
   labs(title = "direction test",
        subtitle = "distdir_from_point()") +
   theme(
-    plot.title = element_text(hjust = 0.5),
+    plot.title = element_text(hjust = 0),
     axis.title.x = element_blank(),
     axis.title.y = element_blank()
   )
@@ -869,10 +907,12 @@ ggplot() +
 # looking at michigan as a whole
 michigan_centroids <-
   tractsMI %>%
+  # centroids on tracts
   st_transform(3395) %>%
   st_centroid
 
 michigan_centroid <-
+  # centroid made from dissolved centroids
   michigan_centroids %>%
   mutate(nichts = "nichts") %>%
   group_by(nichts) %>%
@@ -881,17 +921,18 @@ michigan_centroid <-
   st_centroid
 
 oneMichigan <- michigan %>%
+  # centroid made from dissolved tracts
   st_transform(3395) %>%
   st_centroid
 
 ggplot() +
   geom_sf(data = michigan) +
-  geom_sf(data = michigan_centroid, color = 'red') +
+  geom_sf(data = michigan_centroid, color = 'red') + 
   geom_sf(data = oneMichigan)
 
-# creating centroids from centroids (mean coordinates) rather than dissolving the original provides a result closer to the orginal model
+# creating centroids from centroids (mean coordinates) rather than dissolving the original provides a result closer to the orginal qgis model
 # the red point in the map above is exactly where distance/direction would be calcualted from in the QGIS model if tractsMI was supplied as an input layer for cbd
-# I both added and forgot a step: added dissolving which wasn't originally in the model and forgot to make centroids 
+# I both added and forgot a step: added dissolving which wasn't originally in the model and forgot to make centroids
 
 
 # I made a model in QGIS which created centroids, dissolved those centroids, and then created another centroid from what was dissovled
@@ -907,11 +948,11 @@ test <-
   # got an error from using a list of geometries, so I needed to make it an sf object again
   # https://github.com/r-spatial/sf/issues/243
   st_sf %>%
-  # creating centroids and then dissolving  
+  # creating centroids and then dissolving
   mutate(nichts = "nichts") %>%
   group_by(nichts) %>%
   summarize %>%
-  # this should result in the mean coordinates 
+  # this should result in the mean coordinates
   st_geometry %>%
   st_centroid %>%
   st_transform(4326)
@@ -919,3 +960,247 @@ test <-
 ggplot() +
   geom_sf(data = michigan) +
   geom_sf(data = test)
+
+
+# I thought it would also be good to allow for objects with spatial class to be used so I added as("sf") to coerce objects with spatial class into sf objects
+# testing 
+
+spatialMI <- as_Spatial(tractsMI)
+
+test <-
+  spatialMI %>%
+  # making sf object 
+  as("sf") %>%
+  st_transform(3395) %>%
+  st_geometry %>%
+  st_centroid %>%
+  st_sf %>%
+  mutate(nichts = "nichts") %>%
+  group_by(nichts) %>%
+  summarize %>%
+  st_geometry %>%
+  st_centroid %>%
+  st_transform(4326)
+
+ggplot() +
+  geom_sf(data = michigan) +
+  geom_sf(data = test)
+
+
+
+#### adding edits to function ####
+distdir_from_point <- function (layer, center) {
+  if (missing(center)) {
+    wgs84 <-
+      layer %>%
+      as("sf") %>%
+      st_transform(3395) %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_transform(4326)
+    cbd <-
+      layer %>%
+      as("sf") %>%
+      st_transform(3395) %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_sf %>%
+      mutate(nichts = "nichts") %>%
+      group_by(nichts) %>%
+      summarize %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_transform(4326)
+    int <-
+      layer %>%
+      as("sf") %>%
+      mutate(
+        dist_unit = st_distance(wgs84, cbd),
+        dist_double = as.double(st_distance(wgs84, cbd)),
+        dir_degrees = (bearing(as_Spatial(cbd), as_Spatial(wgs84)) + 360) %% 360
+      )
+  } else {
+    wgs84 <-
+      layer %>%
+      as("sf") %>%
+      st_transform(3395) %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_transform(4326)
+    cbd <-
+      center %>%
+      as("sf") %>%
+      st_transform(3395) %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_sf %>%
+      mutate(nichts = "nichts") %>%
+      group_by(nichts) %>%
+      summarize %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_transform(4326)
+    int <- layer %>%
+      as("sf") %>%
+      mutate(
+        dist_unit = st_distance(wgs84, cbd),
+        dist_double = as.double(st_distance(wgs84, cbd)),
+        dir_degrees = (bearing(as_Spatial(cbd), as_Spatial(wgs84)) + 360) %% 360
+      )
+  }
+  result <- int %>%
+    mutate(card_ord = ifelse(
+      dir_degrees <= 22.5 |
+        dir_degrees >= 337.5,
+      "N",
+      ifelse(
+        dir_degrees <= 67.5 &
+          dir_degrees >= 22.5,
+        "NE",
+        ifelse(
+          dir_degrees <= 122.5 &
+            dir_degrees >= 67.5,
+          "E",
+          ifelse(
+            dir_degrees <= 157.5 &
+              dir_degrees >= 112.5,
+            "SE",
+            ifelse(
+              dir_degrees <= 292.5 &
+                dir_degrees >= 247.5,
+              "W",
+              ifelse(
+                dir_degrees <= 247.5 &
+                  dir_degrees >= 202.5,
+                "SW",
+                ifelse(
+                  dir_degrees <= 337.5 &
+                    dir_degrees >= 292.5,
+                  "NW",
+                  ifelse(dir_degrees <= 202.5 &
+                           dir_degrees >= 157.5, "S", "nichts")
+                )
+              )
+            )
+          )
+        )
+      )
+    ))
+}
+
+#### testing and mapping new function output ####
+test <- distdir_from_point(spatialMI, delta) %>%
+  mutate("Distance in Kilometers" = dist_double / 1000) %>%
+  ggplot() +
+  geom_sf(aes(fill = `Distance in Kilometers`),
+          color = NA) +
+  scale_fill_continuous(type = "viridis") +
+  labs(title = "Distance Test with Final Function",
+       subtitle = "distdir_from_point(spatialMI, delta)")
+
+test <- distdir_from_point(spatialMI, delta) %>%
+  ggplot() +
+  geom_sf(aes(fill = card_ord), color = NA) +
+  scale_fill_viridis(discrete = TRUE)
+
+#### final function ####
+distdir_from_point <- function (layer, center) {
+  if (missing(center)) {
+    wgs84 <-
+      layer %>%
+      as("sf") %>%
+      st_transform(3395) %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_transform(4326)
+    cbd <-
+      layer %>%
+      as("sf") %>%
+      st_transform(3395) %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_sf %>%
+      mutate(nichts = "nichts") %>%
+      group_by(nichts) %>%
+      summarize %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_transform(4326)
+    int <-
+      layer %>%
+      as("sf") %>%
+      mutate(
+        dist_unit = st_distance(wgs84, cbd),
+        dist_double = as.double(st_distance(wgs84, cbd)),
+        dir_degrees = (bearing(as_Spatial(cbd), as_Spatial(wgs84)) + 360) %% 360
+      )
+  } else {
+    wgs84 <-
+      layer %>%
+      as("sf") %>%
+      st_transform(3395) %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_transform(4326)
+    cbd <-
+      center %>%
+      as("sf") %>%
+      st_transform(3395) %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_sf %>%
+      mutate(nichts = "nichts") %>%
+      group_by(nichts) %>%
+      summarize %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_transform(4326)
+    int <- layer %>%
+      as("sf") %>%
+      mutate(
+        dist_unit = st_distance(wgs84, cbd),
+        dist_double = as.double(st_distance(wgs84, cbd)),
+        dir_degrees = (bearing(as_Spatial(cbd), as_Spatial(wgs84)) + 360) %% 360
+      )
+  }
+  result <- int %>%
+    mutate(card_ord = ifelse(
+      dir_degrees <= 22.5 |
+        dir_degrees >= 337.5,
+      "N",
+      ifelse(
+        dir_degrees <= 67.5 &
+          dir_degrees >= 22.5,
+        "NE",
+        ifelse(
+          dir_degrees <= 122.5 &
+            dir_degrees >= 67.5,
+          "E",
+          ifelse(
+            dir_degrees <= 157.5 &
+              dir_degrees >= 112.5,
+            "SE",
+            ifelse(
+              dir_degrees <= 292.5 &
+                dir_degrees >= 247.5,
+              "W",
+              ifelse(
+                dir_degrees <= 247.5 &
+                  dir_degrees >= 202.5,
+                "SW",
+                ifelse(
+                  dir_degrees <= 337.5 &
+                    dir_degrees >= 292.5,
+                  "NW",
+                  ifelse(dir_degrees <= 202.5 &
+                           dir_degrees >= 157.5, "S", "nichts")
+                )
+              )
+            )
+          )
+        )
+      )
+    ))
+}
+
+
