@@ -1,5 +1,5 @@
 # commented code and other things should be added soon?
-# this function is dependent on geosphere, tidyverse, and sf
+# this function is dependent on geosphere, tidyverse (mostly dplyr), sp, and sf
 distdir_from_point <- function (layer, center) {
   if (missing(center)) {
     wgs84 <-
@@ -28,7 +28,7 @@ distdir_from_point <- function (layer, center) {
       mutate(
         dist_unit = st_distance(wgs84, cbd),
         dist_double = as.double(st_distance(wgs84, cbd)),
-        direction = (bearing(as_Spatial(cbd), as_Spatial(wgs84)) + 360) %% 360
+        dir_degrees = (bearing(as_Spatial(cbd), as_Spatial(wgs84)) + 360) %% 360
       )
   } else {
     wgs84 <-
@@ -56,40 +56,40 @@ distdir_from_point <- function (layer, center) {
       mutate(
         dist_unit = st_distance(wgs84, cbd),
         dist_double = as.double(st_distance(wgs84, cbd)),
-        direction = (bearing(as_Spatial(cbd), as_Spatial(wgs84)) + 360) %% 360
+        dir_degrees = (bearing(as_Spatial(cbd), as_Spatial(wgs84)) + 360) %% 360
       )
   }
   result <- int %>%
     mutate(card_ord = ifelse(
-      direction <= 22.5 |
-        direction >= 337.5,
+      dir_degrees <= 22.5 |
+        dir_degrees >= 337.5,
       "N",
       ifelse(
-        direction <= 67.5 &
-          direction >= 22.5,
+        dir_degrees <= 67.5 &
+          dir_degrees >= 22.5,
         "NE",
         ifelse(
-          direction <= 122.5 &
-            direction >= 67.5,
+          dir_degrees <= 122.5 &
+            dir_degrees >= 67.5,
           "E",
           ifelse(
-            direction <= 157.5 &
-              direction >= 112.5,
+            dir_degrees <= 157.5 &
+              dir_degrees >= 112.5,
             "SE",
             ifelse(
-              direction <= 292.5 &
-                direction >= 247.5,
+              dir_degrees <= 292.5 &
+                dir_degrees >= 247.5,
               "W",
               ifelse(
-                direction <= 247.5 &
-                  direction >= 202.5,
+                dir_degrees <= 247.5 &
+                  dir_degrees >= 202.5,
                 "SW",
                 ifelse(
-                  direction <= 337.5 &
-                    direction >= 292.5,
+                  dir_degrees <= 337.5 &
+                    dir_degrees >= 292.5,
                   "NW",
-                  ifelse(direction <= 202.5 &
-                           direction >= 157.5, "S", "nichts")
+                  ifelse(dir_degrees <= 202.5 &
+                           dir_degrees >= 157.5, "S", "nichts")
                 )
               )
             )
