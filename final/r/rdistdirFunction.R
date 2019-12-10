@@ -4,12 +4,14 @@ distdir_from_point <- function (layer, center) {
   if (missing(center)) {
     wgs84 <-
       layer %>%
+      as("sf") %>%
       st_transform(3395) %>%
       st_geometry %>%
       st_centroid %>%
       st_transform(4326)
     cbd <-
       layer %>%
+      as("sf") %>%
       st_transform(3395) %>%
       st_geometry %>%
       st_centroid %>%
@@ -22,6 +24,7 @@ distdir_from_point <- function (layer, center) {
       st_transform(4326)
     int <-
       layer %>%
+      as("sf") %>%
       mutate(
         dist_unit = st_distance(wgs84, cbd),
         dist_double = as.double(st_distance(wgs84, cbd)),
@@ -30,12 +33,14 @@ distdir_from_point <- function (layer, center) {
   } else {
     wgs84 <-
       layer %>%
+      as("sf") %>%
       st_transform(3395) %>%
       st_geometry %>%
       st_centroid %>%
       st_transform(4326)
     cbd <-
       center %>%
+      as("sf") %>%
       st_transform(3395) %>%
       st_geometry %>%
       st_centroid %>%
@@ -47,6 +52,7 @@ distdir_from_point <- function (layer, center) {
       st_centroid %>%
       st_transform(4326)
     int <- layer %>%
+      as("sf") %>%
       mutate(
         dist_unit = st_distance(wgs84, cbd),
         dist_double = as.double(st_distance(wgs84, cbd)),
