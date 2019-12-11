@@ -44,7 +44,7 @@ dorianWords %>%
        title = "Count of unique words")
 ```
 ![dorian words](images/dorianWords.png)
-Excluding https, which should be added to the list of stop words, hurricane and dorian unsurpsingly appear the most in tweets. Alabama, the focus of SharpieGate, lags behind these two, though was still used more than what brought about its increased use. Word pairs were then made and graphed using ggraph. 
+Excluding https, which should be added to the list of stop words, hurricane and dorian unsurpsingly appear the most in tweets. Alabama, the focus of SharpieGate, lags behind these two, though was still used more than what brought about its increased use. Word pairs were then made and [graphed](images/dorianCloud.png) using ggraph. 
 ```r
 #### creating word pairs ####
 dorianWordPairs <- dorian %>% select(text) %>%
