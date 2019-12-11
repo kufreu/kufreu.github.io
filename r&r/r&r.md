@@ -5,7 +5,7 @@ As a class we drafted SQL code to analyze resiliency by Traditional Authority fo
 
 ![map](images/malcomb.png)
 
-Simply put, I was unable to produce the same results as was done in Malcomb et al's work and the litte information I have written here continues this cycle of irreproducibility. For this I apologize. 
+Simply put, I was unable to produce the same results as was done in Malcomb et al's work and the litte information I have written here continues this cycle of irreproducibility, or rather has created another dead-end. For this I apologize. 
 
 ### source
 Malcomb, D. W., Weaver, E. A., & Krakowka, A. R. (2014). Vulnerability modeling for sub-Saharan Africa: An operationalized approach in Malawi. Applied Geography, 48, 17–30. [https://doi.org/10.1016/j.apgeog.2014.01.004](https://doi.org/10.1016/j.apgeog.2014.01.004)
