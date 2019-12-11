@@ -90,14 +90,12 @@ With the the data frames uploaded to the database, more preparation was done in 
 ![heatmap](images/heatmap.png)
 
 ![ndti](images/tweets.png)
-*Both maps are also incorrectly titled!*
+*Both maps are incorrectly titled!*
 
 ### spatial statistics with geoda 
-After the heatmap and NTDI map made in QGIS and the data prepared with PostGIS, GeoDa was then used to conduct spatial statistics. I connected to my database through GeoDa and loaded the counties table into the program. I then created a new weights matrix using geoid as a unique ID and setting the variable to the tweet rate a caluclated in PostGIS. Finally, I used GeoDa to calculate the local G* stastistic, the results of which can be seen in these two maps. 
+After the heatmap and NTDI map made in QGIS and the data prepared with PostGIS, GeoDa was then used to conduct spatial statistics. I connected to my database through GeoDa and loaded the counties table into the program. I then created a new weights matrix using geoid as a unique ID and setting the variable to the tweet rate a caluclated in PostGIS. Finally, I used GeoDa to calculate the local G* stastistic, the results of which can be seen in these [two](images/countiesGetisOrdMapFrame.png) [maps](images/countiesSigGetisOrdMapFrame.png). 
 ![geoda](images/countiesGetisOrdMapFrame.png)
 ![geoda2](images/countiesSigGetisOrdMapFrame.png)
-
+Predictably, these maps show that the amount tweets made along the East Coast is statistically significant.
 ### interpretation 
-Despite the President's claims that course of Hurricane Dorian was set towards Alabama, it seems as though most Twitter activity was focused along the true path of the storm. This can be seen in the high NTDI of counties along the East Coast 
-
-
+Despite the President's claims that the course of Hurricane Dorian was set towards Alabama, the maps have made it apparent that most Twitter activity was focused along the true path of the storm. Although Trump was unable to greatly influence the location of tweets, he was, however, able impact the content of tweets. This can be seen in the count of unique words where Trump, his Twitter handle, Alabama, and SharpieGate were the most used words after Hurricane Dorian. 
