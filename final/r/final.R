@@ -163,7 +163,7 @@ ggplot() +
   labs(title = "distance test",
        subtitle = "distTest()") +
   theme(
-    plot.title = element_text(hjust = 0.5),
+    plot.title = element_text(hjust = 0),
     axis.title.x = element_blank(),
     axis.title.y = element_blank()
   )
@@ -586,7 +586,7 @@ test <- distdir_from_point(tractsMI)
 ggplot() +
   geom_sf(data = test, aes(fill = card_ord), color = "grey") +
   scale_fill_brewer(palette = "YlGnBu") +
-  guides(fill = guide_legend(title = "direction in degrees")) +
+  guides(fill = guide_legend(title = "direction")) +
   labs(title = "direction test",
        subtitle = "distdir_from_point()") +
   theme(
@@ -1103,8 +1103,115 @@ test <- distdir_from_point(spatialMI, delta) %>%
   geom_sf(aes(fill = card_ord), color = NA) +
   scale_fill_viridis(discrete = TRUE)
 
-#### final function ####
-distdir_from_point <- function (layer, center) {
+#### can I add prefixes to the new columns? ####
+prefix <- distdir_from_point(tractsMI, berrien) %>%
+  # paste concatenates and rename does what it does
+  # testing to see if I can concatenate while also renaming columns 
+      rename(paste("test", "dist_unit", sep = "_") = dist_unit) %>%
+      rename(paste("test", "dist_double", sep = "_")= dist_double) %>%
+      rename(paste("test", "dir_degrees", sep = "_") = dir_degrees)
+
+# this doesn't seem to work 
+
+#https://github.com/tidyverse/dplyr/issues/1600
+#https://adv-r.hadley.nz/quasiquotation.html
+
+prefix <- distdir_from_point(tractsMI, berrien) %>%
+  rename(!! paste("test", "dist_unit", sep = "_") := dist_unit) %>%
+  rename(!! paste("test", "dist_double", sep = "_"):= dist_double) %>%
+  rename(!! paste("test", "dir_degrees", sep = "_") := dir_degrees)
+
+# this works, I'll try to add it to a section of the function
+prefixtest <- function (layer, center, prefix = "cbd") {
+  # adding new argument for prefix, replacing test 
+    wgs84 <-
+      layer %>%
+      as("sf") %>%
+      st_transform(3395) %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_transform(4326)
+    cbd <-
+      layer %>%
+      as("sf") %>%
+      st_transform(3395) %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_sf %>%
+      mutate(nichts = "nichts") %>%
+      group_by(nichts) %>%
+      summarize %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_transform(4326)
+    int <-
+      layer %>%
+      as("sf") %>%
+      mutate(
+        dist_unit = st_distance(wgs84, cbd),
+        dist_double = as.double(st_distance(wgs84, cbd)),
+        dir_degrees = (bearing(as_Spatial(cbd), as_Spatial(wgs84)) + 360) %% 360
+      )
+    int %>%
+      rename(!! paste(prefix, "dist_unit", sep = "_") := dist_unit) %>%
+      rename(!! paste(prefix, "dist_double", sep = "_"):= dist_double) %>%
+      rename(!! paste(prefix, "dir_degrees", sep = "_") := dir_degrees)
+      
+}
+#### testing prefix ###
+View(prefix <- prefixtest(tractsMI))
+View(prefix <- prefixtest(tractsMI , prefix = "TEST"))
+
+# this works, though is there a way to make the seperator conditional?
+# if the prefix = "", don't do anything 
+prefixtest <- function (layer, center, prefix = "") {
+  wgs84 <-
+    layer %>%
+    as("sf") %>%
+    st_transform(3395) %>%
+    st_geometry %>%
+    st_centroid %>%
+    st_transform(4326)
+  cbd <-
+    layer %>%
+    as("sf") %>%
+    st_transform(3395) %>%
+    st_geometry %>%
+    st_centroid %>%
+    st_sf %>%
+    mutate(nichts = "nichts") %>%
+    group_by(nichts) %>%
+    summarize %>%
+    st_geometry %>%
+    st_centroid %>%
+    st_transform(4326)
+  int <-
+    layer %>%
+    as("sf") %>%
+    mutate(
+      dist_unit = st_distance(wgs84, cbd),
+      dist_double = as.double(st_distance(wgs84, cbd)),
+      dir_degrees = (bearing(as_Spatial(cbd), as_Spatial(wgs84)) + 360) %% 360
+    )
+  
+    if(prefix == ""){
+      int %>%
+      rename(!! paste(prefix, "dist_unit", sep = ""):= dist_unit) %>%
+      rename(!! paste(prefix, "dist_double", sep = ""):= dist_double) %>%
+      rename(!! paste(prefix, "dir_degrees", sep = ""):= dir_degrees)
+    } else {
+      int %>%
+      rename(!! paste(prefix, "dist_unit", sep = "_"):= dist_unit) %>%
+      rename(!! paste(prefix, "dist_double", sep = "_"):= dist_double) %>%
+      rename(!! paste(prefix, "dir_degrees", sep = "_"):= dir_degrees)
+    }
+}
+View(prefix <- prefixtest(tractsMI))
+
+# it works!
+
+#### adding prefixes to main function ####
+distdir_from_point <- function (layer, center, prefix = "") {
   if (missing(center)) {
     wgs84 <-
       layer %>%
@@ -1201,6 +1308,260 @@ distdir_from_point <- function (layer, center) {
         )
       )
     ))
+  if(prefix == ""){
+    result %>%
+      rename(!! paste(prefix, "dist_unit", sep = ""):= dist_unit) %>%
+      rename(!! paste(prefix, "dist_double", sep = ""):= dist_double) %>%
+      rename(!! paste(prefix, "dir_degrees", sep = ""):= dir_degrees) %>%
+      #adding car_ord 
+      rename(!! paste(prefix, "card_ord", sep = ""):= card_ord)
+  } else {
+    result %>%
+      rename(!! paste(prefix, "dist_unit", sep = "_"):= dist_unit) %>%
+      rename(!! paste(prefix, "dist_double", sep = "_"):= dist_double) %>%
+      rename(!! paste(prefix, "dir_degrees", sep = "_"):= dir_degrees) %>%
+      rename(!! paste(prefix, "card_ord", sep = "_"):= card_ord)
+  }
 }
 
 
+#### prefix testing ####
+
+distdir_from_point(layer = tractsMI, center = alger, prefix = "cbd" )%>%
+  mutate("Distance in Kilometers" = cbd_dist_double / 1000) %>%
+  ggplot() +
+  geom_sf(aes(fill = `Distance in Kilometers`),
+          color = NA) +
+  scale_fill_continuous(type = "viridis") +
+  labs(title = "Distance Test with Final? Function",
+       subtitle = "distdir_from_point(spatialMI, alger, prefix = 'cbd')")
+  
+View(distdir_from_point(layer = tractsMI, center = alger, prefix = "cbd" ))
+View(distdir_from_point(layer = tractsMI, center = alger))
+# minor adjustments 
+distdir_from_point <- function (layer, center, prefix = "") {
+  if (missing(center)) {
+    wgs84 <-
+      layer %>%
+      as("sf") %>%
+      st_transform(3395) %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_transform(4326)
+    cbd <-
+      layer %>%
+      as("sf") %>%
+      st_transform(3395) %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_sf %>%
+      mutate(nichts = "nichts") %>%
+      group_by(nichts) %>%
+      summarize %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_transform(4326)
+    int <-
+      layer %>%
+      as("sf") %>%
+      mutate(
+        dist_unit = st_distance(wgs84, cbd),
+        dist_double = as.double(st_distance(wgs84, cbd)),
+        dir_degrees = (bearing(as_Spatial(cbd), as_Spatial(wgs84)) + 360) %% 360
+      )
+  } else {
+    wgs84 <-
+      layer %>%
+      as("sf") %>%
+      st_transform(3395) %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_transform(4326)
+    cbd <-
+      center %>%
+      as("sf") %>%
+      st_transform(3395) %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_sf %>%
+      mutate(nichts = "nichts") %>%
+      group_by(nichts) %>%
+      summarize %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_transform(4326)
+    int <- layer %>%
+      as("sf") %>%
+      mutate(
+        dist_unit = st_distance(wgs84, cbd),
+        dist_double = as.double(st_distance(wgs84, cbd)),
+        dir_degrees = (bearing(as_Spatial(cbd), as_Spatial(wgs84)) + 360) %% 360
+      )
+  }
+  result <- int %>%
+    mutate(card_ord = ifelse(
+      dir_degrees <= 22.5 |
+        dir_degrees >= 337.5,
+      "N",
+      ifelse(
+        dir_degrees <= 67.5 &
+          dir_degrees >= 22.5,
+        "NE",
+        ifelse(
+          dir_degrees <= 122.5 &
+            dir_degrees >= 67.5,
+          "E",
+          ifelse(
+            dir_degrees <= 157.5 &
+              dir_degrees >= 112.5,
+            "SE",
+            ifelse(
+              dir_degrees <= 292.5 &
+                dir_degrees >= 247.5,
+              "W",
+              ifelse(
+                dir_degrees <= 247.5 &
+                  dir_degrees >= 202.5,
+                "SW",
+                ifelse(
+                  dir_degrees <= 337.5 &
+                    dir_degrees >= 292.5,
+                  "NW",
+                  ifelse(dir_degrees <= 202.5 &
+                           dir_degrees >= 157.5, "S", "nichts")
+                )
+              )
+            )
+          )
+        )
+      )
+    ))
+  if(prefix == ""){
+    result 
+    # no changes are necessary so I removed that block of code after the pipe
+  } else {
+    result %>%
+      rename(!! paste(prefix, "dist_unit", sep = "_"):= dist_unit) %>%
+      rename(!! paste(prefix, "dist_double", sep = "_"):= dist_double) %>%
+      rename(!! paste(prefix, "dir_degrees", sep = "_"):= dir_degrees) %>%
+      rename(!! paste(prefix, "card_ord", sep = "_"):= card_ord)
+  }
+}
+
+View(distdir_from_point(layer = tractsMI, center = alger, prefix = "" ))%>%
+  mutate("Distance in Kilometers" = dist_double / 1000) %>%
+  ggplot() +
+  geom_sf(aes(fill = `Distance in Kilometers`),
+          color = NA) +
+  scale_fill_continuous(type = "viridis") +
+  labs(title = "Distance Test with Final? Function",
+       subtitle = "distdir_from_point(spatialMI, alger, prefix = '')")
+
+#### final function ####
+distdir_from_point <- function (layer, center, prefix = "") {
+  if (missing(center)) {
+    wgs84 <-
+      layer %>%
+      as("sf") %>%
+      st_transform(3395) %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_transform(4326)
+    cbd <-
+      layer %>%
+      as("sf") %>%
+      st_transform(3395) %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_sf %>%
+      mutate(nichts = "nichts") %>%
+      group_by(nichts) %>%
+      summarize %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_transform(4326)
+    int <-
+      layer %>%
+      as("sf") %>%
+      mutate(
+        dist_unit = st_distance(wgs84, cbd),
+        dist_double = as.double(st_distance(wgs84, cbd)),
+        dir_degrees = (bearing(as_Spatial(cbd), as_Spatial(wgs84)) + 360) %% 360
+      )
+  } else {
+    wgs84 <-
+      layer %>%
+      as("sf") %>%
+      st_transform(3395) %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_transform(4326)
+    cbd <-
+      center %>%
+      as("sf") %>%
+      st_transform(3395) %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_sf %>%
+      mutate(nichts = "nichts") %>%
+      group_by(nichts) %>%
+      summarize %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_transform(4326)
+    int <- layer %>%
+      as("sf") %>%
+      mutate(
+        dist_unit = st_distance(wgs84, cbd),
+        dist_double = as.double(st_distance(wgs84, cbd)),
+        dir_degrees = (bearing(as_Spatial(cbd), as_Spatial(wgs84)) + 360) %% 360
+      )
+  }
+  result <- int %>%
+    mutate(card_ord = ifelse(
+      dir_degrees <= 22.5 |
+        dir_degrees >= 337.5,
+      "N",
+      ifelse(
+        dir_degrees <= 67.5 &
+          dir_degrees >= 22.5,
+        "NE",
+        ifelse(
+          dir_degrees <= 122.5 &
+            dir_degrees >= 67.5,
+          "E",
+          ifelse(
+            dir_degrees <= 157.5 &
+              dir_degrees >= 112.5,
+            "SE",
+            ifelse(
+              dir_degrees <= 292.5 &
+                dir_degrees >= 247.5,
+              "W",
+              ifelse(
+                dir_degrees <= 247.5 &
+                  dir_degrees >= 202.5,
+                "SW",
+                ifelse(
+                  dir_degrees <= 337.5 &
+                    dir_degrees >= 292.5,
+                  "NW",
+                  ifelse(dir_degrees <= 202.5 &
+                           dir_degrees >= 157.5, "S", "nichts")
+                )
+              )
+            )
+          )
+        )
+      )
+    ))
+  if(prefix == ""){
+    result 
+  } else {
+    result %>%
+      rename(!! paste(prefix, "dist_unit", sep = "_"):= dist_unit) %>%
+      rename(!! paste(prefix, "dist_double", sep = "_"):= dist_double) %>%
+      rename(!! paste(prefix, "dir_degrees", sep = "_"):= dir_degrees) %>%
+      rename(!! paste(prefix, "card_ord", sep = "_"):= card_ord)
+  }
+}
