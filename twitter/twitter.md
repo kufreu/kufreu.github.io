@@ -18,9 +18,18 @@ novemberText <- select(november,text)
 dorianWords <- unnest_tokens(dorianText, word, text)
 novemberWords <- unnest_tokens(novemberText, word, text)
 ```
+The stop words were then removed from these objects through these steps.
+```r
+data("stop_words")
+stop_words <- stop_words %>% add_row(word="t.co",lexicon = "SMART")
 
+dorianWords <- dorianWords %>%
+  anti_join(stop_words) 
 
-![dorian words](images/dorianWords.png)
+novemberWords <- novemberWords %>%
+  anti_join(stop_words)
+```
+I then graphed the count of the unique words used in the tweet having removed the useless words. 
 ```r
 dorianWords %>%
   count(word, sort = TRUE) %>%
@@ -34,6 +43,8 @@ dorianWords %>%
        y = "Unique words",
        title = "Count of unique words")
 ```
+![dorian words](images/dorianWords.png)
+
 ![dorian cloud](images/dorianCloud.png)
 ``` r
 dorianWordPairs %>%
