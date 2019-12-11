@@ -3,7 +3,7 @@
 RStudio, QGIS, and GeoDa were used in this lab to analyze tweets to see if either a glaringly doctored hurricane map (SharpieGate) or the actual path of Hurricane Dorian drove more Twitter activity during the storm. 
 
 ### textual analysis of tweets
-[This script](dorianTwitterScript.R) was written by Professor Holler and was used to search and download geographic Twitter data for Hurricane Dorian. This script resulted in two data frames: dorian, which  contains tweets about Hurricane Dorian, and november, which contains  
+[This script](code/dorianTwitterScript.R) was written by Professor Holler and was used to search and download geographic Twitter data for Hurricane Dorian. This script resulted in two data frames: dorian, which  contains tweets about Hurricane Dorian, and november, which contains  
 After the the tweets were taken from the 
 
 ![dorian words](images/dorianWords.png)
