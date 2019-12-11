@@ -1,6 +1,6 @@
 # commented code and other things should be added soon?
 # this function is dependent on geosphere, tidyverse (mostly dplyr), sp, and sf
-distdir_from_point <- function (layer, center) {
+distdir_from_point <- function (layer, center, prefix = "") {
   if (missing(center)) {
     wgs84 <-
       layer %>%
@@ -97,4 +97,13 @@ distdir_from_point <- function (layer, center) {
         )
       )
     ))
+  if(prefix == ""){
+    result 
+  } else {
+    result %>%
+      rename(!! paste(prefix, "dist_unit", sep = "_"):= dist_unit) %>%
+      rename(!! paste(prefix, "dist_double", sep = "_"):= dist_double) %>%
+      rename(!! paste(prefix, "dir_degrees", sep = "_"):= dir_degrees) %>%
+      rename(!! paste(prefix, "card_ord", sep = "_"):= card_ord)
+  }
 }
