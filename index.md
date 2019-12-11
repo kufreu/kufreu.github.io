@@ -10,7 +10,7 @@
 
 [reproducibility & replicability](r&r/r&r.md)
 
-[big data](R/twitter.md)
+[big data](twitter/twitter.md)
 
 [final project](final/final.md)
 
