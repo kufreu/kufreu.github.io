@@ -1,10 +1,24 @@
 # analysis of tweets during hurricane dorian using r and postgis 
 ### about
-RStudio, QGIS, and GeoDa were used in this lab to analyze tweets to see if either a glaringly doctored hurricane map (SharpieGate) or the actual path of Hurricane Dorian drove more Twitter activity during the storm. 
+RStudio, QGIS, and GeoDa were used in this lab to analyze tweets to see if either a glaringly doctored hurricane map (SharpieGate) or the actual path of Hurricane Dorian drove more Twitter activity. 
 
 ### textual analysis of tweets
-[This script](code/dorianTwitterScript.R) was written by Professor Holler and was used to search and download geographic Twitter data for Hurricane Dorian. This script resulted in two data frames: dorian, which  contains tweets about Hurricane Dorian, and november, which contains  
-After the the tweets were taken from the 
+[This script](code/dorianTwitterScript.R) was written by Professor Holler and was used to search and download the geographic Twitter data used in this lab using R. This script resulted in two data frames: dorian, which contains tweets about Hurricane Dorian, and november, which contains tweets with no text filter that were made in the same geographic region as the tweets. The dates when the tweets were searched can be found on the script. The status IDs for these tweets can be found [here](data/november.csv) and [here](data/dorian.csv).
+
+After this was done, further preperations were made to analyze the tweets. 
+It was first necessary to install these packages and load them into RStudio.
+```r
+install.packages(c("rtweet","dplyr","tidytext","tm","tidyr","ggraph", "ggplot2"))
+```
+The text of each  tweets was first selected from the data frames and then words from the text.
+```r
+dorianText <- select(dorian,text)
+novemberText <- select(november,text)
+
+dorianWords <- unnest_tokens(dorianText, word, text)
+novemberWords <- unnest_tokens(novemberText, word, text)
+```
+
 
 ![dorian words](images/dorianWords.png)
 ```r
