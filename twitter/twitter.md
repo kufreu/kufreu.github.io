@@ -84,10 +84,14 @@ After using R and RStudio to conduct a texual analysis of the tweets, the tweets
 ```r
 Counties <- get_estimates("county",product="population",output="wide",geometry=TRUE,keep_geo_vars=TRUE, key="woot")
 ```
+With the the data frames uploaded to the database, even more preparation was done in order to make a kernel density map based on tweets per county and a map which shows the normalized tweet difference index of each county. 
+
 
 ![heatmap](images/heatmap.png)
 
-![ndti](images/tweets.png)
+![ntdi](images/tweets.png)
+*Both maps are incorrectly titled!*
+
 
 
 ### spatial statistics with geoda 
