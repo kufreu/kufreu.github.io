@@ -85,7 +85,7 @@ After using R and RStudio to conduct a textual analysis of the tweets, the tweet
 ```r
 Counties <- get_estimates("county",product="population",output="wide",geometry=TRUE,keep_geo_vars=TRUE, key="woot")
 ```
-With the the data frames uploaded to the database, more preparation was done in order to make a kernel density map based on tweets per county and a map which shows the normalized tweet difference index of each county. The SQL used to prepare the data can be found [here](code/tweets.sql). In essence, PostGIS was used to spatially join the tweets to the counties and to calculate the number of tweets per 10,000 people and the normalized tweet difference by county. The formula for the NDTI was (tweets about Dorian - baseline tweets)/(tweets about Dorian + baseline tweets). The November tweets were used a baseline.
+With the the data frames uploaded to the database, more preparation was done in order to make a kernel density map of tweets and a map which shows the normalized tweet difference index of each county in QGIS. The SQL used to prepare the data can be found [here](code/tweets.sql). In essence, PostGIS was used to spatially join the tweets to the counties and to calculate the number of tweets per 10,000 people and the normalized tweet difference by county. The formula for the NDTI was (tweets about Dorian - baseline tweets)/(tweets about Dorian + baseline tweets). The November tweets were used a baseline.
 
 ![heatmap](images/heatmap.png)
 
