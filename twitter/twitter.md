@@ -3,7 +3,7 @@
 RStudio, PostGIS, QGIS, and GeoDa were used in this lab to analyze tweets to see if either a glaringly doctored hurricane map (SharpieGate) or the actual path of Hurricane Dorian drove more Twitter activity. 
 
 ### textual analysis of tweets
-[This script](code/dorianTwitterScript.R) was written by Professor Holler and was used to search and download the geographic Twitter data used in this lab using R. This script resulted in two data frames: dorian, which contains tweets about Hurricane Dorian, and november, which contains tweets with no text filter that were made in the same geographic region as the tweets. The dates when the tweets were searched can be found on the script. The status IDs for these tweets can be found [here](data/november.csv) and [here](data/dorian.csv).
+[This script](code/dorianTwitterScript.R) was written by Professor Joseph Holler and was used to search and download the geographic Twitter data used in this lab using R. This script resulted in two data frames: dorian, which contains tweets about Hurricane Dorian, and november, which contains tweets with no text filter that were made in the same geographic region as the tweets. The dates when the tweets were searched can be found on the script. The status IDs for these tweets can be found [here](data/november.csv) and [here](data/dorian.csv).
 
 After this was done, further preperations were made to analyze the tweets. 
 It was first necessary to install these packages and load them into RStudio.
@@ -85,7 +85,7 @@ After using R and RStudio to conduct a textual analysis of the tweets, the tweet
 ```r
 Counties <- get_estimates("county",product="population",output="wide",geometry=TRUE,keep_geo_vars=TRUE, key="woot")
 ```
-With the the data frames uploaded to the database, more preparation was done in order to make a kernel density map of tweets and a map which shows the normalized tweet difference index of each county in QGIS. The SQL used to prepare the data can be found [here](code/tweets.sql). In essence, PostGIS was used to spatially join the tweets to the counties and to calculate the number of tweets per 10,000 people and the normalized tweet difference by county. The formula for the NDTI was (tweets about Dorian - baseline tweets)/(tweets about Dorian + baseline tweets). The November tweets were used a baseline.
+With the the data frames uploaded to the database, more preparation was done in order to make a [kernel density map](images/heatmap.png) of tweets and a [map which shows the normalized tweet difference index of each county](images/tweets.png) in QGIS. The SQL used to prepare the data can be found [here](code/tweets.sql). In essence, PostGIS was used to spatially join the tweets to the counties and to calculate the number of tweets per 10,000 people and the normalized tweet difference by county. The formula for the NDTI was (tweets about Dorian - baseline tweets)/(tweets about Dorian + baseline tweets). The November tweets were used a baseline.
 
 ![heatmap](images/heatmap.png)
 
