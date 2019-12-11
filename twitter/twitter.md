@@ -29,7 +29,7 @@ dorianWords <- dorianWords %>%
 novemberWords <- novemberWords %>%
   anti_join(stop_words)
 ```
-I then graphed the count of the unique words used in the tweet having removed the useless words. 
+I then graphed the count of the unique words used in the tweets using ggplot2 having removed the useless words. 
 ```r
 dorianWords %>%
   count(word, sort = TRUE) %>%
@@ -44,9 +44,24 @@ dorianWords %>%
        title = "Count of unique words")
 ```
 ![dorian words](images/dorianWords.png)
+Excluding https, which should be added to the list of stop words, hurricane and dorian unsurpsingly appear the most in tweets. Alabama, the focus of SharpieGate, lags behind these two, though was still used more than what brought about its increased use. Word pairs were then made and graphed using ggraph. 
+```r
+#### creating word pairs ####
+dorianWordPairs <- dorian %>% select(text) %>%
+  mutate(text = removeWords(text, stop_words$word)) %>%
+  unnest_tokens(paired_words, text, token = "ngrams", n = 2)
 
-![dorian cloud](images/dorianCloud.png)
-``` r
+novemberWordPairs <- november %>% select(text) %>%
+  mutate(text = removeWords(text, stop_words$word)) %>%
+  unnest_tokens(paired_words, text, token = "ngrams", n = 2)
+
+dorianWordPairs <- separate(dorianWordPairs, paired_words, c("word1", "word2"),sep=" ")
+dorianWordPairs <- dorianWordPairs %>% count(word1, word2, sort=TRUE)
+
+novemberWordPairs <- separate(novemberWordPairs, paired_words, c("word1", "word2"),sep=" ")
+novemberWordPairs <- novemberWordPairs %>% count(word1, word2, sort=TRUE)
+
+#### graphing word cloud with space indicating association ####
 dorianWordPairs %>%
   filter(n >= 30) %>%
   graph_from_data_frame() %>%
@@ -56,15 +71,24 @@ dorianWordPairs %>%
   geom_node_point(color = "darkslategray4", size = 3) +
   geom_node_text(aes(label = name), vjust = 1.8, size = 3) +
   labs(title = "Dorian Tweets",
-       subtitle = "August 2019 - Text mining twitter data ",
+       subtitle = "September 2019 - Text mining twitter data ",
        x = "", y = "") +
   theme_void()
 ```
+![dorian cloud](images/dorianCloud.png)
+
+The complete script for this analysis can be found [here](code/textual.R).
 
 ### uploading data to postgis database and continuing analysis 
-After using R and RStudio to conduct texual analysis of the tweets TidyCensus was used to get 
+After using R and RStudio to conduct a texual analysis of the tweets, the tweets and downloaded counties with census estimates were uploaded to my PostGIS database using [this script](code/postgis.R). The counties were obtained from the Census using a function from TidyCensus.
+```r
+Counties <- get_estimates("county",product="population",output="wide",geometry=TRUE,keep_geo_vars=TRUE, key="woot")
+```
+
 ![heatmap](images/heatmap.png)
+
 ![ndti](images/tweets.png)
+
 
 ### spatial statistics with geoda 
 After all this was done, I opened GeoDa, connected to my database and loaded the counties table into the program. 
