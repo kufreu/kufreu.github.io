@@ -3,7 +3,7 @@ In this lab we attempted to reproduce the work done by Malcomb, Weaver, and Krak
 
 As a class we drafted SQL code to analyze resiliency by Traditional Authority following the methods described by Malcomb and were only able to replicate 80% of Malcomb et al's analysis. The SQL code can be found [here](code&models/vulnerability.sql). QGIS with the GRASS plugin was used in this analysis.
 
-[map](images/malcomb.png)
+![map](images/malcomb.png)
 
 Simply put, I was unable to reproduce the same results as was done in Malcomb et al's work and the litte information I have written here continues this cycle of irreproducibility. For this I apologize. 
 
