@@ -80,22 +80,22 @@ dorianWordPairs %>%
 The complete script for this analysis can be found [here](code/textual.R).
 
 ### uploading data to postgis database and continuing analysis 
-After using R and RStudio to conduct a texual analysis of the tweets, the tweets and downloaded counties with census estimates were uploaded to my PostGIS database using [this script](code/postgis.R). The counties were obtained from the Census using a function from TidyCensus.
+After using R and RStudio to conduct a textual analysis of the tweets, the tweets and downloaded counties with census estimates were uploaded to my PostGIS database using [this script](code/postgis.R). The counties were obtained from the Census using a function from TidyCensus.
 ```r
 Counties <- get_estimates("county",product="population",output="wide",geometry=TRUE,keep_geo_vars=TRUE, key="woot")
 ```
-With the the data frames uploaded to the database, even more preparation was done in order to make a kernel density map based on tweets per county and a map which shows the normalized tweet difference index of each county. 
-
+With the the data frames uploaded to the database, more preparation was done in order to make a kernel density map based on tweets per county and a map which shows the normalized tweet difference index of each county. The SQL used to prepare the data can be found here(code/tweets.sql). In essence, PostGIS was used to spatially join the tweets to the counties and to calculate the number of tweets per 10,000 people and the normalized tweet difference by county. The formula for the NDTI was (tweets about Dorian - baseline tweets)/(tweets about Dorian + baseline tweets). The November tweets were used a baseline.
 
 ![heatmap](images/heatmap.png)
 
-![ntdi](images/tweets.png)
+![ndti](images/tweets.png)
 *Both maps are incorrectly titled!*
 
-
-
 ### spatial statistics with geoda 
-After all this was done, I opened GeoDa, connected to my database and loaded the counties table into the program. 
+After the heatmap and NTDI map made in QGIS and the data prepared with PostGIS, GeoDa was then used to conduct spatial statistics. I connected to my database through GeoDa and loaded the counties table into the program. I then created a new weights matrix using geoid as a unique ID and setting the variable to the tweet rate a caluclated in PostGIS. Finally, I used GeoDa to calculate the local G* stastistic, the results of which can be seen in these two maps. 
 ![geoda](images/countiesGetisOrdMapFrame.png)
 ![geoda2](images/countiesSigGetisOrdMapFrame.png)
+
+### interpretation 
+
 
