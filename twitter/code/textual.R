@@ -12,8 +12,6 @@ library(ggraph)
 library(ggplot2)
 
 
-count(dorian, place_type)
-
 #### getting text from tweets ####
 dorianText <- select(dorian,text)
 novemberText <- select(november,text)
