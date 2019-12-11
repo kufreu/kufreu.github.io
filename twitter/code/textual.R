@@ -87,7 +87,7 @@ dorianWordPairs %>%
   geom_node_point(color = "darkslategray4", size = 3) +
   geom_node_text(aes(label = name), vjust = 1.8, size = 3) +
   labs(title = "Dorian Tweets",
-       subtitle = "August 2019 - Text mining twitter data ",
+       subtitle = "September 2019 - Text mining twitter data ",
        x = "", y = "") +
   theme_void()
 
