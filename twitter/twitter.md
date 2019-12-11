@@ -76,6 +76,7 @@ dorianWordPairs %>%
   theme_void()
 ```
 ![dorian cloud](images/dorianCloud.png)
+*This should be corrected to Septemeber 2019*
 
 The complete script for this analysis can be found [here](code/textual.R).
 
@@ -84,12 +85,12 @@ After using R and RStudio to conduct a textual analysis of the tweets, the tweet
 ```r
 Counties <- get_estimates("county",product="population",output="wide",geometry=TRUE,keep_geo_vars=TRUE, key="woot")
 ```
-With the the data frames uploaded to the database, more preparation was done in order to make a kernel density map based on tweets per county and a map which shows the normalized tweet difference index of each county. The SQL used to prepare the data can be found here(code/tweets.sql). In essence, PostGIS was used to spatially join the tweets to the counties and to calculate the number of tweets per 10,000 people and the normalized tweet difference by county. The formula for the NDTI was (tweets about Dorian - baseline tweets)/(tweets about Dorian + baseline tweets). The November tweets were used a baseline.
+With the the data frames uploaded to the database, more preparation was done in order to make a kernel density map based on tweets per county and a map which shows the normalized tweet difference index of each county. The SQL used to prepare the data can be found [here](code/tweets.sql). In essence, PostGIS was used to spatially join the tweets to the counties and to calculate the number of tweets per 10,000 people and the normalized tweet difference by county. The formula for the NDTI was (tweets about Dorian - baseline tweets)/(tweets about Dorian + baseline tweets). The November tweets were used a baseline.
 
 ![heatmap](images/heatmap.png)
 
 ![ndti](images/tweets.png)
-*Both maps are incorrectly titled!*
+*Both maps are also incorrectly titled!*
 
 ### spatial statistics with geoda 
 After the heatmap and NTDI map made in QGIS and the data prepared with PostGIS, GeoDa was then used to conduct spatial statistics. I connected to my database through GeoDa and loaded the counties table into the program. I then created a new weights matrix using geoid as a unique ID and setting the variable to the tweet rate a caluclated in PostGIS. Finally, I used GeoDa to calculate the local G* stastistic, the results of which can be seen in these two maps. 
@@ -97,5 +98,6 @@ After the heatmap and NTDI map made in QGIS and the data prepared with PostGIS, 
 ![geoda2](images/countiesSigGetisOrdMapFrame.png)
 
 ### interpretation 
+Despite the President's claims that course of Hurricane Dorian was set towards Alabama, it seems as though most Twitter activity was focused along the true path of the storm. This can be seen in the high NTDI of counties along the East Coast 
 
 
