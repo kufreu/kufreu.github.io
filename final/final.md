@@ -181,11 +181,11 @@ michigan <-
 
 ggplot(michigan) + geom_sf()
 ```
-I mapped each result to see if they dissolved and then went on to testing st_centroid.  
+I mapped each result to see if they dissolved and then went on to test st_centroid.  
 ```r
 centroidTracts <- st_centroid(tractsMI)
 ```
-There was warning when creating centroid which I largely igorned, though this will be resovled later.
+There was warning when creating centroids which I largely igorned, though this will be resovled later.
 ```r
 Warning message:
 In st_centroid.sf(tractsMI) :
