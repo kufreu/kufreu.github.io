@@ -89,7 +89,7 @@ distdir_from_point <- function (layer, center, prefix = "") {
                     dir_degrees >= 292.5,
                   "NW",
                   ifelse(dir_degrees <= 202.5 &
-                           dir_degrees >= 157.5, "S", "nichts")
+                           dir_degrees >= 157.5, "S", "nirgendwo")
                 )
               )
             )
