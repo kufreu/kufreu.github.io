@@ -159,10 +159,7 @@ chicagoCBD <- st_read(dsn = "chicago.gpkg", layer = "CBD")
 
 #### packages 
 [tidyverse](https://www.tidyverse.org/)
-
 [sf](https://r-spatial.github.io/sf/index.html)
-
 [sp](https://cran.r-project.org/web/packages/sp/index.html)
-
 [geosphere](https://cran.r-project.org/web/packages/geosphere/index.html)
 
