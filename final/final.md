@@ -1,6 +1,6 @@
 # what happens in the end?
 ### about
-For my final project, I replicated the QGIS model I created to calculate distance and direction from a given point with SQL using R and various R packages such as sf, sp, tidyverse, and geosphere. This was all done in [RStudio](https://rstudio.com/). In short, I converted the SQL used in the QGIS model into a function in R. Similar to the QGIS model, the function has three arguments/inputs: the input features, the layer from which direction is calculated, and an optional character string to prefix the new columns for distance and direction.  As with the original model, the intended application of this function is to calculate the distance and direction of features within a city from the city center or central business district, though as can be seen with my focus on caluclating distance and direction between tracts and counties in Michigan, the applications for the model are not limited to cities and CBDs. [Here](r/distdirFunction.R) is the function in its entirety. I will undoubtedly add comments to it in the next two days or so. 
+For my final project, I replicated the [QGIS model](qgis/qgismodel.md) I created to calculate distance and direction from a given point with SQL using R and various R packages such as sf, sp, tidyverse, and geosphere. This was all done in [RStudio](https://rstudio.com/). In short, I converted the SQL used in the QGIS model into a function in R. Similar to the QGIS model, the function has three arguments/inputs: the input features, the layer from which direction is calculated, and an optional character string to prefix the new columns for distance and direction.  As with the original model, the intended application of this function is to calculate the distance and direction of features within a city from the city center or central business district, though as can be seen with my focus on caluclating distance and direction between tracts and counties in Michigan, the applications for the model are not limited to cities and CBDs. [Here](r/distdirFunction.R) is the function in its entirety. I will undoubtedly add comments to it in the next two days or so. 
 ### the function
 ```r
 # commented code and other things should be added soon?
@@ -146,12 +146,52 @@ library(sf)
 library(sp)
 library(geosphere)
 ```
-Initially, I thought that I would only need tidyverse and sf, though it soon became apparent that sf was not enough for what I was hoping to do and that I would need to use other packages to anaylze spatial data, these packages being [geosphere](https://cran.r-project.org/web/packages/geosphere/index.html) and [sp](https://cran.r-project.org/web/packages/sp/index.html), the package which it is dependent on. After these packages were loaded, the data being used  for test was loaded into RStudio using a function from sf. 
+Initially, I thought that I would only need tidyverse and sf, though it soon became apparent that sf was not enough for what I was hoping to do and that I would need to use other packages to anaylze spatial data, these packages being [geosphere](https://cran.r-project.org/web/packages/geosphere/index.html) and [sp](https://cran.r-project.org/web/packages/sp/index.html), the package which it is dependent on. After these packages were loaded, the data being used for testing was loaded into RStudio using a function from sf. 
 ```r
 tractsMI <- st_read(dsn = "censusMI.gpkg", layer = "tracts")
 chicago <- st_read(dsn = "chicago.gpkg", layer = "tracts2010")
 chicagoCBD <- st_read(dsn = "chicago.gpkg", layer = "CBD")
 ```
+Rather than take on all the SQL at once, I decided to break it up into three manageable parts and begin by testing individual functions in dplyr and sf. Calculating distance was the first section to test and this was the SQL that needed to be converted in order to do that.
+``` sql
+distance(centroid(transform((geometry),4326)),transform((select geometry from input1),4326), true) as [% @Prefix %]Dist
+```
+The three functions used in the SQL  here were distance, transform, and centroid, so I needed to find and learn how to use thier equivalents in sf. The first of these I tried out was transform, or st_transform in sf. As stated on the sf website, all functions and methods in sf that  use spatial data have st_ as a prefix, which stands for spatial and temporal. I transformed tractsMI into WGS 84 to to test out st_transform. 
+```r
+View(tractsMI %>%
+       st_transform(4326))
+```
+My next line of reasoning was to dissolve the tracts and create a centroid on the dissolved shape rather than try to caluclate mean coordinates (I stay with this for a while though I change to a different method which more closely resembles the SQL). Since sf didn't have a function to dissolve, I had to look elsewhere to learn how. I found two ways to dissolve from [Phil Mike Jones](https://philmikejones.me/tutorials/2015-09-03-dissolve-polygons-in-r/) on his website and tested them out.
+```r
+tractsMI$area <- st_area(tractsMI)
+
+michigan <-
+  tractsMI %>%
+  summarize(area = sum(area))
+
+ggplot(michigan2) + geom_sf()
+
+# OR
+
+michigan <-
+  tractsMI %>%
+  mutate(state = "michigan") %>%
+  group_by(state) %>%
+  summarize()
+
+ggplot(michigan) + geom_sf()
+```
+I mapped each result to see if they dissolved and then went on to testing st_centroid.  
+```r
+centroidTracts <- st_centroid(tractsMI)
+```
+There was warning when creating centroid which I largely igorned, though this will be resovled later.
+```r
+Warning message:
+In st_centroid.sf(tractsMI) :
+  st_centroid assumes attributes are constant over geometries of x
+```
+
 ### data sources
 
 ### software 
