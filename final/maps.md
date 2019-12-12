@@ -49,7 +49,8 @@ keweenaw <- countiesMI[countiesMI$fips == "083", ]
 ```
 
 ### making the maps 
-[berrien county](images/countyBerrien.png)
+[distance of counties from berrien county](images/countyBerrien.png)
+![distance of counties from berrien county](images/countyBerrien.png)
 ```r
 distdir_from_point(center = berrien,
                    layer = countiesMI,
