@@ -1,6 +1,6 @@
 # what happens in the end?
 ### about
-For my final project, I replicated the QGIS model I created to calculate distance and direction from a given point using R and various R packages such as sf, sp, tidyverse, and geosphere. This was all done with [RStudio](https://rstudio.com/).The end result of this replication was a function with three arguments: the input features, the layer from which direction is calculated, and an optional character string to prefix the new columns for distance and direction. As with the original model, the intended application of this function is to calculate the distance and direction of features within a city from the city center or central business district, though as can be seen with my focus on caluclating distance and direction between tracts and counties in Michigan, the applications for the model are not limited to cities and CBDs. [Here](r/distdirFunction.R) is the function in its entirety. I will undoubtedly add comments to it in the next two days or so. 
+For my final project, I replicated the QGIS model I created to calculate distance and direction from a given point with SQL using R and various R packages such as sf, sp, tidyverse, and geosphere. This was all done in [RStudio](https://rstudio.com/). In short, I converted the SQL used in the QGIS model into a function in R. The end result was a function with three arguments: the input features, the layer from which direction is calculated, and an optional character string to prefix the new columns for distance and direction.  As with the original model, the intended application of this function is to calculate the distance and direction of features within a city from the city center or central business district, though as can be seen with my focus on caluclating distance and direction between tracts and counties in Michigan, the applications for the model are not limited to cities and CBDs. [Here](r/distdirFunction.R) is the function in its entirety. I will undoubtedly add comments to it in the next two days or so. 
 ### the function
 ```r
 # commented code and other things should be added soon?
@@ -113,21 +113,8 @@ distdir_from_point <- function (layer, center, prefix = "") {
   }
 }
 ```
-### creating the function
-The first step of making this function was to identify the packages I would need to use for this project, installing and loading them in RStudio when they were found. [Tidyverse](https://www.tidyverse.org/) was used because of the relative ease dplyr provides in manipulating data frames and ggplot2 to map results. I could have installed only these two packages from tidyverse, though I thought it would be best to play it safe as  the other packages which make up the tidyverse could also be of use. Along with tidyverse, [sf](https://r-spatial.github.io/sf/index.html) makes up the backbone of this function. Package sf provides simple features as data frames with a geometry list-column, which is a format I was familiar with coming from using tables in QGIS and PostGIS. It also has many of the geometry and geoemtric operations I need to make the function.     
-```r
-#### installation ####
-install.packages("tidyverse","sf", "sp", "geosphere")
-
-#### loading packages ####
-library(tidyverse)
-library(sf)
-library(sp)
-library(geosphere)
-```
-Initially, I thought that I would only need tidyverse and sf, though it soon became apparent that sf was not enough for all spatial calculations. Why this was will be explained further. 
-
-```sql
+### sql that function was based on
+``````sql
 select distDir.*,
 case
 when [% @Prefix %]Dir<=22.5 or [% @Prefix %]Dir>=337.5 then 'N'
@@ -144,4 +131,32 @@ from (select *,
       degrees(azimuth(transform((select geometry from input1),3395), centroid(transform((geometry),3395)))) as [% @Prefix %]Dir
       from input2) as distDir
 ```
+![what of it](finalDistanceTest.png)
+### creating the function
+The first step of making this function was to identify the packages I would need to use for this project, installing and loading them in RStudio when they were found. [Tidyverse](https://www.tidyverse.org/) was used because of the relative ease dplyr provides in manipulating data frames and ggplot2 to map results. I could have installed only these two packages from tidyverse, though I thought it would be best to play it safe as  the other packages which make up the tidyverse could also be of use. Along with tidyverse, [sf](https://r-spatial.github.io/sf/index.html) makes up the backbone of this function. Package sf provides simple features as data frames with a geometry list-column, which is a format I was familiar with coming from using tables in QGIS and PostGIS. It also has many of the geometry and geoemtric operations I need to make the function.     
+```r
+#### installation ####
+install.packages("tidyverse","sf", "sp", "geosphere")
+
+#### loading packages ####
+library(tidyverse)
+library(sf)
+library(sp)
+library(geosphere)
+```
+Initially, I thought that I would only need tidyverse and sf, though it soon became apparent that sf was not enough for what I was hoping to do and that I would need to use other packages to anaylze spatial data, these packages being [geosphere](https://cran.r-project.org/web/packages/geosphere/index.html) and [sp](https://cran.r-project.org/web/packages/sp/index.html), the package which it is dependent on. After these packages were loaded, the data being used  for test was loaded into RStudio using a function from sf. 
+```r
+tractsMI <- st_read(dsn = "censusMI.gpkg", layer = "tracts")
+chicago <- st_read(dsn = "chicago.gpkg", layer = "tracts2010")
+chicagoCBD <- st_read(dsn = "chicago.gpkg", layer = "CBD")
+```
+### data sources
+
+### software 
+[RStudio](https://rstudio.com/)
+#### packages 
+[tidyverse](https://www.tidyverse.org/)
+[sf](https://r-spatial.github.io/sf/index.html)
+[sp](https://cran.r-project.org/web/packages/sp/index.html)
+[geosphere](https://cran.r-project.org/web/packages/geosphere/index.html)
 
