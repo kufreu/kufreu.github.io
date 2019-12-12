@@ -80,6 +80,20 @@ distdir_from_point(center = berrien,
        y = "Longitude",
        x = "Latitude")
 ```
+#### [census tracts northwest of washtenaw county](images/washtenaw.png)
+![census tracts northwest of washtenaw county](images/washtenaw.png)
+```r
+distdir_from_point(center = washtenaw,
+                   layer = tractsMI,
+                   prefix = "cbd") %>%
+  mutate("Distance (km)" = cbd_dist_double / 1000) %>%
+  filter(cbd_card_ord == "NW") %>%
+  ggplot() +
+  geom_sf(aes(fill = `Distance (km)`),
+          color = NA) +
+  scale_fill_viridis() +
+  labs(title = "Census Tracts Northwest of Washtenaw County")
+  ```
 #### [distance of tracts  from the central business district of chicago](images/chicagoDist.png)
 ![distance of tracts  from the central business district of chicago](images/chicagoDist.png)
 
