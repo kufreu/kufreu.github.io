@@ -77,8 +77,8 @@ distdir_from_point(center = berrien,
           color = NA) +
   scale_fill_viridis() +
   labs(title = "Census Tracts North of Berrien County",
-       y = "Longitude",
-       x = "Latitude")
+       x = "Longitude",
+       y = "Latitude")
 ```
 #### [census tracts northwest of washtenaw county](images/washtenaw.png)
 ![census tracts northwest of washtenaw county](images/washtenaw.png)
