@@ -114,7 +114,7 @@ distdir_from_point <- function (layer, center, prefix = "") {
 }
 ```
 ### sql that function was based on
-``````sql
+```sql
 select distDir.*,
 case
 when [% @Prefix %]Dir<=22.5 or [% @Prefix %]Dir>=337.5 then 'N'
@@ -131,7 +131,8 @@ from (select *,
       degrees(azimuth(transform((select geometry from input1),3395), centroid(transform((geometry),3395)))) as [% @Prefix %]Dir
       from input2) as distDir
 ```
-![what of it](finalDistanceTest.png)
+![what of it](images/finalDistanceTest.png)
+
 ### creating the function
 The first step of making this function was to identify the packages I would need to use for this project, installing and loading them in RStudio when they were found. [Tidyverse](https://www.tidyverse.org/) was used because of the relative ease dplyr provides in manipulating data frames and ggplot2 to map results. I could have installed only these two packages from tidyverse, though I thought it would be best to play it safe as  the other packages which make up the tidyverse could also be of use. Along with tidyverse, [sf](https://r-spatial.github.io/sf/index.html) makes up the backbone of this function. Package sf provides simple features as data frames with a geometry list-column, which is a format I was familiar with coming from using tables in QGIS and PostGIS. It also has many of the geometry and geoemtric operations I need to make the function.     
 ```r
@@ -154,9 +155,13 @@ chicagoCBD <- st_read(dsn = "chicago.gpkg", layer = "CBD")
 
 ### software 
 [RStudio](https://rstudio.com/)
+
 #### packages 
 [tidyverse](https://www.tidyverse.org/)
+
 [sf](https://r-spatial.github.io/sf/index.html)
+
 [sp](https://cran.r-project.org/web/packages/sp/index.html)
+
 [geosphere](https://cran.r-project.org/web/packages/geosphere/index.html)
 
