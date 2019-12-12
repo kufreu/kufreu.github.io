@@ -62,3 +62,35 @@ distdir_from_point(center = berrien,
   scale_fill_viridis() +
   labs(title = "Distance from Berrien County")
   ```
+  
+  [tracts north of berrien county distance from berrien](images/northBerrien.png)
+  ![tracts north of berrien county distance from berrien](images/northBerrien.png)
+  
+ ```r
+ distdir_from_point(center = berrien,
+                   layer = tractsMI,
+                   prefix = "cbd") %>%
+  mutate("Distance (km)" = cbd_dist_double / 1000) %>%
+  filter(cbd_card_ord == "N") %>%
+  ggplot() +
+  geom_sf(aes(fill = `Distance (km)`),
+          color = NA) +
+  scale_fill_viridis() +
+  labs(title = "Census Tracts North of Berrien County",
+       y = "Longitude",
+       x = "Latitude")
+```
+[distance of tracts  from the central business district of chicago](chicagoDist.png)
+![distance of tracts  from the central business district of chicago](chicagoDist.png)
+
+```r
+distdir_from_point(center = chicagoCBD,
+                   layer = chicago,
+                   prefix = "cbd") %>%
+  mutate("Distance (km)" = cbd_dist_double / 1000) %>%
+  ggplot() +
+  geom_sf(aes(fill = `Distance (km)`),
+          color = NA) +
+  scale_fill_viridis() +
+  labs(title = "Distance of Tracts from the CBD of Chicago")
+  ```
