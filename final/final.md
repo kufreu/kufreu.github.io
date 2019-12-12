@@ -131,6 +131,7 @@ from (select *,
       degrees(azimuth(transform((select geometry from input1),3395), centroid(transform((geometry),3395)))) as [% @Prefix %]Dir
       from input2) as distDir
 ```
+### [maps](maps.md)
 ![what of it](images/finalDistanceTest.png)
 
 ### creating the function
