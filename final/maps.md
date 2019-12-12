@@ -63,8 +63,8 @@ distdir_from_point(center = berrien,
   labs(title = "Distance from Berrien County")
   ```
   
-  #### [tracts north of berrien county distance from berrien](images/northBerrien.png)
-  ![tracts north of berrien county distance from berrien](images/northBerrien.png)
+  #### [tracts north of berrien county](images/northBerrien.png)
+  ![tracts north of berrien county](images/northBerrien.png)
   
  ```r
  distdir_from_point(center = berrien,
