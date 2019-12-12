@@ -192,6 +192,8 @@ In st_centroid.sf(tractsMI) :
   st_centroid assumes attributes are constant over geometries of x
 ```
 
+*to be continued*
+
 ### data sources
 
 ### software 
