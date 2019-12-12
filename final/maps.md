@@ -1,4 +1,4 @@
-# mapped outputs of distdir_from_point
+# mapping outputs of distdir_from_point
 
 ### packages used 
 ```r
@@ -48,7 +48,7 @@ washtenaw <- countiesMI[countiesMI$fips == "161", ]
 keweenaw <- countiesMI[countiesMI$fips == "083", ]
 ```
 
-### map-making
+### maps made using ggplot2
 #### [distance of counties from berrien county](images/countyBerrien.png)
 ![distance of counties from berrien county](images/countyBerrien.png)
 ```r
