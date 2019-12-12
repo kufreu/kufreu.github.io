@@ -80,8 +80,8 @@ distdir_from_point(center = berrien,
        y = "Longitude",
        x = "Latitude")
 ```
-[distance of tracts  from the central business district of chicago](chicagoDist.png)
-![distance of tracts  from the central business district of chicago](chicagoDist.png)
+[distance of tracts  from the central business district of chicago](images/chicagoDist.png)
+![distance of tracts  from the central business district of chicago](images/chicagoDist.png)
 
 ```r
 distdir_from_point(center = chicagoCBD,
