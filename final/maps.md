@@ -49,7 +49,7 @@ keweenaw <- countiesMI[countiesMI$fips == "083", ]
 ```
 
 ### making the maps 
-[distance of counties from berrien county](images/countyBerrien.png)
+#### [distance of counties from berrien county](images/countyBerrien.png)
 ![distance of counties from berrien county](images/countyBerrien.png)
 ```r
 distdir_from_point(center = berrien,
@@ -63,7 +63,7 @@ distdir_from_point(center = berrien,
   labs(title = "Distance from Berrien County")
   ```
   
-  [tracts north of berrien county distance from berrien](images/northBerrien.png)
+  #### [tracts north of berrien county distance from berrien](images/northBerrien.png)
   ![tracts north of berrien county distance from berrien](images/northBerrien.png)
   
  ```r
@@ -80,7 +80,7 @@ distdir_from_point(center = berrien,
        y = "Longitude",
        x = "Latitude")
 ```
-[distance of tracts  from the central business district of chicago](images/chicagoDist.png)
+#### [distance of tracts  from the central business district of chicago](images/chicagoDist.png)
 ![distance of tracts  from the central business district of chicago](images/chicagoDist.png)
 
 ```r
