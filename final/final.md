@@ -472,7 +472,7 @@ distdir_from_point <- function (layer, center) {
     ))
 }
 ```
-Given the warning messages I got everytime I used the function, more needed to be done to fix the function. These were the warning messages from st_centroid which needed to be resolved .
+Given the warning messages I got every time I used the function, more needed to be done to fix the function. These were the warning messages from st_centroid which needed to be resolved .
 ```r
 Warning: st_centroid does not give correct centroids for longitude/latitude data
 Warning message:
@@ -486,8 +486,97 @@ test <- tractsMI %>%
   st_geometry %>%
   st_centroid() %>%
   st_transform(4326)
- ```
- 
+```
+I made several changes to the main function after removing these errors. Rather than make the centroids for WGS 84 within the distance function, I made wgs84 centroids instead of just a transformed layer. Int, the intermediate layer, was also changed to have the intial layer input instead of wgs84 be piped to mutate. This means that output  will have the original crs of the input layer rather than the 
+```r
+ distdir_from_point <- function (layer, center) {
+  if (missing(center)) {
+    wgs84 <-
+      layer %>%
+      st_transform(3395) %>%
+      # I removed the parentheses because I realized they weren't necessary
+      st_geometry %>%
+      st_centroid %>%
+      st_transform(4326)
+    cbd <-
+      layer %>%
+      mutate(nichts = "nichts") %>%
+      group_by(nichts) %>%
+      summarize %>%
+      st_transform(3395) %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_transform(4326)
+    int <-
+      layer %>%
+      mutate(
+        dist_unit = st_distance(wgs84, cbd),
+        dist_double = as.double(st_distance(wgs84, cbd)),
+        dir_degrees = (bearing(as_Spatial(cbd), as_Spatial(wgs84)) + 360) %% 360
+      )
+  } else {
+    wgs84 <-
+      layer %>%
+      st_transform(3395) %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_transform(4326)
+    cbd <-
+      center %>%
+      mutate(nichts = "nichts") %>%
+      group_by(nichts) %>%
+      summarize %>%
+      st_transform(3395) %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_transform(4326)
+    int <- layer %>%
+      mutate(
+        dist_unit = st_distance(wgs84, cbd),
+        dist_double = as.double(st_distance(wgs84, cbd)),
+        dir_degrees = (bearing(as_Spatial(cbd), as_Spatial(wgs84)) + 360) %% 360
+      )
+  }
+  result <- int %>%
+    mutate(card_ord = ifelse(
+      dir_degrees <= 22.5 |
+        dir_degrees >= 337.5,
+      "N",
+      ifelse(
+        dir_degrees <= 67.5 &
+          dir_degrees >= 22.5,
+        "NE",
+        ifelse(
+          dir_degrees <= 122.5 &
+            dir_degrees >= 67.5,
+          "E",
+          ifelse(
+            dir_degrees <= 157.5 &
+              dir_degrees >= 112.5,
+            "SE",
+            ifelse(
+              dir_degrees <= 292.5 &
+                dir_degrees >= 247.5,
+              "W",
+              ifelse(
+                dir_degrees <= 247.5 &
+                  dir_degrees >= 202.5,
+                "SW",
+                ifelse(
+                  dir_degrees <= 337.5 &
+                    dir_degrees >= 292.5,
+                  "NW",
+                  ifelse(dir_degrees <= 202.5 &
+                           dir_degrees >= 157.5, "S", "nichts")
+                )
+              )
+            )
+          )
+        )
+      )
+    ))
+}
+``` 
 
 *to be continued*
 
