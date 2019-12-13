@@ -217,11 +217,11 @@ center <-
   summarize() %>%
   st_centroid()
 ```
-Both `geosphere` and `sf` have functions to create centroids, though I ended up using st_centroid from `sf` because it was less of a hassle to use. `centroid` from `geosphere` first needed the object to be converted to having a spatial class and the ouput of the function were x,y coordinates which then needed to be made into a point. Having already loaded the objects into R using `sf` and them being simple features, sticking with `sf` functions appeared to be the best way to go since it requires the least amount of effort. The next step was testing out `st_distance` to calculate the distance between the centroid of Michigan and its tracts. 
+Both `geosphere` and `sf` have functions to create centroids, though I ended up using `st_centroid` from `sf` because it was less of a hassle to use. `centroid` from `geosphere` first needed the object to be converted to having a spatial class and the ouput of the function were x,y coordinates which then needed to be made into a point. Having already loaded the objects into R using `sf` and them being simple features, sticking with `sf` functions appeared to be the best way to go since it requires the least amount of effort. The next step was testing out `st_distance` to calculate the distance between the centroid of Michigan and its tracts. 
 ```r
 View(st_distance(centroidTracts, center))
 ```
-With these three functions figured out (other than warning  message for st_centroid), I set out to create a function to calculate distance from the centroid of Michigan.
+With these three functions figured out (other than warning  message for `st_centroid`), I set out to create a function to calculate distance from the centroid of Michigan.
 ```r
 distTest <- function(layer) {
   tbd <- layer %>%
@@ -287,11 +287,11 @@ result <- wgs84 %>%
         dist_double = as.double(st_distance(st_centroid(wgs84), cbd))
       )
 ```
-Minor changes were made to the result of this function to create two columns for distance, one column with distance and the unit of measurement and one column with just the value. This new function was named dist_from_point. Having been somewhat successful calculating distance with `distTest` and then `dist_from_point`, I continued to try to calculate direction and convert the next line of SQL.
+Minor changes were made to the result of this function to create two columns for distance, one column with distance and the unit of measurement and one column with just the value. This new function was named `dist_from_point`. Having been somewhat successful calculating distance with `distTest` and then `dist_from_point`, I continued to try to calculate direction and convert the next line of SQL.
 ```sql
 degrees(azimuth(transform((select geometry from input1),3395), centroid(transform((geometry),3395)))) as [% @Prefix %]Dir
 ```
-Because I wanted to try to stick with sf functions for as long as possible, I thought I should try to use st_geod_azimuth from the `sf` package. Unfortunately, I was unable to find a way to supply more than one argument to it. This is where `geosphere` and `sp` come into play. The bearing function from geosphere was chosen to caluclate distance. 
+Because I wanted to try to stick with `sf` functions for as long as possible, I thought I should try to use `st_geod_azimuth` from the `lwgeom` package, a companion of `sf` that uses simple features in operations. Unfortunately, I was unable to find a way to supply more than one argument to it. This is where `geosphere` and `sp` come into play. The bearing function from geosphere was chosen to caluclate distance. 
 ```r
 View((bearing(
   as_Spatial(st_transform(centroidTracts, 4326)), as_Spatial(st_transform(center, 4326))
@@ -338,7 +338,7 @@ distdir_from_point <- function (layer, center) {
   }
 }
 ```
-I next had to assign cardinal and ordinal directions to the dir_degree result and convert this block of SQL. 
+I next had to assign cardinal and ordinal directions to the `dir_degree` and convert this block of SQL. 
 ```r
 case
 when [% @Prefix %]Dir<=22.5 or [% @Prefix %]Dir>=337.5 then 'N'
@@ -472,7 +472,7 @@ distdir_from_point <- function (layer, center) {
     ))
 }
 ```
-Given the warning messages I got every time I used the function, more was needed to be done to fix the function. These were the warning messages from `st_centroid` which needed to be resolved .
+Given the warning messages I got every time I used the function, more was needed to be done to fix it. These were the warning messages from `st_centroid` which needed to be resolved .
 ```r
 Warning: st_centroid does not give correct centroids for longitude/latitude data
 Warning message:
@@ -487,7 +487,7 @@ test <- tractsMI %>%
   st_centroid() %>%
   st_transform(4326)
 ```
-I made several changes to the main function after removing these errors. Rather than make the centroids for WGS 84 within the distance function, I made the wgs84 object into centroids instead of just a transformed layer. Int, the intermediate layer, was also changed to have the intial layer input instead of wgs84 be piped to mutate. This means that output will have the original CRS of the input layer rather than EPSG:4326, though distance and direction will still be calculated with 4326.  
+I made several changes to the main function after removing these errors. Rather than make the centroids for WGS 84 within the distance function, I made `wgs84` into centroids instead of just a transformed layer. `int`, the intermediate layer, was also changed to have the intial layer input instead of `wgs84` be piped to mutate. This means that output will have the original CRS of the input layer rather than EPSG:4326, though distance and direction will still be calculated with 4326.  
 ```r
  distdir_from_point <- function (layer, center) {
   if (missing(center)) {
