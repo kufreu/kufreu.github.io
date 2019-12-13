@@ -292,7 +292,7 @@ Minor changes were made to the result of this function to create two columns for
 ```sql
 degrees(azimuth(transform((select geometry from input1),3395), centroid(transform((geometry),3395)))) as [% @Prefix %]Dir
 ```
-Because I wanted to try to stick with `sf` functions for as long as possible, I thought I should try to use `st_geod_azimuth` from the `lwgeom` package, a companion of `sf` that uses simple features in operations. Unfortunately, I was unable to find a way to supply more than one argument to it. This is where `geosphere` and `sp` come into play. The bearing function from geosphere was chosen to caluclate distance. 
+Because I wanted to try to stick with `sf` functions for as long as possible, I thought I should try to use `st_geod_azimuth` from the `lwgeom` package, a companion of `sf` that uses simple features in operations. Unfortunately, I was unable to find a way to supply more than one argument to it. This is where `geosphere` and `sp` come into play. The `bearing` function from `geosphere` was chosen to calculate direction. 
 ```r
 View((bearing(
   as_Spatial(st_transform(centroidTracts, 4326)), as_Spatial(st_transform(center, 4326))
