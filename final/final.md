@@ -338,7 +338,7 @@ distdir_from_point <- function (layer, center) {
   }
 }
 ```
-My next step was to assign cardinal and ordinal directions to the dir_degree result and convert this block of SQL. 
+I next had to assign cardinal and ordinal directions to the dir_degree result and convert this block of SQL. 
 ```r
 case
 when [% @Prefix %]Dir<=22.5 or [% @Prefix %]Dir>=337.5 then 'N'
