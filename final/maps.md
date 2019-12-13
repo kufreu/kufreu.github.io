@@ -55,8 +55,8 @@ keweenaw <- countiesMI[countiesMI$fips == "083", ]
 ```r
 distdir_from_point(center = berrien,
                    layer = countiesMI,
-                   prefix = "cbd") %>%
-  mutate("Distance (km)" = cbd_dist_double / 1000) %>%
+                   prefix = "ber") %>%
+  mutate("Distance (km)" = ber_dist_double / 1000) %>%
   ggplot() +
   geom_sf(aes(fill = `Distance (km)`),
           color = "white") +
@@ -69,9 +69,9 @@ distdir_from_point(center = berrien,
  ```r
  distdir_from_point(center = berrien,
                    layer = tractsMI,
-                   prefix = "cbd") %>%
-  mutate("Distance (km)" = cbd_dist_double / 1000) %>%
-  filter(cbd_card_ord == "N") %>%
+                   prefix = "ber") %>%
+  mutate("Distance (km)" = ber_dist_double / 1000) %>%
+  filter(ber_card_ord == "N") %>%
   ggplot() +
   geom_sf(aes(fill = `Distance (km)`),
           color = NA) +
@@ -86,9 +86,9 @@ distdir_from_point(center = berrien,
 ```r
 distdir_from_point(center = washtenaw,
                    layer = tractsMI,
-                   prefix = "cbd") %>%
+                   prefix = "wa") %>%
   mutate("Distance (km)" = cbd_dist_double / 1000) %>%
-  filter(cbd_card_ord == "NW") %>%
+  filter(wa_card_ord == "NW") %>%
   ggplot() +
   geom_sf(aes(fill = `Distance (km)`),
           color = NA) +
@@ -100,9 +100,9 @@ distdir_from_point(center = washtenaw,
 ```r
 distdir_from_point(center = berrien,
                    layer = tractsMI,
-                   prefix = "cbd") %>%
-  mutate("Distance (km)" = cbd_dist_double / 1000) %>%
-  filter(cbd_card_ord == "NE" & `Distance (km)` >= 200) %>%
+                   prefix = "ber") %>%
+  mutate("Distance (km)" = ber_dist_double / 1000) %>%
+  filter(ber_card_ord == "NE" & `Distance (km)` >= 200) %>%
   ggplot() +
   geom_sf(aes(fill = `Distance (km)`),
           color = NA) +
