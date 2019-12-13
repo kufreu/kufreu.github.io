@@ -578,6 +578,9 @@ I made several changes to the main function after removing these errors. Rather 
 }
 ``` 
 
+![mean coordinates](images/mean.PNG)
+![dissolved centroids](images/dissolve.PNG)
+
 ***to be continued***
 
 ### data sources
