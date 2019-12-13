@@ -472,7 +472,7 @@ distdir_from_point <- function (layer, center) {
     ))
 }
 ```
-Given the warning messages I got every time I used the function, more needed to be done to fix the function. These were the warning messages from st_centroid which needed to be resolved .
+Given the warning messages I got every time I used the function, more was needed to be done to fix the function. These were the warning messages from st_centroid which needed to be resolved .
 ```r
 Warning: st_centroid does not give correct centroids for longitude/latitude data
 Warning message:
@@ -578,7 +578,7 @@ I made several changes to the main function after removing these errors. Rather 
 }
 ``` 
 
-*to be continued*
+***to be continued***
 
 ### data sources
 
