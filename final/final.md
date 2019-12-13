@@ -479,7 +479,7 @@ Warning message:
 In st_centroid.sf(.) :
 st_centroid assumes attributes are constant over geometries of x
 ```
-To fix the first warning, the object was transformed into a projected mercator (3395) before being made into a centroid. The second warning was fixed by supplying only the geometries of the layer to st_centroid using st_geometry. This is similar to the SQL where only the geometries are used in the functions rather the whole layer being piped through. The centroids are then transformed to EPSG:4326. 
+To fix the first warning, the object was transformed into a projected coordinate system (3395) before being made into a centroid. The second warning was fixed by supplying only the geometries of the layer to st_centroid using st_geometry. This is similar to the SQL where only the geometries are used in the functions rather the whole layer being piped through. The centroids are then transformed to EPSG:4326. 
 ```r
 test <- tractsMI %>%
   st_transform(3395) %>%
@@ -487,7 +487,7 @@ test <- tractsMI %>%
   st_centroid() %>%
   st_transform(4326)
 ```
-I made several changes to the main function after removing these errors. Rather than make the centroids for WGS 84 within the distance function, I made wgs84 centroids instead of just a transformed layer. Int, the intermediate layer, was also changed to have the intial layer input instead of wgs84 be piped to mutate. This means that output will have the original CRS of the input layer rather than EPSG:4326 though distance and direction will still be calculated with this.  
+I made several changes to the main function after removing these errors. Rather than make the centroids for WGS 84 within the distance function, I made the wgs84 object into centroids instead of just a transformed layer. Int, the intermediate layer, was also changed to have the intial layer input instead of wgs84 be piped to mutate. This means that output will have the original CRS of the input layer rather than EPSG:4326, though distance and direction will still be calculated with 4326.  
 ```r
  distdir_from_point <- function (layer, center) {
   if (missing(center)) {
