@@ -1,7 +1,7 @@
 # what happens in the end?
 ### about
-For my final project, I replicated the [QGIS model](qgis/qgisModeling.md) I created at the beginning of the semester to calculate distance and direction from a given point with SQL using R and various R packages such as sf, sp, tidyverse, and geosphere. This was all done in [RStudio](https://rstudio.com/). In short, I converted the SQL used in the QGIS model into a function in R. Similar to the QGIS model, the function has three arguments/inputs: the input features, the layer from which direction is calculated, and an optional character string to prefix the new columns for distance and direction.  As with the original model, the intended application of this function is to calculate the distance and direction of features within a city from the city center or central business district, though as can be seen with my focus on caluclating distance and direction between tracts and counties in Michigan, the applications for the model are not limited to cities and CBDs. [Here](r/distdirFunction.R) is the function in its entirety. I will undoubtedly add comments to it in the next two days or so. 
-### the function
+For my final project, I replicated the [QGIS model](qgis/qgisModeling.md) I created at the beginning of the semester to calculate distance and direction from a given point with SQL using R and various R packages such as sf, sp, tidyverse, and geosphere. This was all done in [RStudio](https://rstudio.com/). In short, I converted the SQL used in the QGIS model into a function in R. Similar to the QGIS model, the R function has three arguments/inputs: the input features, the layer from which direction is calculated, and an optional character string to prefix the new columns for distance and direction.  As with the original model, the intended application of this function is to calculate the distance and direction of features within a city from the city center or central business district, though as can be seen with my focus on caluclating distance and direction between tracts and counties in Michigan, the applications for the model are not limited to cities and CBDs. [Here](r/distdirFunction.R) is the function in its entirety. I will undoubtedly add comments to it in the next two days or so. 
+### the function: distdir_from_point()
 ```r
 # commented code and other things should be added soon?
 # this function is dependent on geosphere, tidyverse (mostly dplyr), sp, and sf
@@ -113,7 +113,7 @@ distdir_from_point <- function (layer, center, prefix = "") {
   }
 }
 ```
-### sql that function was based on
+### sql translated to r
 ```sql
 select distDir.*,
 case
@@ -191,6 +191,37 @@ Warning message:
 In st_centroid.sf(tractsMI) :
   st_centroid assumes attributes are constant over geometries of x
 ```
+Ignoring this  warning message, I went on to make test out making centroids on dissolved shapes.  
+
+```r
+# from sf package
+center <-
+  tractsMI %>%
+  mutate(area = st_area(tractsMI)) %>%
+  summarize(area = sum(area)) %>%
+  st_centroid()
+
+# from geosphere package
+center <-
+  tractsMI %>%
+  mutate(area = st_area(tractsMI)) %>%
+  summarize(area = sum(area)) %>%
+  as_Spatial() %>%
+  centroid()
+
+# alternate way to dissolve
+center <-
+  tractsMI %>%
+  mutate(nichts = "nichts") %>%
+  group_by(nichts) %>%
+  summarize() %>%
+  st_centroid()
+```
+Both geosphere and sf have functions to create centroids, though I ended up using st_centroid from sf because it was less of a hassle to use. Centroid from geosphere first needed the object to be converted to having a spatial class and the ouput of the function were x,y coordinates which then needed to be made into a point. Having already loaded the objects into R using sf and them being simple features, sticking with sf functions appeared to be the best way to go since it requires the least amount of effort. The next step was testing out st_distance to calculate the distance between the centroid of Michigan and its tracts. 
+```r
+View(st_distance(centroidTracts, center))
+```
+With these thre
 
 *to be continued*
 
