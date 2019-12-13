@@ -351,7 +351,7 @@ when [% @Prefix %]Dir<=337.5 and [% @Prefix %]Dir>=292.5 then 'NW'
 when [% @Prefix %]Dir<=202.5 and [% @Prefix %]Dir>=157.5 then 'S'
 end [% @Prefix %]CardOrd
 ```
-I used a string of ifelse functions to replicate this case statement. 
+I used a string of ```ifelse``` functions to replicate this case statement. 
 ```r
 dirtesting <- distdir_from_point(tractsMI)
 View(dirtesting %>%
