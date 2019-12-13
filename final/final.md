@@ -487,7 +487,7 @@ test <- tractsMI %>%
   st_centroid() %>%
   st_transform(4326)
 ```
-I made several changes to the main function after removing these errors. Rather than make the centroids for WGS 84 within the distance function, I made `wgs84` into centroids instead of just a transformed layer. `int`, the intermediate layer, was also changed to have the intial layer input instead of `wgs84` be piped to mutate. This means that output will have the original CRS of the input layer rather than EPSG:4326, though distance and direction will still be calculated with 4326.  
+I made several changes to the main function after removing these errors. Rather than make the centroids for WGS 84 within the distance function, I made `wgs84` into centroids instead of just a transformed layer. `int`, the intermediate layer, was also changed to have the intial layer input instead of `wgs84` be piped to `mutate`. This means that output will have the original CRS of the input layer rather than EPSG:4326, though distance and direction will still be calculated with 4326.  
 ```r
  distdir_from_point <- function (layer, center) {
   if (missing(center)) {
