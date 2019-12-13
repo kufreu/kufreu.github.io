@@ -234,10 +234,71 @@ distTest <- function(layer) {
     summarize(area = sum(area)) %>%
     st_centroid()
   result <- tbd %>%
+  # centroids are made on tbd and distance is calculated 
     mutate(dist = as.double(st_distance(st_centroid(tbd), center)))
 }
 ```
-Like the original model, I transformed the layer before calculating distance. Two objects are created in this object before calculating the result, tbd, which is the transformed input with a field to dissolve on and center, the centroid made on the dissolved input.
+Like the original model, I transformed the layer before calculating distance. Two objects are created in this object before calculating the result, tbd, which is the transformed input with a field to dissolve on and center, the centroid made on the dissolved input. As.double makes the data type of the st_distance's result as a double. This was done because before the output was a list with the distance and unit of measurement in one field and I could not do other calculations with it in this form. I wanted to get a handle on using more pipes in functions after making distTest to make it more streamlined.
+```r
+#### pipe dreams / testing pipes in R ####
+central <-
+  tractsMI %>%
+  st_transform(4326) %>%
+  mutate(area = st_area(tractsMI)) %>%
+  summarize(area = sum(area)) %>%
+  st_centroid()
+```
+With this newfound pipe knowledge, I went on to create a distance function with two arguments. One argument would act as the input features and the other argument would be the point from which distance is calculated.
+```r
+distTest2 <- function (layer, center) {
+  # center is an optional argument to add a point or polygon(s) from which to calculate distance and direction
+  # if center is missing, a centroid is made on the layer input and distance is calculated from it
+  if (missing(center)) {
+    wgs84 <-
+      layer %>%
+      st_transform(4326) %>%
+      mutate(area = st_area(layer))
+    cbd <-
+      wgs84 %>%
+      summarize(area = sum(area)) %>%
+      st_centroid()
+    result <-
+      wgs84 %>%
+      mutate(dist = as.double(st_distance(st_centroid(wgs84), cbd)))
+  } else {
+    wgs84 <-
+      layer %>% st_transform(4326)
+    cbd <-
+      center %>%
+      st_transform(4326) %>%
+      mutate(area = st_area(center)) %>%
+      summarize(area = sum(area)) %>%
+      st_centroid()
+    result <- wgs84 %>%
+      mutate(dist = as.double(st_distance(st_centroid(wgs84), cbd)))
+  }
+}
+```
+An if-else statement is used in this function to allow for more variability. If the an object is inputted as center, distance will be calculated from it. If nothing is supplied, a centroid is made on the sole input and distance is calculated from it.
+```r
+result <- wgs84 %>%
+  mutate(
+        dist_unit = st_distance(st_centroid(wgs84), cbd),
+        dist_double = as.double(st_distance(st_centroid(wgs84), cbd))
+      )
+```
+Minor changes were made to the result of this function to create two columns for distance, one column with distance and the unit of measurement and one column with just the value. This new function was named dist_from_point. Having been somewhat successful calculating distance with distTest and then dist_from_point, I continued to try to calculate direction and convert the next line of SQL.
+```sql
+degrees(azimuth(transform((select geometry from input1),3395), centroid(transform((geometry),3395)))) as [% @Prefix %]Dir
+```
+Because I wanted to try to stick with sf functions for as long as possible, I thought I should try to use st_geod_azimuth from the sf package. Unfortunately, I was unable to find a way to supply more than one argument to it. This is where geosphere and sp come into play. The bearing function from geosphere was chosen to caluclate distance. 
+```r
+View((bearing(
+  as_Spatial(st_transform(centroidTracts, 4326)), as_Spatial(st_transform(center, 4326))
+) + 360) %% 360)
+```
+This was the result of my testing with the bearing function. Using baring wasn't as straightforward as st_distance and required more tinkering to get it working. Firstly, geosphere functions require objects to have "spatial" class. Sf objects need to be given this class with the function as_Spatial. Secondly, bearing requires geometries to be in lat/long, which is why the objects were transformed to EPSG:4326 rather than EPSG:3395. Both are WGS 84, however. 4326 is geographic (lat/long) while 3395 is projected.
+
 
 *to be continued*
 
