@@ -279,7 +279,7 @@ distTest2 <- function (layer, center) {
   }
 }
 ```
-An if-else statement is used in this function to allow for more variability. If the an object is inputted as center, distance will be calculated from it. If nothing is supplied, a centroid is made on the sole input and distance is calculated from it.
+An if-else statement is used in this function to allow for more flexibility. If the an object is inputted as center, distance will be calculated from it. If nothing is supplied, a centroid is made on the sole input and distance is calculated from it.
 ```r
 result <- wgs84 %>%
   mutate(
