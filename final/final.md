@@ -590,6 +590,7 @@ I made several changes to the main function after removing these errors. Rather 
 Data Sources: U.S. Census Bureau; 2018 Census Tracts for Michigan, 2017 American Community Survey 5-Year Estimates, Tables B25064 and B03002
 ### software
 [R](https://www.r-project.org/)
+
 [RStudio](https://rstudio.com/)
 
 #### packages 
