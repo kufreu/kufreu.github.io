@@ -133,8 +133,19 @@ from (select *,
       from input2) as distDir
 ```
 ### [maps](maps.md)
-![what of it](images/finalDistanceTest.png)
-
+![what of it](images/gogebic.png)
+```r
+distdir_from_point(center = gogebic,
+                   layer = tractsMI,) %>%
+  mutate("Distance (km)" = dist_double / 1000) %>%
+  ggplot() +
+  geom_sf(aes(fill = `Distance (km)`),
+          color = NA) +
+  scale_fill_viridis() +
+  labs(title = "Distance of Census Tracts from Gogebic County",
+       x = "Longitude",
+       y = "Latitude")
+```
 ### creating the function
 The first step of making this function was to identify the packages I would need to use for this project, installing and loading them in RStudio when they were found. ``tidyverse`` was used because of the relative ease `dplyr` provides in manipulating data frames and ``ggplot2`` to map results. I could have installed only these two packages from `tidyverse`, though I thought it would be best to play it safe as  the other packages which make up the tidyverse could also be of use. Along with tidyverse, `sf` makes up the backbone of this function. Package ``sf`` provides simple features as data frames with a geometry list-column, which is a format I was familiar with coming from using tables in QGIS and PostGIS. It also has many of the geometry and geoemtric operations I need to make the function.     
 ```r
