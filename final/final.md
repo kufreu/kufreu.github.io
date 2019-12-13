@@ -209,7 +209,7 @@ center <-
   as_Spatial() %>%
   centroid()
 
-# alternate way to dissolve
+# alternative way to dissolve
 center <-
   tractsMI %>%
   mutate(nichts = "nichts") %>%
