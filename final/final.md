@@ -221,7 +221,35 @@ Both geosphere and sf have functions to create centroids, though I ended up usin
 ```r
 View(st_distance(centroidTracts, center))
 ```
-With these thre
+With these three functions figured out (other than warning  message for st_centroid), I set out to create a function to calculate distance from the centroid of the dissolved feature.
+```r
+distTest <- function(layer) {
+  tbd <- layer %>%
+    #transforming to wgs 84 and adding a field to base the dissolve
+    st_transform(4326) %>%
+    mutate(area = st_area(layer))
+  #dissolving layer and making a centroid on dissolved shape
+  center <-
+    tbd %>%
+    summarize(area = sum(area)) %>%
+    st_centroid()
+  result <- tbd %>%
+    mutate(dist = as.double(st_distance(st_centroid(tbd), center)))
+}
+```
+
+#### mapping distance test ####
+ggplot() +
+  geom_sf(data = test, aes(fill = cut_number(dist, 7)), color = "grey") +
+  scale_fill_brewer(palette = "YlGnBu") +
+  guides(fill = guide_legend(title = "distance in meters")) +
+  labs(title = "distance test",
+       subtitle = "distTest()") +
+  theme(
+    plot.title = element_text(hjust = 0),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank()
+  )
 
 *to be continued*
 
