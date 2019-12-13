@@ -479,7 +479,7 @@ Warning message:
 In st_centroid.sf(.) :
 st_centroid assumes attributes are constant over geometries of x
 ```
-To fix the first warning, the object was transformed into a projected mercator (3395) before being made into a centroid. The second warning was fixed by supplying only the geometries of the layer to st_centroid using st_geometry. This is similar to the SQL where only the geometries are used in the functions. 
+To fix the first warning, the object was transformed into a projected mercator (3395) before being made into a centroid. The second warning was fixed by supplying only the geometries of the layer to st_centroid using st_geometry. This is similar to the SQL where only the geometries are used in the functions rather the whole layer being piped through. The centroids are then transformed to EPSG:4326. 
 ```r
 test <- tractsMI %>%
   st_transform(3395) %>%
@@ -487,6 +487,7 @@ test <- tractsMI %>%
   st_centroid() %>%
   st_transform(4326)
  ```
+ 
 
 *to be continued*
 
