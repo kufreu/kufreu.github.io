@@ -1,6 +1,6 @@
 # what happens in the end?
 ### about
-For my final project, I replicated the [QGIS model](qgis/qgisModeling.md) I created at the beginning of the semester to calculate distance and direction from a given point with SQL using R and various R packages such as sf, sp, tidyverse, and geosphere. This was all done in [RStudio](https://rstudio.com/). In short, I converted the SQL used in the QGIS model into a function in R. Similar to the QGIS model, the R function has three arguments/inputs: the input features, the layer from which direction is calculated, and an optional character string to prefix the new columns for distance and direction.  As with the original model, the intended application of this function is to calculate the distance and direction of features within a city from the city center or central business district, though as can be seen with my focus on caluclating distance and direction between tracts and counties in Michigan, the applications for the model are not limited to cities and CBDs. [Here](r/distdirFunction.R) is the function in its entirety. I will undoubtedly add comments to it in the next two days or so. 
+For my final project, I replicated the [QGIS model](qgis/qgisModeling.md) I created at the beginning of the semester to calculate distance and direction from a given point with SQL using R and various R packages such as sf, sp, tidyverse, and geosphere. This was all done in [RStudio](https://rstudio.com/). In short, I converted the SQL used in the QGIS model into a function in R. Similar to the QGIS model, the R function has three arguments/inputs: the input features, the layer from which distance and direction are calculated, and an optional character string to prefix the new columns for distance and direction.  As with the original model, the intended application of this function is to calculate the distance and direction of features within a city from the city center or central business district, though as can be seen with my focus on caluclating distance and direction between tracts and counties in Michigan, the applications for the model are not limited to cities and CBDs. [Here](r/distdirFunction.R) is the function in its entirety. I will undoubtedly add comments to it in the next two days or so. 
 ### the function: distdir_from_point()
 ```r
 # commented code and other things should be added soon?
@@ -351,6 +351,142 @@ when [% @Prefix %]Dir<=337.5 and [% @Prefix %]Dir>=292.5 then 'NW'
 when [% @Prefix %]Dir<=202.5 and [% @Prefix %]Dir>=157.5 then 'S'
 # end [% @Prefix %]CardOrd
 ```
+I used a string of ifelse functions to replicate this case statement. 
+```r
+dirtesting <- distdir_from_point(tractsMI)
+View(dirtesting %>%
+       mutate(card_ord = ifelse(
+         dir_degrees <= 22.5 |
+           dir_degrees >= 337.5,
+         "N",
+         ifelse(
+           dir_degrees <= 67.5 &
+             dir_degrees >= 22.5,
+           "NE",
+           ifelse(
+             dir_degrees <= 122.5 &
+               dir_degrees >= 67.5,
+             "E",
+             ifelse(
+               dir_degrees <= 157.5 &
+                 dir_degrees >= 112.5,
+               "SE",
+               ifelse(
+                 dir_degrees <= 292.5 &
+                   dir_degrees >= 247.5,
+                 "W",
+                 ifelse(
+                   dir_degrees <= 247.5 &
+                     dir_degrees >= 202.5,
+                   "SW",
+                   ifelse(
+                     dir_degrees <= 337.5 &
+                       dir_degrees >= 292.5,
+                     "NW",
+                     ifelse(dir_degrees <= 202.5 &
+                              dir_degrees >= 157.5, "S", "nichts")
+                   )
+                 )
+               )
+             )
+           )
+         )
+       )))
+     ```
+This  was then added to to distdir_from_point to create what I thought would be the final form of the function. 
+```r
+distdir_from_point <- function (layer, center) {
+  if (missing(center)) {
+    wgs84 <-
+      layer %>%
+      st_transform(4326) %>%
+      mutate(area = st_area(layer))
+    cbd <-
+      wgs84 %>%
+      summarize(area = sum(area)) %>%
+      st_centroid()
+    int <-
+      wgs84 %>%
+      mutate(
+        dist_unit = st_distance(st_centroid(wgs84), cbd),
+        dist_double = as.double(st_distance(st_centroid(wgs84), cbd)),
+        dir_degrees = (bearing(
+          as_Spatial(cbd), as_Spatial(st_centroid(wgs84))
+        ) + 360) %% 360
+      )
+  } else {
+    wgs84 <-
+      layer %>% st_transform(4326)
+    cbd <-
+      center %>%
+      st_transform(4326) %>%
+      mutate(area = st_area(center)) %>%
+      summarize(area = sum(area)) %>%
+      st_centroid()
+    int <- wgs84 %>%
+      mutate(
+        dist_unit = st_distance(st_centroid(wgs84), cbd),
+        dist_double = as.double(st_distance(st_centroid(wgs84), cbd)),
+        dir_degrees = (bearing(
+          as_Spatial(cbd), as_Spatial(st_centroid(wgs84))
+        ) + 360) %% 360
+      )
+  }
+  result <- int %>%
+    mutate(card_ord = ifelse(
+      dir_degrees <= 22.5 |
+        dir_degrees >= 337.5,
+      "N",
+      ifelse(
+        dir_degrees <= 67.5 &
+          dir_degrees >= 22.5,
+        "NE",
+        ifelse(
+          dir_degrees <= 122.5 &
+            dir_degrees >= 67.5,
+          "E",
+          ifelse(
+            dir_degrees <= 157.5 &
+              dir_degrees >= 112.5,
+            "SE",
+            ifelse(
+              dir_degrees <= 292.5 &
+                dir_degrees >= 247.5,
+              "W",
+              ifelse(
+                dir_degrees <= 247.5 &
+                  dir_degrees >= 202.5,
+                "SW",
+                ifelse(
+                  dir_degrees <= 337.5 &
+                    dir_degrees >= 292.5,
+                  "NW",
+                  ifelse(dir_degrees <= 202.5 &
+                           dir_degrees >= 157.5, "S", "nichts")
+                )
+              )
+            )
+          )
+        )
+      )
+    ))
+}
+```
+Given the warning messages I got everytime I used the function, more needed to be done to fix the function. These were the warning messages from st_centroid which needed to be resolved .
+```r
+Warning: st_centroid does not give correct centroids for longitude/latitude data
+Warning message:
+In st_centroid.sf(.) :
+st_centroid assumes attributes are constant over geometries of x
+```
+To fix the first warning, the object was transformed into a projected mercator (3395) before being made into a centroid. The second warning was fixed by supplying only the geometries of the layer to st_centroid using st_geometry. This is similar to the SQL where only the geometries are used in the functions. 
+```r
+test <- tractsMI %>%
+  st_transform(3395) %>%
+  st_geometry %>%
+  st_centroid() %>%
+  st_transform(4326)
+ ```
 
 *to be continued*
 
