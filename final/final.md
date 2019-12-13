@@ -392,7 +392,7 @@ View(dirtesting %>%
            )
          )
        )))
-     ```
+```
 This  was then added to to distdir_from_point to create what I thought would be the final form of the function. 
 ```r
 distdir_from_point <- function (layer, center) {
