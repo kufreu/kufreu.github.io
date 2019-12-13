@@ -135,7 +135,7 @@ from (select *,
 ![what of it](images/finalDistanceTest.png)
 
 ### creating the function
-The first step of making this function was to identify the packages I would need to use for this project, installing and loading them in RStudio when they were found. ``[tidyverse](https://www.tidyverse.org/)`` was used because of the relative ease dplyr provides in manipulating data frames and ggplot2 to map results. I could have installed only these two packages from tidyverse, though I thought it would be best to play it safe as  the other packages which make up the tidyverse could also be of use. Along with tidyverse, [sf](https://r-spatial.github.io/sf/index.html) makes up the backbone of this function. Package sf provides simple features as data frames with a geometry list-column, which is a format I was familiar with coming from using tables in QGIS and PostGIS. It also has many of the geometry and geoemtric operations I need to make the function.     
+The first step of making this function was to identify the packages I would need to use for this project, installing and loading them in RStudio when they were found. ``tidyverse`` was used because of the relative ease `dplyr` provides in manipulating data frames and ``ggplot2`` to map results. I could have installed only these two packages from `tidyverse`, though I thought it would be best to play it safe as  the other packages which make up the tidyverse could also be of use. Along with tidyverse, `sf` makes up the backbone of this function. Package ``sf`` provides simple features as data frames with a geometry list-column, which is a format I was familiar with coming from using tables in QGIS and PostGIS. It also has many of the geometry and geoemtric operations I need to make the function.     
 ```r
 #### installation ####
 install.packages("tidyverse","sf", "sp", "geosphere")
@@ -146,22 +146,22 @@ library(sf)
 library(sp)
 library(geosphere)
 ```
-Initially, I thought that I would only need tidyverse and sf, though it soon became apparent that sf was not enough for what I was hoping to do and that I would need to use other packages to anaylze spatial data, these packages being [geosphere](https://cran.r-project.org/web/packages/geosphere/index.html) and [sp](https://cran.r-project.org/web/packages/sp/index.html), the package which it is dependent on. After these packages were loaded, the data being used for testing was loaded into RStudio using a function from sf. 
+Initially, I thought that I would only need `tidyverse` and `sf`, though it soon became apparent that sf was not enough for what I was hoping to do and that I would need to use other packages to anaylze spatial data, these packages being `geosphere` and `sp`, the package which it is dependent on. After these packages were loaded, the data being used for testing was loaded into RStudio using a function from `sf`. 
 ```r
 tractsMI <- st_read(dsn = "censusMI.gpkg", layer = "tracts")
 chicago <- st_read(dsn = "chicago.gpkg", layer = "tracts2010")
 chicagoCBD <- st_read(dsn = "chicago.gpkg", layer = "CBD")
 ```
-Rather than take on all the SQL at once, I decided to break it up into three manageable parts and begin by testing individual functions in dplyr and sf. Calculating distance was the first section to test and this was the SQL that needed to be converted in order to do that.
+Rather than take on all the SQL at once, I decided to break it up into three manageable parts and begin by testing individual functions in `dplyr` and `sf`. Calculating distance was the first section to test and this was the SQL that needed to be converted in order to do that.
 ``` sql
 distance(centroid(transform((geometry),4326)),transform((select geometry from input1),4326), true) as [% @Prefix %]Dist
 ```
-The three functions used in the SQL  here were distance, transform, and centroid, so I needed to find and learn how to use thier equivalents in sf. The first of these I tried out was transform, or st_transform in sf. As stated on the sf website, all functions and methods in sf that  use spatial data have st_ as a prefix, which stands for spatial and temporal. I transformed tractsMI into WGS 84 to to test out st_transform. 
+The three functions used in the SQL  here were distance, transform, and centroid, so I needed to find and learn how to use thier equivalents in `sf`. The first of these I tried out was transform, or `st_transform` in `sf`. As stated on the `sf` [website](https://r-spatial.github.io/sf/index.html), all functions and methods in sf that  use spatial data have st_ as a prefix, which stands for spatial and temporal. I transformed tractsMI into WGS 84 to to test out `st_transform`. 
 ```r
 View(tractsMI %>%
        st_transform(4326))
 ```
-My next line of reasoning was to dissolve the tracts and create a centroid on the dissolved shape rather than try to caluclate mean coordinates (I stay with this for a while though I change to a different method which more closely resembles the SQL). Since sf didn't have a function to dissolve, I had to look elsewhere to learn how. I found two ways to dissolve from [Phil Mike Jones](https://philmikejones.me/tutorials/2015-09-03-dissolve-polygons-in-r/) on his website and tested them out.
+My next line of reasoning was to dissolve the tracts and create a centroid on the dissolved shape rather than try to caluclate mean coordinates (I stay with this for a while though I change to a different method which more closely resembles the SQL). Since `sf` didn't have a function to dissolve, I had to look elsewhere to learn how. I found two ways to dissolve from [Phil Mike Jones](https://philmikejones.me/tutorials/2015-09-03-dissolve-polygons-in-r/) on his website and tested them out.
 ```r
 tractsMI$area <- st_area(tractsMI)
 
@@ -181,7 +181,7 @@ michigan <-
 
 ggplot(michigan) + geom_sf()
 ```
-I mapped each result to see if they dissolved and then went on to test st_centroid.  
+I mapped each result to see if they dissolved and then went on to test `st_centroid`.  
 ```r
 centroidTracts <- st_centroid(tractsMI)
 ```
@@ -217,7 +217,7 @@ center <-
   summarize() %>%
   st_centroid()
 ```
-Both geosphere and sf have functions to create centroids, though I ended up using st_centroid from sf because it was less of a hassle to use. Centroid from geosphere first needed the object to be converted to having a spatial class and the ouput of the function were x,y coordinates which then needed to be made into a point. Having already loaded the objects into R using sf and them being simple features, sticking with sf functions appeared to be the best way to go since it requires the least amount of effort. The next step was testing out st_distance to calculate the distance between the centroid of Michigan and its tracts. 
+Both `geosphere` and `sf` have functions to create centroids, though I ended up using st_centroid from `sf` because it was less of a hassle to use. `centroid` from `geosphere` first needed the object to be converted to having a spatial class and the ouput of the function were x,y coordinates which then needed to be made into a point. Having already loaded the objects into R using `sf` and them being simple features, sticking with `sf` functions appeared to be the best way to go since it requires the least amount of effort. The next step was testing out `st_distance` to calculate the distance between the centroid of Michigan and its tracts. 
 ```r
 View(st_distance(centroidTracts, center))
 ```
@@ -238,7 +238,7 @@ distTest <- function(layer) {
     mutate(dist = as.double(st_distance(st_centroid(tbd), center)))
 }
 ```
-Like the original model, I transformed the layer before calculating distance. Two objects are created in this object before calculating the result, tbd, which is the transformed input with a field to dissolve on and center, the centroid made on the dissolved input. As.double makes the data type of the st_distance's result as a double. This was done because before the output was a list with the distance and unit of measurement in one field and I could not do other calculations with it in this form. I wanted to get a handle on using more pipes in functions after making distTest to make it more streamlined.
+Like the original model, I transformed the layer before calculating distance. Two objects are created in this object before calculating the result, tbd, which is the transformed input with a field to dissolve on and center, the centroid made on the dissolved input. `as.double` makes the data type of the `st_distance` result a double. This was done because before the output was a list with the distance and unit of measurement in one field and I could not do other calculations with it in this form. I wanted to get a handle on using more pipes in functions after making distTest to make it more streamlined.
 ```r
 #### pipe dreams / testing pipes in R ####
 central <-
@@ -287,17 +287,17 @@ result <- wgs84 %>%
         dist_double = as.double(st_distance(st_centroid(wgs84), cbd))
       )
 ```
-Minor changes were made to the result of this function to create two columns for distance, one column with distance and the unit of measurement and one column with just the value. This new function was named dist_from_point. Having been somewhat successful calculating distance with distTest and then dist_from_point, I continued to try to calculate direction and convert the next line of SQL.
+Minor changes were made to the result of this function to create two columns for distance, one column with distance and the unit of measurement and one column with just the value. This new function was named dist_from_point. Having been somewhat successful calculating distance with `distTest` and then `dist_from_point`, I continued to try to calculate direction and convert the next line of SQL.
 ```sql
 degrees(azimuth(transform((select geometry from input1),3395), centroid(transform((geometry),3395)))) as [% @Prefix %]Dir
 ```
-Because I wanted to try to stick with sf functions for as long as possible, I thought I should try to use st_geod_azimuth from the sf package. Unfortunately, I was unable to find a way to supply more than one argument to it. This is where geosphere and sp come into play. The bearing function from geosphere was chosen to caluclate distance. 
+Because I wanted to try to stick with sf functions for as long as possible, I thought I should try to use st_geod_azimuth from the `sf` package. Unfortunately, I was unable to find a way to supply more than one argument to it. This is where `geosphere` and `sp` come into play. The bearing function from geosphere was chosen to caluclate distance. 
 ```r
 View((bearing(
   as_Spatial(st_transform(centroidTracts, 4326)), as_Spatial(st_transform(center, 4326))
 ) + 360) %% 360)
 ```
-This was the result of my testing with the bearing function. Using baring wasn't as straightforward as st_distance and required more tinkering to get it working. Firstly, geosphere functions require objects to have "spatial" class. Sf objects need to be given this class with the function as_Spatial. Secondly, bearing requires geometries to be in lat/long, which is why the objects were transformed to EPSG:4326 rather than EPSG:3395. Both are WGS 84, however. 4326 is geographic (lat/long) while 3395 is projected. Lastly, bearing gives answers in degrees ranging from 180 to -180, so modular division was needed and used to make the answers from 0 to 360 degrees. After testing it in a function by itself, I added bearing to the dist_from_point function to make distdir_from_point.
+This was the result of my testing with the `bearing` function. Using `bearing` wasn't as straightforward as `st_distance` and required more tinkering to get it working. Firstly, `geosphere` functions require objects to have "spatial" class. `sf` objects need to be given this class with the function `as_Spatial`. Secondly, bearing requires geometries to be in lat/long, which is why the objects were transformed to EPSG:4326 rather than EPSG:3395. Both are WGS 84, however. 4326 is geographic (lat/long) while 3395 is projected. Lastly, `bearing` gives answers in degrees ranging from 180 to -180, so modular division was needed and used to make the answers from 0 to 360 degrees. After testing it in a function by itself, I added `bearing` to the `dist_from_point` function to make `distdir_from_point`.
 ```r
 distdir_from_point <- function (layer, center) {
   if (missing(center)) {
@@ -393,7 +393,7 @@ View(dirtesting %>%
          )
        )))
 ```
-This  was then added to to distdir_from_point to create what I thought would be the final form of the function. 
+This  was then added to to `distdir_from_point` to create what I thought would be the final form of the function. 
 ```r
 distdir_from_point <- function (layer, center) {
   if (missing(center)) {
@@ -472,14 +472,14 @@ distdir_from_point <- function (layer, center) {
     ))
 }
 ```
-Given the warning messages I got every time I used the function, more was needed to be done to fix the function. These were the warning messages from st_centroid which needed to be resolved .
+Given the warning messages I got every time I used the function, more was needed to be done to fix the function. These were the warning messages from `st_centroid` which needed to be resolved .
 ```r
 Warning: st_centroid does not give correct centroids for longitude/latitude data
 Warning message:
 In st_centroid.sf(.) :
 st_centroid assumes attributes are constant over geometries of x
 ```
-To fix the first warning, the object was transformed into a projected coordinate system (3395) before being made into a centroid. The second warning was fixed by supplying only the geometries of the layer to st_centroid using st_geometry. This is similar to the SQL where only the geometries are used in the functions rather the whole layer being piped through. The centroids are then transformed to EPSG:4326. 
+To fix the first warning, the object was transformed into a projected coordinate system (3395) before being made into a centroid. The second warning was fixed by supplying only the geometries of the layer to `st_centroid` using `st_geometry`. This is similar to the SQL where only the geometries are used in the functions rather the whole layer being piped through. The centroids are then transformed to EPSG:4326. 
 ```r
 test <- tractsMI %>%
   st_transform(3395) %>%
