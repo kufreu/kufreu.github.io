@@ -1,5 +1,6 @@
 # commented code and other things should be added soon?
 # this function is dependent on geosphere, tidyverse (mostly dplyr), sp, and sf
+# written by kufre u.
 distdir_from_point <- function (layer, center, prefix = "") {
   if (missing(center)) {
     wgs84 <-
