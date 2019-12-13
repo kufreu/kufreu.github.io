@@ -157,7 +157,7 @@ Rather than take on all the SQL at once, I decided to break it up into three man
 ``` sql
 distance(centroid(transform((geometry),4326)),transform((select geometry from input1),4326), true) as [% @Prefix %]Dist
 ```
-The three functions used in the SQL  here were distance, transform, and centroid, so I needed to find and learn how to use thier equivalents in `sf`. The first of these I tried out was transform, or `st_transform` in `sf`. As stated on the `sf` [website](https://r-spatial.github.io/sf/index.html), all functions and methods in sf that  use spatial data have st_ as a prefix, which stands for spatial and temporal. I transformed tractsMI into WGS 84 to to test out `st_transform`. 
+The three functions used in the SQL  here were distance, transform, and centroid, so I needed to find and learn how to use thier equivalents in `sf`. The first of these I tried out was transform, or `st_transform` in `sf`. As stated on the `sf` [website](https://r-spatial.github.io/sf/index.html), all functions and methods in `sf` that use spatial data have st_ as a prefix, which stands for spatial and temporal or spacetime. I transformed tractsMI into WGS 84 to to test out `st_transform`. 
 ```r
 View(tractsMI %>%
        st_transform(4326))
