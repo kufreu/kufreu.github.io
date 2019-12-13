@@ -49,8 +49,7 @@ keweenaw <- countiesMI[countiesMI$fips == "083", ]
 ```
 
 ### maps made using ggplot2
-
-#### [distance of counties from berrien county](images/countyBerrien.png)
+#### [distance of counties from berrien county, michigan](images/countyBerrien.png)
 ![distance of counties from berrien county](images/countyBerrien.png)
 ```r
 distdir_from_point(center = berrien,
@@ -64,7 +63,7 @@ distdir_from_point(center = berrien,
   labs(title = "Distance from Berrien County")
   ```
   
-#### [census tracts north of berrien county](images/northBerrien.png)
+##### [census tracts north of berrien county, michigan](images/northBerrien.png)
   ![tracts north of berrien county](images/northBerrien.png)
  ```r
  distdir_from_point(center = berrien,
@@ -81,7 +80,7 @@ distdir_from_point(center = berrien,
        y = "Latitude")
 ```
 
-#### [census tracts northwest of washtenaw county](images/washtenaw.png)
+#### [census tracts northwest of washtenaw county, michigan](images/washtenaw.png)
 ![census tracts northwest of washtenaw county](images/washtenaw.png)
 ```r
 distdir_from_point(center = washtenaw,
@@ -110,7 +109,7 @@ distdir_from_point(center = berrien,
   labs(title = "Census Tracts Northeast of Berrien County and >= 200km")
 ```
 
-#### [distance of tracts  from the central business district of chicago](images/chicagoDist.png)
+#### [distance of tracts  from the central business district of chicago, illinois](images/chicagoDist.png)
 ![distance of tracts  from the central business district of chicago](images/chicagoDist.png)
 ```r
 distdir_from_point(center = chicagoCBD,
