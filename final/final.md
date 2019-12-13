@@ -297,8 +297,60 @@ View((bearing(
   as_Spatial(st_transform(centroidTracts, 4326)), as_Spatial(st_transform(center, 4326))
 ) + 360) %% 360)
 ```
-This was the result of my testing with the bearing function. Using baring wasn't as straightforward as st_distance and required more tinkering to get it working. Firstly, geosphere functions require objects to have "spatial" class. Sf objects need to be given this class with the function as_Spatial. Secondly, bearing requires geometries to be in lat/long, which is why the objects were transformed to EPSG:4326 rather than EPSG:3395. Both are WGS 84, however. 4326 is geographic (lat/long) while 3395 is projected.
-
+This was the result of my testing with the bearing function. Using baring wasn't as straightforward as st_distance and required more tinkering to get it working. Firstly, geosphere functions require objects to have "spatial" class. Sf objects need to be given this class with the function as_Spatial. Secondly, bearing requires geometries to be in lat/long, which is why the objects were transformed to EPSG:4326 rather than EPSG:3395. Both are WGS 84, however. 4326 is geographic (lat/long) while 3395 is projected. Lastly, bearing gives answers in degrees ranging from 180 to -180, so modular division was needed and used to make the answers from 0 to 360 degrees. After testing it in a function by itself, I added bearing to the dist_from_point function to make distdir_from_point.
+```r
+distdir_from_point <- function (layer, center) {
+  if (missing(center)) {
+    wgs84 <-
+      layer %>%
+      st_transform(4326) %>%
+      mutate(area = st_area(layer))
+    cbd <-
+      wgs84 %>%
+      summarize(area = sum(area)) %>%
+      st_centroid()
+    result <-
+      wgs84 %>%
+      mutate(
+        dist_unit = st_distance(st_centroid(wgs84), cbd),
+        dist_double = as.double(st_distance(st_centroid(wgs84), cbd)),
+        dir_degrees = (bearing(
+          as_Spatial(cbd), as_Spatial(st_centroid(wgs84))
+        ) + 360) %% 360
+      )
+  } else {
+    wgs84 <-
+      layer %>% st_transform(4326)
+    cbd <-
+      center %>%
+      st_transform(4326) %>%
+      mutate(area = st_area(center)) %>%
+      summarize(area = sum(area)) %>%
+      st_centroid()
+    result <- wgs84 %>%
+      mutate(
+        dist_unit = st_distance(st_centroid(wgs84), cbd),
+        dist_double = as.double(st_distance(st_centroid(wgs84), cbd)),
+        dir_degrees = (bearing(
+          as_Spatial(cbd), as_Spatial(st_centroid(wgs84))
+        ) + 360) %% 360
+      )
+  }
+}
+```
+My next step was to assign cardinal and ordinal directions to the dir_degree result and convert this block of SQL. 
+```r
+case
+when [% @Prefix %]Dir<=22.5 or [% @Prefix %]Dir>=337.5 then 'N'
+when [% @Prefix %]Dir<=67.5 and [% @Prefix %]Dir>=22.5 then 'NE'
+when [% @Prefix %]Dir<=122.5 and [% @Prefix %]Dir>=67.5 then 'E'
+when [% @Prefix %]Dir<=157.5 and [% @Prefix %]Dir>=112.5 then 'SE'
+when [% @Prefix %]Dir<=292.5 and [% @Prefix %]Dir>=247.5 then 'W'
+when [% @Prefix %]Dir<=247.5 and [% @Prefix %]Dir>=202.5 then 'SW'
+when [% @Prefix %]Dir<=337.5 and [% @Prefix %]Dir>=292.5 then 'NW'
+when [% @Prefix %]Dir<=202.5 and [% @Prefix %]Dir>=157.5 then 'S'
+# end [% @Prefix %]CardOrd
+```
 
 *to be continued*
 
