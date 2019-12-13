@@ -349,7 +349,7 @@ when [% @Prefix %]Dir<=292.5 and [% @Prefix %]Dir>=247.5 then 'W'
 when [% @Prefix %]Dir<=247.5 and [% @Prefix %]Dir>=202.5 then 'SW'
 when [% @Prefix %]Dir<=337.5 and [% @Prefix %]Dir>=292.5 then 'NW'
 when [% @Prefix %]Dir<=202.5 and [% @Prefix %]Dir>=157.5 then 'S'
-# end [% @Prefix %]CardOrd
+end [% @Prefix %]CardOrd
 ```
 I used a string of ifelse functions to replicate this case statement. 
 ```r
