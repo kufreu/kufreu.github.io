@@ -1028,7 +1028,7 @@ if(prefix == ""){
       rename(!! paste(prefix, "card_ord", sep = "_"):= card_ord)
   }
 ```
-This minor change was madeto the function and `distdir_from_point` was complete.
+This minor change was made to the function and `distdir_from_point` was complete.
 
 ### data 
 [census tracts for michigan](data/censusMI.gpkg)
