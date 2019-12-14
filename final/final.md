@@ -592,7 +592,86 @@ I made several changes to the main function after removing these errors. Rather 
     ))
 }
 ``` 
+The function worked and in all honesty I thought that this would be the final form of the funtion, though I also wanted to see if points can be inputted for center because I had only been using polygons. I compared the difference between using the the centroids of Delta County's tracts and inputting the tracts as polygons.  
+```r
+centroidsDelta <- delta %>%
+  transform(3395) %>%
+  st_centroid
 
+point_test <- distdir_from_point(tractsMI, centroidsDelta)
+
+
+ggplot() +
+  geom_sf(data = point_test, aes(fill = cut_number(dist_double, 5)), color = "grey") +
+  scale_fill_brewer(palette = "YlGnBu") +
+  guides(fill = guide_legend(title = "distance in meters")) +
+  labs(title = "distance test",
+       subtitle = "distTest()") +
+  theme(
+    plot.title = element_text(hjust = 0),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank()
+  )
+
+ggplot() +
+  geom_sf(data = point_test, aes(fill = card_ord), color = "grey") +
+  scale_fill_brewer(palette = "YlGnBu") +
+  guides(fill = guide_legend(title = "Direction")) +
+  labs(title = "direction test",
+       subtitle = "distdir_from_point()") +
+  theme(
+    plot.title = element_text(hjust = 0),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank()
+  )
+
+#vs
+
+tract_test <- distdir_from_point(tractsMI, delta)
+
+ggplot() +
+  geom_sf(data = tract_test, aes(fill = card_ord), color = "grey") +
+  scale_fill_brewer(palette = "YlGnBu") +
+  guides(fill = guide_legend(title = "direction")) +
+  labs(title = "direction test",
+       subtitle = "distdir_from_point()") +
+  theme(
+    plot.title = element_text(hjust = 0),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank()
+  )
+ ```
+ Initially, I thought the results looked similar, though I did further testing comparing the difference between making a centroid from  dissolved centroids and making a centroid on a dissolved polygon
+ 
+ ``` r
+ centroidDelta <- centroidsDelta %>%
+  mutate(nichts = "nichts") %>%
+  group_by(nichts) %>%
+  summarize %>%
+  st_transform(3395) %>%
+  st_geometry %>%
+  st_centroid %>%
+  st_transform(4326)
+
+# vs from dissolved tracts
+dissolved_delta <-
+  delta %>%
+  mutate(nichts = "nichts") %>%
+  group_by(nichts) %>%
+  summarize %>%
+  st_transform(3395) %>%
+  st_geometry %>%
+  st_centroid
+
+ggplot() +
+  geom_sf(data = delta) +
+  geom_sf(data = dissolved_delta, color = "blue") +
+  geom_sf(data = centroidDelta) +
+  geom_sf(data = centroidsDelta, color = "red")
+
+```
+
+I tested the process in 
 ![mean coordinates](images/mean.PNG)
 ![dissolved centroids](images/dissolve.PNG)
 
