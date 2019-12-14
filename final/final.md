@@ -846,7 +846,7 @@ prefix <- distdir_from_point(tractsMI, berrien) %>%
 
 # this doesn't seem to work 
 ```
-I tried to rename the columns with the function `paste`, concatenating the word test to name of the column and seperating the two  with an underscore. My first attempt to add prefixes was by all means unsucessful, though I had most of the pieces together to make it work.  Using the sources below, I found a way to add prefixes to columns using `paste`. Why`!!` (bang bang)  and `:=` solve this problem is beyond me, though the links with the code aptly describe how and why it works. 
+I tried to rename the columns with the function `paste`, concatenating the word test to name of the column and seperating the two  with an underscore. My first attempt to add prefixes was by all means unsucessful, though I had most of the pieces together to make it work.  Using the sources below, I found a way to add prefixes to columns using `paste`. Why`!!` (bang bang)  and `:=` allows me to use `paste` is beyond me, mostly because it delves into tidy evaluation and quoting/unquoting arguments, though the links with the code aptly describe how and why it works. 
 ```r
 #Sources for the fix
 #https://github.com/tidyverse/dplyr/issues/1600
@@ -860,8 +860,173 @@ prefix <- distdir_from_point(tractsMI, berrien) %>%
   rename(!! paste("test", "dist_double", sep = "_"):= dist_double) %>%
   rename(!! paste("test", "dir_degrees", sep = "_") := dir_degrees)
 ```
-
-***to be continued***
+With this fixed, I then tested out adding a prefix argument. 
+```r
+prefixtest <- function (layer, center, prefix = "cbd") {
+  # adding new argument for prefix, replacing test 
+    wgs84 <-
+      layer %>%
+      as("sf") %>%
+      st_transform(3395) %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_transform(4326)
+    cbd <-
+      layer %>%
+      as("sf") %>%
+      st_transform(3395) %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_sf %>%
+      mutate(nichts = "nichts") %>%
+      group_by(nichts) %>%
+      summarize %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_transform(4326)
+    int <-
+      layer %>%
+      as("sf") %>%
+      mutate(
+        dist_unit = st_distance(wgs84, cbd),
+        dist_double = as.double(st_distance(wgs84, cbd)),
+        dir_degrees = (bearing(as_Spatial(cbd), as_Spatial(wgs84)) + 360) %% 360
+      )
+    int %>%
+      rename(!! paste(prefix, "dist_unit", sep = "_") := dist_unit) %>%
+      rename(!! paste(prefix, "dist_double", sep = "_"):= dist_double) %>%
+      rename(!! paste(prefix, "dir_degrees", sep = "_") := dir_degrees)
+      
+}
+```
+This test worked, though I wanted there to be a way to remove the underscore if no prefix was supplied. An if-else statement seemed to be the best way to solve this problem. First, I changed the default of the argument from `prefix = "cbd"` to `prefix =""`
+```r
+distdir_from_point <- function (layer, center, prefix = "") {
+  if (missing(center)) {
+    wgs84 <-
+      layer %>%
+      as("sf") %>%
+      st_transform(3395) %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_transform(4326)
+    cbd <-
+      layer %>%
+      as("sf") %>%
+      st_transform(3395) %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_sf %>%
+      mutate(nichts = "nichts") %>%
+      group_by(nichts) %>%
+      summarize %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_transform(4326)
+    int <-
+      layer %>%
+      as("sf") %>%
+      mutate(
+        dist_unit = st_distance(wgs84, cbd),
+        dist_double = as.double(st_distance(wgs84, cbd)),
+        dir_degrees = (bearing(as_Spatial(cbd), as_Spatial(wgs84)) + 360) %% 360
+      )
+  } else {
+    wgs84 <-
+      layer %>%
+      as("sf") %>%
+      st_transform(3395) %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_transform(4326)
+    cbd <-
+      center %>%
+      as("sf") %>%
+      st_transform(3395) %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_sf %>%
+      mutate(nichts = "nichts") %>%
+      group_by(nichts) %>%
+      summarize %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_transform(4326)
+    int <- layer %>%
+      as("sf") %>%
+      mutate(
+        dist_unit = st_distance(wgs84, cbd),
+        dist_double = as.double(st_distance(wgs84, cbd)),
+        dir_degrees = (bearing(as_Spatial(cbd), as_Spatial(wgs84)) + 360) %% 360
+      )
+  }
+  result <- int %>%
+    mutate(card_ord = ifelse(
+      dir_degrees <= 22.5 |
+        dir_degrees >= 337.5,
+      "N",
+      ifelse(
+        dir_degrees <= 67.5 &
+          dir_degrees >= 22.5,
+        "NE",
+        ifelse(
+          dir_degrees <= 122.5 &
+            dir_degrees >= 67.5,
+          "E",
+          ifelse(
+            dir_degrees <= 157.5 &
+              dir_degrees >= 112.5,
+            "SE",
+            ifelse(
+              dir_degrees <= 292.5 &
+                dir_degrees >= 247.5,
+              "W",
+              ifelse(
+                dir_degrees <= 247.5 &
+                  dir_degrees >= 202.5,
+                "SW",
+                ifelse(
+                  dir_degrees <= 337.5 &
+                    dir_degrees >= 292.5,
+                  "NW",
+                  ifelse(dir_degrees <= 202.5 &
+                           dir_degrees >= 157.5, "S", "nichts")
+                )
+              )
+            )
+          )
+        )
+      )
+    ))
+  if(prefix == ""){
+    result %>%
+      rename(!! paste(prefix, "dist_unit", sep = ""):= dist_unit) %>%
+      rename(!! paste(prefix, "dist_double", sep = ""):= dist_double) %>%
+      rename(!! paste(prefix, "dir_degrees", sep = ""):= dir_degrees) %>%
+      #adding car_ord 
+      rename(!! paste(prefix, "card_ord", sep = ""):= card_ord)
+  } else {
+    result %>%
+      rename(!! paste(prefix, "dist_unit", sep = "_"):= dist_unit) %>%
+      rename(!! paste(prefix, "dist_double", sep = "_"):= dist_double) %>%
+      rename(!! paste(prefix, "dir_degrees", sep = "_"):= dir_degrees) %>%
+      rename(!! paste(prefix, "card_ord", sep = "_"):= card_ord)
+  }
+}
+```
+Although this worked, I realized that the first section was somewhat redundant. I was renaming something which didn't need to be renamed, giving it the same name unchanged. Because of this changed the begining of the statement to be if prefix is the default, return `result`, the object which has the three new columns, unchanged (`if(prefix == ""){result}`). 
+```r
+if(prefix == ""){
+    result 
+  } else {
+    result %>%
+      rename(!! paste(prefix, "dist_unit", sep = "_"):= dist_unit) %>%
+      rename(!! paste(prefix, "dist_double", sep = "_"):= dist_double) %>%
+      rename(!! paste(prefix, "dir_degrees", sep = "_"):= dir_degrees) %>%
+      rename(!! paste(prefix, "card_ord", sep = "_"):= card_ord)
+  }
+```
+This minor change was madeto the function and `distdir_from_point` was complete.
 
 ### data 
 [census tracts for michigan](data/censusMI.gpkg)
