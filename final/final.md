@@ -709,11 +709,29 @@ ggplot() +
 ![centroidsMI](images/centroidMI.png)
 
 The red point on this map is made from the centroids of the tracts while the black one is the centroid of the dissovled tracts. 
-The distance between these points is 275 km. I found that creating centroids from centroids, essentially finding the mean coordinates of the centriods, rather than just dissolving provides a result closer to the orginal QGIS model. The red point in the map above is exactly where distance/direction would be calculated from in the QGIS model if tractsMI was supplied as an input layer for cbd. When creating the function, I both added and forgot a step: I added dissolving which wasn't originally in the model and forgot to make centroids. Just to be sure, I tested these two models in QGIS to see if there was any diffence in the results and found none. 
+The distance between these points is 275 km. I found that creating centroids from centroids, essentially finding the mean coordinates of the centriods, rather than just dissolving provides a result closer to the orginal QGIS model. The red point in the map above is exactly where distance/direction would be calculated from in the QGIS model if tractsMI was supplied as an input layer for cbd. When creating the function, I both added and forgot a step: I added dissolving which wasn't originally in the model and forgot to make centroids before dissolving. Just to be sure, I tested these two models in QGIS to see if there was any diffence in the results and found none. 
 ![mean coordinates](images/mean.PNG)
 ![dissolved centroids](images/dissolve.PNG)
-Before making everything in the model SQL, the input features were made into centroids and then a point was made using the 
-
+The second model here is what would be replicated in R to create the center point. This was the result incorporating these changes in a test to make a centroid from the mean coordinates of the tract centroids.
+```r
+test <-
+  tractsMI %>%
+  #moved the functions used to dissolve the geometries
+  st_transform(3395) %>%
+  st_geometry %>%
+  st_centroid %>%
+  # got an error from using a list of geometries, so I needed to make it an sf object again
+  # https://github.com/r-spatial/sf/issues/243
+  st_sf %>%
+  # creating centroids and then dissolving
+  mutate(nichts = "nichts") %>%
+  group_by(nichts) %>%
+  summarize %>%
+  # this should result in the mean coordinates
+  st_geometry %>%
+  st_centroid %>%
+  st_transform(4326)
+```
 ***to be continued***
 
 ### data 
