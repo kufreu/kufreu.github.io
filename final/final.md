@@ -712,7 +712,7 @@ The red point on this map is made from the centroids of the tracts while the bla
 The distance between these points is 275 km. I found that creating centroids from centroids, essentially finding the mean coordinates of the centriods, rather than just dissolving provides a result closer to the orginal QGIS model. The red point in the map above is exactly where distance/direction would be calculated from in the QGIS model if tractsMI was supplied as cbd. When creating the function, I both added and forgot a step: I added dissolving which wasn't originally in the model and forgot to make centroids before dissolving. Just to be sure, I tested these two models in QGIS to see if there was any diffence in the results and found none. 
 ![mean coordinates](images/mean.PNG)
 ![dissolved centroids](images/dissolve.PNG)
-The second model here is what would be replicated in R to create the center point. This was the result incorporating these changes in a test to make a centroid from the mean coordinates of the tract centroids.
+The second model here is what would be replicated in R to create the center point. This was the result of incorporating these changes in a test to make a centroid from the mean coordinates of the tract centroids.
 ```r
 test <-
   tractsMI %>%
@@ -732,6 +732,110 @@ test <-
   st_centroid %>%
   st_transform(4326)
 ```
+In this code, centroids are made on the census tracts and then they are dissolved into one geoemtry. A centroid is then made on this. I also thought it would be good to allow for objects with the spatial class to be used in this function so I added `as("sf")` to coerce objects with spatial class into sf objects to the mean coordinates test. I then added these changes to `distdir_from_point`.
+```r
+distdir_from_point <- function (layer, center) {
+  if (missing(center)) {
+    wgs84 <-
+      layer %>%
+      as("sf") %>%
+      st_transform(3395) %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_transform(4326)
+    cbd <-
+      layer %>%
+      as("sf") %>%
+      st_transform(3395) %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_sf %>%
+      mutate(nichts = "nichts") %>%
+      group_by(nichts) %>%
+      summarize %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_transform(4326)
+    int <-
+      layer %>%
+      as("sf") %>%
+      mutate(
+        dist_unit = st_distance(wgs84, cbd),
+        dist_double = as.double(st_distance(wgs84, cbd)),
+        dir_degrees = (bearing(as_Spatial(cbd), as_Spatial(wgs84)) + 360) %% 360
+      )
+  } else {
+    wgs84 <-
+      layer %>%
+      as("sf") %>%
+      st_transform(3395) %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_transform(4326)
+    cbd <-
+      center %>%
+      as("sf") %>%
+      st_transform(3395) %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_sf %>%
+      mutate(nichts = "nichts") %>%
+      group_by(nichts) %>%
+      summarize %>%
+      st_geometry %>%
+      st_centroid %>%
+      st_transform(4326)
+    int <- layer %>%
+      as("sf") %>%
+      mutate(
+        dist_unit = st_distance(wgs84, cbd),
+        dist_double = as.double(st_distance(wgs84, cbd)),
+        dir_degrees = (bearing(as_Spatial(cbd), as_Spatial(wgs84)) + 360) %% 360
+      )
+  }
+  result <- int %>%
+    mutate(card_ord = ifelse(
+      dir_degrees <= 22.5 |
+        dir_degrees >= 337.5,
+      "N",
+      ifelse(
+        dir_degrees <= 67.5 &
+          dir_degrees >= 22.5,
+        "NE",
+        ifelse(
+          dir_degrees <= 122.5 &
+            dir_degrees >= 67.5,
+          "E",
+          ifelse(
+            dir_degrees <= 157.5 &
+              dir_degrees >= 112.5,
+            "SE",
+            ifelse(
+              dir_degrees <= 292.5 &
+                dir_degrees >= 247.5,
+              "W",
+              ifelse(
+                dir_degrees <= 247.5 &
+                  dir_degrees >= 202.5,
+                "SW",
+                ifelse(
+                  dir_degrees <= 337.5 &
+                    dir_degrees >= 292.5,
+                  "NW",
+                  ifelse(dir_degrees <= 202.5 &
+                           dir_degrees >= 157.5, "S", "nichts")
+                )
+              )
+            )
+          )
+        )
+      )
+    ))
+}
+```
+
+
+
 
 ***to be continued***
 
