@@ -709,15 +709,10 @@ ggplot() +
 ![centroidsMI](images/centroidMI.png)
 
 The red point on this map is made from the centroids of the tracts while the black one is the centroid of the dissovled tracts. 
-The distance between these points is 275 km.  
-
-
-
-
-
-I tested the process in the QGIS modeler to see if there was any difference between calculating the 
+The distance between these points is 275 km. I found that creating centroids from centroids, essentially finding the mean coordinates of the centriods, rather than just dissolving provides a result closer to the orginal QGIS model. The red point in the map above is exactly where distance/direction would be calculated from in the QGIS model if tractsMI was supplied as an input layer for cbd. When creating the function, I both added and forgot a step: I added dissolving which wasn't originally in the model and forgot to make centroids. Just to be sure, I tested these two models in QGIS to see if there was any diffence in the results and found none. 
 ![mean coordinates](images/mean.PNG)
 ![dissolved centroids](images/dissolve.PNG)
+Before making everything in the model SQL, the input features were made into centroids and then a point was made using the 
 
 ***to be continued***
 
