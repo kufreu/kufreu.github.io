@@ -834,7 +834,7 @@ distdir_from_point <- function (layer, center) {
     ))
 }
 ```
-
+At this point, the function worked almost exactly as the QGIS model safe for one thing: there was not an argument for customizable field prefix. Although Iwas originally going to leave this functionality out, in the end I thought it would be best to include it in the function to replicate the model in full. 
 ```r
 #### can I add prefixes to the new columns? ####
 prefix <- distdir_from_point(tractsMI, berrien) %>%
@@ -845,8 +845,10 @@ prefix <- distdir_from_point(tractsMI, berrien) %>%
       rename(paste("test", "dir_degrees", sep = "_") = dir_degrees)
 
 # this doesn't seem to work 
-
-#Sources
+```
+I tried to rename the columns with the function `paste`, concatenating the word test to name of the column and seperating the two  with an underscore. My first attempt to add prefixes was by all means unsucessful, though I had most of the pieces together to make it work.  Using the sources below, I found a way to add prefixes to columns using `paste`. Why`!!` (bang bang)  and `:=` solve this problem is beyond me, though the links with the code aptly describe how and why it works. 
+```r
+#Sources for the fix
 #https://github.com/tidyverse/dplyr/issues/1600
 #https://adv-r.hadley.nz/quasiquotation.html
 #https://thisisnic.github.io/2018/03/31/what-the-heck-is-quasiquotation/
@@ -858,7 +860,6 @@ prefix <- distdir_from_point(tractsMI, berrien) %>%
   rename(!! paste("test", "dist_double", sep = "_"):= dist_double) %>%
   rename(!! paste("test", "dir_degrees", sep = "_") := dir_degrees)
 ```
-
 
 ***to be continued***
 
