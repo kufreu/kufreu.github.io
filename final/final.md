@@ -835,7 +835,29 @@ distdir_from_point <- function (layer, center) {
 }
 ```
 
+```r
+#### can I add prefixes to the new columns? ####
+prefix <- distdir_from_point(tractsMI, berrien) %>%
+  # paste concatenates and rename does what it does
+  # testing to see if I can concatenate while also renaming columns 
+      rename(paste("test", "dist_unit", sep = "_") = dist_unit) %>%
+      rename(paste("test", "dist_double", sep = "_")= dist_double) %>%
+      rename(paste("test", "dir_degrees", sep = "_") = dir_degrees)
 
+# this doesn't seem to work 
+
+#Sources
+#https://github.com/tidyverse/dplyr/issues/1600
+#https://adv-r.hadley.nz/quasiquotation.html
+#https://thisisnic.github.io/2018/03/31/what-the-heck-is-quasiquotation/
+#https://www.r-bloggers.com/bang-bang-how-to-program-with-dplyr/
+vignette("programming")
+
+prefix <- distdir_from_point(tractsMI, berrien) %>%
+  rename(!! paste("test", "dist_unit", sep = "_") := dist_unit) %>%
+  rename(!! paste("test", "dist_double", sep = "_"):= dist_double) %>%
+  rename(!! paste("test", "dir_degrees", sep = "_") := dir_degrees)
+```
 
 
 ***to be continued***
