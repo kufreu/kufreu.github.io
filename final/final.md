@@ -670,8 +670,48 @@ ggplot() +
   geom_sf(data = centroidsDelta, color = "red")
 
 ```
+![centroids](images/centroidDelta.png)
+The mapped results show that there is a  difference between the locations of the centroids. The black point is the centroid made by making centroids on the tracts (shown here in red), dissolving them and then making a centroid. The blue point is the centroid made from just dissolving the tracts. With this being small county, I wanted to see how big this diffrence would be on the state scale. 
 
-I tested the process in 
+```r
+# looking at michigan as a whole
+michigan_centroids <-
+  tractsMI %>%
+  # centroids on tracts
+  st_transform(3395) %>%
+  st_centroid
+
+michigan_centroid <-
+  # centroid made from dissolved centroids
+  michigan_centroids %>%
+  mutate(nichts = "nichts") %>%
+  group_by(nichts) %>%
+  summarize %>%
+  st_transform(3395) %>%
+  st_centroid
+
+michigan <- tractsMI %>%
+  #michigan dissolved
+  mutate(nichts= "nichts")%>%
+  group_by(nichts)%>%
+  summarize
+  
+oneMichigan <- michigan %>%
+  # centroid made from dissolved tracts
+  st_transform(3395) %>%
+  st_centroid
+
+ggplot() +
+  geom_sf(data = michigan) +
+  geom_sf(data = michigan_centroid, color = 'red') + 
+  geom_sf(data = oneMichigan)
+```
+
+
+
+
+
+I tested the process in the QGIS modeler to see if there was any difference between calculating the 
 ![mean coordinates](images/mean.PNG)
 ![dissolved centroids](images/dissolve.PNG)
 
