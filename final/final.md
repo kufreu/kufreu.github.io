@@ -2,10 +2,12 @@
 ### a brief exploration of the geospatial capabilities of r 
 ----------------------------------------------------------
 ### about
-For my final project, I replicated the [QGIS model](qgis/qgisModeling.md) I created at the beginning of the semester using R and various R packages such as ``sf``, ``sp``, ``tidyverse``, and ``geosphere``. This was all done in [RStudio](https://rstudio.com/). In short, I converted the SQL used in the QGIS model into a function in R. Similar to the QGIS model, the R function has three arguments/inputs: the input features, the layer from which distance and direction are calculated, and an optional character string to prefix the new columns for distance and direction (layer, center, and prefix). Numeric results for `distdir_from_point` are in meters and degrees.  As with the original model, the intended application of this function is to calculate the distance and direction of features within a city from the city center or central business district, though as can be seen with my focus on caluclating distance and direction between tracts and counties in Michigan, the applications for the model are not limited to cities and CBDs. [Here](r/distdirFunction.R) is the function in its entirety. I will undoubtedly add comments to it in the next two days or so. 
+For my final project, I replicated the [QGIS model](qgis/qgisModeling.md) I created at the beginning of the semester using R and various R packages such as ``sf``, ``sp``, ``tidyverse``, and ``geosphere``. This was all done in [RStudio](https://rstudio.com/). In short, I converted the SQL used in the QGIS model into a function in R. Similar to the QGIS model, the R function has three arguments/inputs: the input features, the layer from which distance and direction are calculated, and an optional character string to prefix the new columns for distance and direction (layer, center, and prefix). Numeric results for `distdir_from_point` are in meters and degrees.[Here](r/distdirFunction.R) is the function in its entirety. 
+
 ### the function: ``distdir_from_point``
 ```r
 # commented code and other things should be added soon?
+# it calculates distance in meters and direction in degrees from an origin (center) to a destination (layer)
 # this function is dependent on geosphere, tidyverse (mostly dplyr), sp, and sf
 # written by kufre u. 
 distdir_from_point <- function (layer, center, prefix = "") {
