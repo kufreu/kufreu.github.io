@@ -641,7 +641,7 @@ ggplot() +
     axis.title.y = element_blank()
   )
  ```
- Initially, I thought the results looked similar, though I did further testing comparing the difference between making a centroid from  dissolved centroids and making a centroid on a dissolved polygon.
+Initially, I thought the results looked similar, though I did further testing comparing the difference between making a centroid from  dissolved centroids and making a centroid on a dissolved polygon.
  
  ``` r
  centroidDelta <- centroidsDelta %>%
@@ -671,6 +671,7 @@ ggplot() +
 
 ```
 ![centroids](images/centroidDelta.png)
+
 The mapped results show that there is a difference between the locations of the centroids. The black point is the centroid made by making centroids on the tracts (the tract centroids shown here in red), dissolving them and then making a centroid. The blue point is the centroid made from just dissolving the tracts. With this being small county, I wanted to see how big this diffrence would be on the state scale. 
 
 ```r
