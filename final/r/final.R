@@ -1,6 +1,6 @@
 #### final project ####
 
-# with this project, I attempted to replicate the distance and direction model that I created in the QGIS modeler using SQL
+# with this project, I replicated the distance and direction model that I created in the QGIS modeler 
 
 # this is the SQL used in the original/updated model to calculate distance and direction from a point.
 
@@ -21,7 +21,6 @@
 #       from input2) as distDir
 
 
-#https://bakaniko.github.io/FOSS4G2019_Geoprocessing_with_R_workshop/
 
 #### getting things in order ####
 install.packages("tidyverse")
@@ -844,7 +843,7 @@ ggplot() +
   labs(title = "distance test",
        subtitle = "distTest()") +
   theme(
-    plot.title = element_text(hjust = 1),
+    plot.title = element_text(hjust = 0),
     axis.title.x = element_blank(),
     axis.title.y = element_blank()
   )
@@ -868,7 +867,7 @@ tract_test <- distdir_from_point(tractsMI, delta)
 ggplot() +
   geom_sf(data = tract_test, aes(fill = card_ord), color = "grey") +
   scale_fill_brewer(palette = "YlGnBu") +
-  guides(fill = guide_legend(title = "Direction?")) +
+  guides(fill = guide_legend(title = "direction")) +
   labs(title = "direction test",
        subtitle = "distdir_from_point()") +
   theme(
@@ -920,6 +919,12 @@ michigan_centroid <-
   st_transform(3395) %>%
   st_centroid
 
+michigan <- tractsMI %>%
+  #michigan dissolved
+  mutate(nichts= "nichts")%>%
+  group_by(nichts)%>%
+  summarize
+  
 oneMichigan <- michigan %>%
   # centroid made from dissolved tracts
   st_transform(3395) %>%
@@ -929,6 +934,7 @@ ggplot() +
   geom_sf(data = michigan) +
   geom_sf(data = michigan_centroid, color = 'red') + 
   geom_sf(data = oneMichigan)
+
 
 # creating centroids from centroids (mean coordinates) rather than dissolving the original provides a result closer to the orginal qgis model
 # the red point in the map above is exactly where distance/direction would be calcualted from in the QGIS model if tractsMI was supplied as an input layer for cbd
@@ -1113,8 +1119,12 @@ prefix <- distdir_from_point(tractsMI, berrien) %>%
 
 # this doesn't seem to work 
 
+#Sources
 #https://github.com/tidyverse/dplyr/issues/1600
 #https://adv-r.hadley.nz/quasiquotation.html
+#https://thisisnic.github.io/2018/03/31/what-the-heck-is-quasiquotation/
+#https://www.r-bloggers.com/bang-bang-how-to-program-with-dplyr/
+vignette("programming")
 
 prefix <- distdir_from_point(tractsMI, berrien) %>%
   rename(!! paste("test", "dist_unit", sep = "_") := dist_unit) %>%
@@ -1457,7 +1467,7 @@ View(distdir_from_point(layer = tractsMI, center = alger, prefix = "" ))%>%
   labs(title = "Distance Test with Final? Function",
        subtitle = "distdir_from_point(spatialMI, alger, prefix = '')")
 
-#### final function ####
+#### somewhat final function, layer changed to input, center to origin ####
 distdir_from_point <- function (layer, center, prefix = "") {
   if (missing(center)) {
     wgs84 <-
