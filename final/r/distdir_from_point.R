@@ -24,7 +24,7 @@ distdir_from_point <- function (input, origin, prefix = "") {
   # example uses:
   # distdir_from_point(tracts, city_center, "cbd" )
   # distdir_from_point(input = tracts, origin = city_center, prefix = "cbd")
-  # unless the arguments are clearly defined as they are in the second example, the inputs should always be input, origin, then prefix
+  # unless the arguments are clearly defined as they are in the second example, the inputs should always be wrtitten in the order input, origin, then prefix
   
   if (missing(origin)) {
     # this section calculates distance/directon from input if origin is not supplied
