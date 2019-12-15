@@ -5,7 +5,6 @@
 library(tidyverse)
 library(sf)
 library(sp)
-library(RColorBrewer)
 library(geosphere)
 library(viridis)
 library(viridisLite)
