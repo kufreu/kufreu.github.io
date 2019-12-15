@@ -63,6 +63,21 @@ distdir_from_point(center = berrien,
   labs(title = "Distance from Berrien County")
   ```
   
+#### distance of tracts from gogebic county, michigan(images/gogebic.png)
+  [what of it](images/gogebic.png)
+```r
+distdir_from_point(center = gogebic,
+                   layer = tractsMI,) %>%
+  mutate("Distance (km)" = dist_double / 1000) %>%
+  ggplot() +
+  geom_sf(aes(fill = `Distance (km)`),
+          color = NA) +
+  scale_fill_viridis() +
+  labs(title = "Distance of Census Tracts from Gogebic County",
+       x = "Longitude",
+       y = "Latitude")
+```
+  
 #### [census tracts north of berrien county, michigan](images/northBerrien.png)
   ![tracts north of berrien county](images/northBerrien.png)
  ```r
