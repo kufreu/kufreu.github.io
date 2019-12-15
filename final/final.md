@@ -62,7 +62,7 @@ distdir_from_point <- function (input, origin, prefix = "") {
       mutate(
         dist_unit = st_distance(wgs84, cbd), # unaltered output of st_distance (meters)
         dist_double = as.double(st_distance(wgs84, cbd)), # distance as a double (in meters, though unit is not shown with number) 
-        dir_degrees = (bearing(as_Spatial(cbd), as_Spatial(wgs84)) + 360) %% 360 # direction (in degrees, 0-360)
+        dir_degrees = (bearing(as_Spatial(cbd), as_Spatial(wgs84)) + 360) %% 360 #  direction (in degrees, 0-360), objects need to be given the spatial class to be used with bearing and other geosphere functions
       )
   } else {
     # this section calculates distance/direction from origin if it is supplied 
