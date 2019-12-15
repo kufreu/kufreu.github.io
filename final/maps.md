@@ -48,7 +48,7 @@ washtenaw <- countiesMI[countiesMI$fips == "161", ]
 keweenaw <- countiesMI[countiesMI$fips == "083", ]
 ```
 
-### maps made using ggplot2
+### maps made using ggplot2(r/mapping.R)
 #### [distance of counties from berrien county, michigan](images/countyBerrien.png)
 ![distance of counties from berrien county](images/countyBerrien.png)
 ```r
@@ -63,7 +63,7 @@ distdir_from_point(center = berrien,
   labs(title = "Distance from Berrien County")
   ```
   
-##### [census tracts north of berrien county, michigan](images/northBerrien.png)
+#### [census tracts north of berrien county, michigan](images/northBerrien.png)
   ![tracts north of berrien county](images/northBerrien.png)
  ```r
  distdir_from_point(center = berrien,
