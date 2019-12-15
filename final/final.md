@@ -2,7 +2,7 @@
 ### a brief exploration of the geospatial capabilities of r 
 ----------------------------------------------------------
 ### about
-For my final project, I replicated the [QGIS model](qgis/qgisModeling.md) I created at the beginning of the semester using R and various R packages such as ``sf``, ``sp``, ``tidyverse``, and ``geosphere``. This was all done in [RStudio](https://rstudio.com/). In short, I converted the SQL used in the QGIS model into a function in R. Similar to the QGIS model, the R function has three arguments/inputs: the input features, the layer from which distance and direction are calculated, and an optional character string to prefix the new columns for distance and direction (input, origin, and prefix). Distance is calculated in meters and direction in degrees. The function can be found [here](r/distdir_from_point.R).
+For my final project, I replicated the [QGIS model](qgis/qgisModeling.md) I created at the beginning of the semester using R and various R packages such as ``sf``, ``sp``, ``tidyverse``, and ``geosphere``. This was all done in [RStudio](https://rstudio.com/). In short, I converted the SQL used in the QGIS model into a function in R. Similar to the QGIS model, the R function has three arguments/inputs: the input features, the layer from which distance and direction are calculated, and an optional character string to prefix the new columns for distance and direction (input, origin, and prefix). Distance is calculated in meters and direction in degrees. The function can be found [here](r/distdir_from_point.R) and the entire process, failures and all, can be found in this [R script](r/final.R).
 
 ### the function: ``distdir_from_point(input, origin, prefix)``
 ```r
@@ -1086,7 +1086,6 @@ if(prefix == ""){
 ```
 This minor change was made to the function and `distdir_from_point` was complete. To make things make more sense, I recently changed layer to input and center to origin in the final function. 
 
-### discussion 
-
+### discussion
 
 
