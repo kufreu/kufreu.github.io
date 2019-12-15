@@ -167,7 +167,7 @@ from (select *,
 ![what of it](images/gogebic.png)
 
 ### [creating the function](r/final.R)
-The first step of making this function was to identify the packages I would need to use for this project, installing and loading them in RStudio when they were found. ``tidyverse`` was used because of the relative ease `dplyr` provides in manipulating data frames and ``ggplot2`` to map results. I could have installed only these two packages from `tidyverse`, though I thought it would be best to play it safe as  the other packages which make up the tidyverse could also be of use. Along with tidyverse, `sf` makes up the backbone of this function. Package ``sf`` provides simple features as data frames with a geometry list-column, which is a format I was familiar with coming from using tables in QGIS and PostGIS. It also has many of the geometry and geoemtric operations I need to make the function.     
+The first step of making this function was to identify the packages I would need to use for this project, installing and loading them in RStudio when they were found. ``tidyverse`` was used because of the relative ease `dplyr` provides in manipulating data frames and ``ggplot2`` to map results. I could have installed only these two packages from `tidyverse`, though I thought it would be best to play it safe as the other packages which make up the `tidyverse` could also be of use. Along with `tidyverse`, `sf` makes up the backbone of this function. Package ``sf`` provides simple features as data frames with a geometry list-column, which is a format I was familiar with coming from using tables in QGIS and PostGIS. It also has many of the geometry and geoemtric operations I need to make the function.     
 ```r
 #### installation ####
 install.packages("tidyverse","sf", "sp", "geosphere")
@@ -217,13 +217,13 @@ I mapped each result to see if they dissolved and then went on to test `st_centr
 ```r
 centroidTracts <- st_centroid(tractsMI)
 ```
-There was warning when creating centroids which I largely igorned, though this will be resovled later.
+There was a warning when creating centroids which I largely igorned, though this will be resovled later.
 ```r
 Warning message:
 In st_centroid.sf(tractsMI) :
   st_centroid assumes attributes are constant over geometries of x
 ```
-Ignoring this  warning message, I went on to make test out making centroids on dissolved shapes.  
+Ignoring this  warning message, I went on to test out making centroids on dissolved shapes.  
 
 ```r
 # from sf package
@@ -249,7 +249,7 @@ center <-
   summarize() %>%
   st_centroid()
 ```
-Both `geosphere` and `sf` have functions to create centroids, though I ended up using `st_centroid` from `sf` because it was less of a hassle to use. `centroid` from `geosphere` first needed the object to be converted to having a spatial class and the ouput of the function were x,y coordinates which then needed to be made into a point. Having already loaded the objects into R using `sf` and them being simple features, sticking with `sf` functions appeared to be the best way to go since it requires the least amount of effort. The next step was testing out `st_distance` to calculate the distance between the centroid of Michigan and its tracts. 
+Both `geosphere` and `sf` have functions to create centroids, though I ended up using `st_centroid` from `sf` because it was less of a hassle to use. `centroid` from `geosphere` first needed the object to be converted to have a spatial class and the ouput of the function were x,y coordinates which then needed to be made into a point. Having already loaded the objects into R using `sf` and them being simple features, sticking with `sf` functions appeared to be the best way to go since it requires the least amount of effort. The next step was testing out `st_distance` to calculate the distance between the centroid of Michigan and its tracts. 
 ```r
 View(st_distance(centroidTracts, center))
 ```
@@ -270,7 +270,7 @@ distTest <- function(layer) {
     mutate(dist = as.double(st_distance(st_centroid(tbd), center)))
 }
 ```
-Like the original model, I transformed the layer before calculating distance. Two objects are created in this object before calculating the result, tbd, which is the transformed input with a field to dissolve on and center, the centroid made on the dissolved input. `as.double` makes the data type of the `st_distance` result a double. This was done because before the output was a list with the distance and unit of measurement in one field and I could not do other calculations with it in this form. I wanted to get a handle on using more pipes in functions after making distTest to make it more streamlined.
+Like the original model, I transformed the layer before calculating distance. Two objects are created in this function before calculating the result, tbd, which is the transformed input with a field to dissolve on and center, the centroid made on the dissolved input. `as.double` makes the data type of the `st_distance` result a double. This was done because before the output was a list with the distance and unit of measurement in one field and I could not do other calculations with it in this form. I wanted to get a handle on using more pipes in functions after making distTest to make it more streamlined.
 ```r
 #### pipe dreams / testing pipes in R ####
 central <-
@@ -425,7 +425,7 @@ View(dirtesting %>%
          )
        )))
 ```
-This  was then added to to `distdir_from_point` to create what I thought would be the final form of the function. 
+This was then added to to `distdir_from_point` to create what I thought would be the final form of the function. 
 ```r
 distdir_from_point <- function (layer, center) {
   if (missing(center)) {
@@ -504,7 +504,7 @@ distdir_from_point <- function (layer, center) {
     ))
 }
 ```
-Given the warning messages I got every time I used the function, more was needed to be done to fix it. These were the warning messages from `st_centroid` which needed to be resolved .
+Given the warning messages I got every time I used the function, more was needed to be done to make the function more functional. These were the warning messages from `st_centroid` which needed to be resolved .
 ```r
 Warning: st_centroid does not give correct centroids for longitude/latitude data
 Warning message:
@@ -728,8 +728,11 @@ ggplot() +
 
 The red point on this map is made from the centroids of the tracts while the black one is the centroid of the dissovled tracts. 
 The distance between these points is 275 km. I found that creating centroids from centroids, essentially finding the mean coordinates of the centriods, rather than just dissolving provides a result closer to the orginal QGIS model. The red point in the map above is exactly where distance/direction would be calculated from in the QGIS model if tractsMI was supplied as cbd. When creating the function, I both added and forgot a step: I added dissolving which wasn't originally in the model and forgot to make centroids before dissolving. Just to be sure, I tested these two models in QGIS to see if there was any diffence in the results and found none. 
+
 ![mean coordinates](images/mean.PNG)
+
 ![dissolved centroids](images/dissolve.PNG)
+
 The second model here is what would be replicated in R to create the center point. This was the result of incorporating these changes in a test to make a centroid from the mean coordinates of the tract centroids.
 ```r
 test <-
