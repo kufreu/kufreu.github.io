@@ -139,3 +139,12 @@ distdir_from_point(center = chicagoCBD,
   scale_fill_viridis() +
   labs(title = "Distance of Tracts from the CBD of Chicago")
   ```
+  
+  ### data 
+[census tracts for michigan](data/censusMI.gpkg)
+
+data sources: U.S. Census Bureau; 2018 Census Tracts for Michigan, 2017 American Community Survey 5-Year Estimates, Tables B25064 and B03002
+
+[chicago census tracts](data/chicago.gpkg)
+
+data source: Census, though otherwise unknown 
