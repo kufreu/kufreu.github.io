@@ -2,7 +2,7 @@
 ### a brief exploration of the geospatial capabilities of r 
 ----------------------------------------------------------
 ### about
-For my final project, I replicated the [QGIS model](qgis/qgisModeling.md) I created at the beginning of the semester using R and various R packages such as ``sf``, ``sp``, ``tidyverse``, and ``geosphere``. This was all done in [RStudio](https://rstudio.com/). In short, I converted the SQL used in the QGIS model into a function in R. Similar to the QGIS model, the R function has three arguments/inputs: the input features, the layer from which distance and direction are calculated, and an optional character string to prefix the new columns for distance and direction (input, origin, and prefix). Distance is calculated in meters and direction in degrees. The function can be found [here](r/distdir_from_point.R)
+For my final project, I replicated the [QGIS model](qgis/qgisModeling.md) I created at the beginning of the semester using R and various R packages such as ``sf``, ``sp``, ``tidyverse``, and ``geosphere``. This was all done in [RStudio](https://rstudio.com/). In short, I converted the SQL used in the QGIS model into a function in R. Similar to the QGIS model, the R function has three arguments/inputs: the input features, the layer from which distance and direction are calculated, and an optional character string to prefix the new columns for distance and direction (input, origin, and prefix). Distance is calculated in meters and direction in degrees. The function can be found [here](r/distdir_from_point.R).
 
 ### the function: ``distdir_from_point(input, origin, prefix)``
 ```r
@@ -178,7 +178,7 @@ distdir_from_point(center = gogebic,
        y = "Latitude")
 ```
 
-### creating the function
+### [creating the function](r/final.R)
 The first step of making this function was to identify the packages I would need to use for this project, installing and loading them in RStudio when they were found. ``tidyverse`` was used because of the relative ease `dplyr` provides in manipulating data frames and ``ggplot2`` to map results. I could have installed only these two packages from `tidyverse`, though I thought it would be best to play it safe as  the other packages which make up the tidyverse could also be of use. Along with tidyverse, `sf` makes up the backbone of this function. Package ``sf`` provides simple features as data frames with a geometry list-column, which is a format I was familiar with coming from using tables in QGIS and PostGIS. It also has many of the geometry and geoemtric operations I need to make the function.     
 ```r
 #### installation ####
