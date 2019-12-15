@@ -27,7 +27,7 @@ library(geosphere)
 distdir_from_point <- function (input, origin, prefix = "") {
   # input: destination layer. input also becomes the origin layer if origin is not supplied can either be an sf object or an object with a spatial class (sf preferred)
   # origin: origin layer / where distance and direction are calculated from. can either be an sf object or an object with a spatial class (sf preferred)
-  # prefix: customizable prefix, should be in quotes. must be a character string in quotes
+  # prefix: customizable prefix, must be a character string in quotes
   
   # example uses:
   # distdir_from_point(tracts, city_center, "cbd" )
@@ -38,9 +38,9 @@ distdir_from_point <- function (input, origin, prefix = "") {
     # this section calculates distance/directon from input if origin is not supplied
     wgs84 <- # destination layer, centroid made on each feature  
       input %>%
-      as("sf") %>% # coerce objects with spatial class into sf objects
+      as("sf") %>% # coerces objects with spatial class into sf objects
       st_transform(3395) %>% # transforms input into WGS 84  (projected coordinate system)
-      st_geometry %>% # gets geometry from the object to be used with st_centroid 
+      st_geometry %>% # gets geometry from the object as a list to be used with st_centroid 
       st_centroid %>%
       st_transform(4326) # transforms input into WGS 84 (geographic coordinate system)
     cbd <- # point made from mean coordinates of centroids 
@@ -49,19 +49,19 @@ distdir_from_point <- function (input, origin, prefix = "") {
       st_transform(3395) %>%
       st_geometry %>%
       st_centroid %>% # creating a layer of centroids 
-      st_sf %>%
+      st_sf %>% # this creates an sf object/data frame from the list of geometries made in st_geometry
       mutate(nichts = "nichts") %>% # creating a column to dissolve on  
       group_by(nichts) %>%
       summarize %>% # grouping by new field and dissolving centroids into a single geometry 
       st_geometry %>%
-      st_centroid %>%
+      st_centroid %>% # making centroid from a multipoint feature 
       st_transform(4326)
     int <-
       input %>%
       as("sf") %>%
       mutate(
-        dist_unit = st_distance(wgs84, cbd), # unaltered output of st_distance
-        dist_double = as.double(st_distance(wgs84, cbd)), # distance as a double (no unit) 
+        dist_unit = st_distance(wgs84, cbd), # unaltered output of st_distance (meters)
+        dist_double = as.double(st_distance(wgs84, cbd)), # distance as a double (in meters, though unit is not shown with number) 
         dir_degrees = (bearing(as_Spatial(cbd), as_Spatial(wgs84)) + 360) %% 360 # direction (in degrees, 0-360)
       )
   } else {
