@@ -177,6 +177,35 @@ distdir_from_point(center = gogebic,
        x = "Longitude",
        y = "Latitude")
 ```
+### data 
+[census tracts for michigan](data/censusMI.gpkg)
+
+Data Sources: U.S. Census Bureau; 2018 Census Tracts for Michigan, 2017 American Community Survey 5-Year Estimates, Tables B25064 and B03002
+
+[chicago census tracts](data/chicago.gpkg)
+
+Data Source: Census, though otherwise unknown 
+
+### software
+[R](https://www.r-project.org/)
+
+[RStudio](https://rstudio.com/)
+
+[QGIS](https://qgis.org/en/site/)
+
+### r packages 
+[tidyverse](https://www.tidyverse.org/)
+
+[sf](https://r-spatial.github.io/sf/index.html)
+
+[sp](https://cran.r-project.org/web/packages/sp/index.html)
+
+[geosphere](https://cran.r-project.org/web/packages/geosphere/index.html)
+
+### help
+[R for Data Science](https://r4ds.had.co.nz/)
+[Hands-On Programming with R](https://rstudio-education.github.io/hopr/)
+[Simple Features for R](https://r-spatial.github.io/sf/index.html)
 
 ### [creating the function](r/final.R)
 The first step of making this function was to identify the packages I would need to use for this project, installing and loading them in RStudio when they were found. ``tidyverse`` was used because of the relative ease `dplyr` provides in manipulating data frames and ``ggplot2`` to map results. I could have installed only these two packages from `tidyverse`, though I thought it would be best to play it safe as  the other packages which make up the tidyverse could also be of use. Along with tidyverse, `sf` makes up the backbone of this function. Package ``sf`` provides simple features as data frames with a geometry list-column, which is a format I was familiar with coming from using tables in QGIS and PostGIS. It also has many of the geometry and geoemtric operations I need to make the function.     
@@ -1057,21 +1086,7 @@ if(prefix == ""){
 ```
 This minor change was made to the function and `distdir_from_point` was complete. To make things make more sense, I recently changed layer to input and center to origin in the final function. 
 
-### data 
-[census tracts for michigan](data/censusMI.gpkg)
+### discussion 
 
-Data Sources: U.S. Census Bureau; 2018 Census Tracts for Michigan, 2017 American Community Survey 5-Year Estimates, Tables B25064 and B03002
-### software
-[R](https://www.r-project.org/)
 
-[RStudio](https://rstudio.com/)
-
-#### packages 
-[tidyverse](https://www.tidyverse.org/)
-
-[sf](https://r-spatial.github.io/sf/index.html)
-
-[sp](https://cran.r-project.org/web/packages/sp/index.html)
-
-[geosphere](https://cran.r-project.org/web/packages/geosphere/index.html)
 
