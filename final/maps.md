@@ -48,7 +48,10 @@ washtenaw <- countiesMI[countiesMI$fips == "161", ]
 keweenaw <- countiesMI[countiesMI$fips == "083", ]
 ```
 
-### maps made using ggplot2(r/mapping.R)
+### [maps made using ggplot2](r/mapping.R)
+#### quick note:
+These maps were made with the `distdir_from_point` function that had layer and center as arguments rather than input and origin. 
+
 #### [distance of counties from berrien county, michigan](images/countyBerrien.png)
 ![distance of counties from berrien county](images/countyBerrien.png)
 ```r
