@@ -2,7 +2,7 @@
 ### a brief exploration of the geospatial capabilities of r 
 ----------------------------------------------------------
 ### about
-For my final project, I replicated the [QGIS model](qgis/qgisModeling.md) I created at the beginning of the semester using R and various R packages such as ``sf``, ``sp``, ``tidyverse``, and ``geosphere``. This was all done in [RStudio](https://rstudio.com/). In short, I converted the SQL used in the QGIS model into a function in R. Similar to the QGIS model, the R function has three arguments/inputs: the input features, the layer from which distance and direction are calculated, and an optional character string to prefix the new columns for distance and direction (input, origin, and prefix). Numeric results for `distdir_from_point` are in meters and degrees.[Here](r/distdirFunction.R) is the function in its entirety. 
+For my final project, I replicated the [QGIS model](qgis/qgisModeling.md) I created at the beginning of the semester using R and various R packages such as ``sf``, ``sp``, ``tidyverse``, and ``geosphere``. This was all done in [RStudio](https://rstudio.com/). In short, I converted the SQL used in the QGIS model into a function in R. Similar to the QGIS model, the R function has three arguments/inputs: the input features, the layer from which distance and direction are calculated, and an optional character string to prefix the new columns for distance and direction (input, origin, and prefix). Distance is calculated in meters and direction in degrees. The function can be found [here](r/distdir_from_point.R)
 
 ### the function: ``distdir_from_point(input, origin, prefix)``
 ```r
@@ -32,7 +32,7 @@ distdir_from_point <- function (input, origin, prefix = "") {
   # example uses:
   # distdir_from_point(tracts, city_center, "cbd" )
   # distdir_from_point(input = tracts, origin = city_center, prefix = "cbd")
-  # unless the arguments are clearly defined as they are in the second example, the inputs should always be input, origin, then prefix
+  # unless the arguments are clearly defined as they are in the second example, the inputs should always be written in the order input, origin, then prefix
   
   if (missing(origin)) {
     # this section calculates distance/directon from input if origin is not supplied
