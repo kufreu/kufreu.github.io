@@ -1046,7 +1046,7 @@ if(prefix == ""){
 This minor change was made to the function and `distdir_from_point` was complete. To make things make more sense, I recently changed layer to input and center to origin in the final function. 
 
 ### the *briefest* discussion
-Having only used open source software and providing all the R scripts and data I used along with somewhat adequate documentation, I believe that this project is incredibly open and reproducible. RStudio and QGIS are free to download and the function, `distdir_from_point`, can easily be reproduced and is open to be improved on by others. The purpose of making a function is to be reproducible, and given that the data used is provided and one can use their own data as long as its an sf object and either a point or a polygon, the results are replicable.  
+Having only used open source software and providing all the R scripts and data I used along with somewhat adequate documentation, I believe that this project is incredibly open and reproducible. RStudio and QGIS are free to download and the function, `distdir_from_point`, can easily be reproduced and is open to be improved on by others. The purpose of making a function is to be reproducible, and given that the data used is provided and one can use their own data as long as it's an sf object and is either a point or a polygon, the results are replicable. As I said with the QGIS model, open source GIS software allow users to truly adopt GIS as their own, and through the making of this function, I think I have done the same. The function is my own though it is free to be others. 
 
 ### data 
 [census tracts for michigan](data/censusMI.gpkg)
