@@ -63,7 +63,7 @@ distdir_from_point(center = berrien,
   labs(title = "Distance from Berrien County")
   ```
   
-#### distance of tracts from gogebic county, michigan(images/gogebic.png)
+#### [distance of tracts from gogebic county, michigan](images/gogebic.png)
   [what of it](images/gogebic.png)
 ```r
 distdir_from_point(center = gogebic,
