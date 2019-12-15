@@ -1,4 +1,4 @@
-# mapping outputs of distdir_from_point
+# mapping outputs of `distdir_from_point`
 
 ### packages used 
 ```r
