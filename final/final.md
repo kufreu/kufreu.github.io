@@ -6,50 +6,75 @@ For my final project, I replicated the [QGIS model](qgis/qgisModeling.md) I crea
 
 ### the function: ``distdir_from_point``
 ```r
-# commented code and other things should be added soon?
-# it calculates distance in meters and direction in degrees from an origin (center) to a destination (layer)
+#### distdir_from_point ####
+
+# this function calculates distance in meters and direction in degrees from an origin (origin) to a destination (input)
 # this function is dependent on geosphere, tidyverse (mostly dplyr), sp, and sf
-# written by kufre u. 
-distdir_from_point <- function (layer, center, prefix = "") {
-  if (missing(center)) {
-    wgs84 <-
-      layer %>%
+# written by kufre u.
+
+##### packages ####
+install.packages("geosphere")
+install.packages("tidyverse")
+install.packages("sf")
+install.packages("sp")
+
+library(tidyverse)
+library(sf)
+library(sp)
+library(geosphere)
+
+#### final function ####
+distdir_from_point <- function (input, origin, prefix = "") {
+  # input: destination layer. input also becomes the origin layer if origin is not supplied can either be an sf object or an object with a spatial class (sf preferred)
+  # origin: origin layer / where distance and direction are calculated from. can either be an sf object or an object with a spatial class (sf preferred)
+  # prefix: customizable prefix, should be in quotes. must be a character string in quotes
+  
+  # example uses:
+  # distdir_from_point(tracts, city_center, "cbd" )
+  # distdir_from_point(input = tracts, origin = city_center, prefix = "cbd")
+  # unless the arguments are clearly defined as they are in the second example, the inputs should always be input, origin, then prefix
+  
+  if (missing(origin)) {
+    # this section calculates distance/directon from input if origin is not supplied
+    wgs84 <- # destination layer, centroid made on each feature  
+      input %>%
+      as("sf") %>% # coerce objects with spatial class into sf objects
+      st_transform(3395) %>% # transforms input into WGS 84  (projected coordinate system)
+      st_geometry %>% # gets geometry from the object to be used with st_centroid 
+      st_centroid %>%
+      st_transform(4326) # transforms input into WGS 84 (geographic coordinate system)
+    cbd <- # point made from mean coordinates of centroids 
+      input %>%
       as("sf") %>%
       st_transform(3395) %>%
       st_geometry %>%
-      st_centroid %>%
-      st_transform(4326)
-    cbd <-
-      layer %>%
-      as("sf") %>%
-      st_transform(3395) %>%
-      st_geometry %>%
-      st_centroid %>%
+      st_centroid %>% # creating a layer of centroids 
       st_sf %>%
-      mutate(nichts = "nichts") %>%
+      mutate(nichts = "nichts") %>% # creating a column to dissolve on  
       group_by(nichts) %>%
-      summarize %>%
+      summarize %>% # grouping by new field and dissolving centroids into a single geometry 
       st_geometry %>%
       st_centroid %>%
       st_transform(4326)
     int <-
-      layer %>%
+      input %>%
       as("sf") %>%
       mutate(
-        dist_unit = st_distance(wgs84, cbd),
-        dist_double = as.double(st_distance(wgs84, cbd)),
-        dir_degrees = (bearing(as_Spatial(cbd), as_Spatial(wgs84)) + 360) %% 360
+        dist_unit = st_distance(wgs84, cbd), # unaltered output of st_distance
+        dist_double = as.double(st_distance(wgs84, cbd)), # distance as a double (no unit) 
+        dir_degrees = (bearing(as_Spatial(cbd), as_Spatial(wgs84)) + 360) %% 360 # direction (in degrees, 0-360)
       )
   } else {
+    # this section calculates distance/direction from origin if it is supplied 
     wgs84 <-
-      layer %>%
+      input %>%
       as("sf") %>%
       st_transform(3395) %>%
       st_geometry %>%
       st_centroid %>%
       st_transform(4326)
     cbd <-
-      center %>%
+      origin %>% # input is replaced with origin here 
       as("sf") %>%
       st_transform(3395) %>%
       st_geometry %>%
@@ -61,7 +86,7 @@ distdir_from_point <- function (layer, center, prefix = "") {
       st_geometry %>%
       st_centroid %>%
       st_transform(4326)
-    int <- layer %>%
+    int <- input %>%
       as("sf") %>%
       mutate(
         dist_unit = st_distance(wgs84, cbd),
@@ -70,6 +95,7 @@ distdir_from_point <- function (layer, center, prefix = "") {
       )
   }
   result <- int %>%
+    # assigning cardinal/ordinal directions to dir_degrees
     mutate(card_ord = ifelse(
       dir_degrees <= 22.5 |
         dir_degrees >= 337.5,
@@ -99,7 +125,7 @@ distdir_from_point <- function (layer, center, prefix = "") {
                     dir_degrees >= 292.5,
                   "NW",
                   ifelse(dir_degrees <= 202.5 &
-                           dir_degrees >= 157.5, "S", "nirgendwo")
+                           dir_degrees >= 157.5, "S", "nichts")
                 )
               )
             )
@@ -107,14 +133,15 @@ distdir_from_point <- function (layer, center, prefix = "") {
         )
       )
     ))
-  if(prefix == ""){
-    result 
+  # adding prefixes
+  if (prefix == "") {
+    result # result is returned if no prefix is given 
   } else {
     result %>%
-      rename(!! paste(prefix, "dist_unit", sep = "_"):= dist_unit) %>%
-      rename(!! paste(prefix, "dist_double", sep = "_"):= dist_double) %>%
-      rename(!! paste(prefix, "dir_degrees", sep = "_"):= dir_degrees) %>%
-      rename(!! paste(prefix, "card_ord", sep = "_"):= card_ord)
+      rename(!!paste(prefix, "dist_unit", sep = "_") := dist_unit) %>%
+      rename(!!paste(prefix, "dist_double", sep = "_") := dist_double) %>%
+      rename(!!paste(prefix, "dir_degrees", sep = "_") := dir_degrees) %>%
+      rename(!!paste(prefix, "card_ord", sep = "_") := card_ord)
   }
 }
 ```
@@ -1028,7 +1055,7 @@ if(prefix == ""){
       rename(!! paste(prefix, "card_ord", sep = "_"):= card_ord)
   }
 ```
-This minor change was made to the function and `distdir_from_point` was complete.
+This minor change was made to the function and `distdir_from_point` was complete. To make things make more sense, layer was changed to input and center to origin in the final function. 
 
 ### data 
 [census tracts for michigan](data/censusMI.gpkg)
