@@ -25,8 +25,8 @@ library(geosphere)
 
 #### final function ####
 distdir_from_point <- function (input, origin, prefix = "") {
-  # input: destination layer. input also becomes the origin layer if origin is not supplied can either be an sf object or an object with a spatial class (sf preferred)
-  # origin: origin layer / where distance and direction are calculated from. can either be an sf object or an object with a spatial class (sf preferred)
+  # input: destination layer. input also becomes the origin layer if origin is not supplied can either be an sf object or an object with a spatial class (sf preferred, must be a polygon or point)
+  # origin: origin layer / where distance and direction are calculated from. can either be an sf object or an object with a spatial class (sf preferred, must be a polygon or point)
   # prefix: customizable prefix, must be a character string in quotes
   
   # example uses:
@@ -1046,6 +1046,7 @@ if(prefix == ""){
 This minor change was made to the function and `distdir_from_point` was complete. To make things make more sense, I recently changed layer to input and center to origin in the final function. 
 
 ### discussion
+Having only used open source software and providing all the R scripts and data I used along with somewhat adequate documentation, I believe that this project is incredibly open and reproducible. RStudio and QGIS are free to download and the function, `distdir_from_point`, can easily be reproduced and is open to be improved on by others.  
 
 ### data 
 [census tracts for michigan](data/censusMI.gpkg)
@@ -1072,7 +1073,7 @@ Data Source: Census, though otherwise unknown
 
 [geosphere](https://cran.r-project.org/web/packages/geosphere/index.html)
 
-###  main help
+### books and package documentation
 [R for Data Science](https://r4ds.had.co.nz/)
 
 [Hands-On Programming with R](https://rstudio-education.github.io/hopr/)
@@ -1080,4 +1081,6 @@ Data Source: Census, though otherwise unknown
 [Simple Features for R](https://r-spatial.github.io/sf/index.html)
 
 [geosphere](https://cran.r-project.org/web/packages/geosphere/geosphere.pdf)
+
+[dpylr](https://dplyr.tidyverse.org/)
 
