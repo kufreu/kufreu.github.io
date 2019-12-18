@@ -20,9 +20,9 @@ library(viridisLite)
 
 #### loading data ####
 # data was in same folder as r project
-tractsMI <- st_read(dsn = "censusMI.gpkg", input = "tracts")
-chicago <- st_read(dsn = "chicago.gpkg", input = "tracts2010")
-chicagoCBD <- st_read(dsn = "chicago.gpkg", input = "CBD")
+tractsMI <- st_read(dsn = "censusMI.gpkg", layer = "tracts")
+chicago <- st_read(dsn = "chicago.gpkg", layer = "tracts2010")
+chicagoCBD <- st_read(dsn = "chicago.gpkg", layer = "CBD")
 
 
 #### getting counties & tracts ####
