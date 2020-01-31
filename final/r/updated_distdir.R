@@ -1,4 +1,9 @@
-#### distdir (one distance column) ####
+#### distdir ####
+
+# this function calculates distance in meters and direction in degrees from an origin (origin) to a destination (input)
+# this function is dependent on geosphere, tidyverse (mostly dplyr), sp, and sf
+# written by kufre u.
+
 distdir <- function (input, origin, prefix = "") {
   
   library(units)
