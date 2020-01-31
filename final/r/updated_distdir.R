@@ -8,8 +8,9 @@ distdir <- function (input, origin, prefix = "") {
   
   library(units)
   library(geosphere)
-  library(tidyverse)
-  
+  library(dplyr)
+  library(sf)
+    
   print("Distance is measured in meters.")
   
   wgs84 <-
