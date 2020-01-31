@@ -8,6 +8,7 @@ distdir <- function (input, origin, prefix = "") {
   
   library(units)
   library(geosphere)
+  library(tidyverse)
   
   print("Distance is measured in meters.")
   
