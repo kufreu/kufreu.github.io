@@ -98,5 +98,6 @@ distdir <- function (input, origin, prefix = "") {
              !!paste(prefix, "direction_degrees", sep = "_") := direction_degrees,
              !!paste(prefix, "direction_card_ord", sep = "_") := direction_card_ord)
   }
+return(result)
 }
 ```
