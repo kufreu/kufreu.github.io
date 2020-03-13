@@ -93,7 +93,7 @@ distdir <- function (input, origin, prefix = "") {
   if (prefix == "") {
     result  
   } else {
-    result %>%
+    result<- result %>%
       rename(!!paste(prefix, "distance", sep = "_") := distance,
              !!paste(prefix, "direction_degrees", sep = "_") := direction_degrees,
              !!paste(prefix, "direction_card_ord", sep = "_") := direction_card_ord)
