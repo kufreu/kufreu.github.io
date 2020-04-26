@@ -6,10 +6,10 @@
 
 distdir <- function (input, origin, prefix = "") {
   
-  library(units)
   library(geosphere)
   library(dplyr)
   library(sf)
+  library(units)
     
   print("Distance is measured in meters.")
   
