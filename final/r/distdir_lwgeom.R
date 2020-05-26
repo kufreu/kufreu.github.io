@@ -1,7 +1,7 @@
 #### distdir ####
 
 # this function calculates distance in meters and direction in degrees from an origin (origin) to a destination (input)
-# this function is dependent on lwgeom, tidyverse (mostly dplyr), and sf
+# this function is dependent on lwgeom, dplyr, and sf
 # written by kufre u.
 
 distdir_lwgeom <- function (input, origin, prefix = "") {
