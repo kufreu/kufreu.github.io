@@ -280,7 +280,7 @@ distdir_s2 = function (input, origin, prefix = "") {
   result =
     input %>%
     mutate(
-      distance = s2_distance(o, d),
+      distance = s2_distance(o, i),
       direction = (atan2(y, x) * r2d + 360) %% 360,
       cardinal = case_when(
         direction <= 22.5 |
