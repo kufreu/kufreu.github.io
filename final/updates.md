@@ -100,7 +100,7 @@ distdir <- function (input, origin, prefix = "") {
   }
 }
 ```
-### [distdir using lwgeom instead of geosphere](r/distdir_lwgeom)
+### [distdir using lwgeom instead of geosphere](r/distdir_lwgeom.R)
 ```r
 #### distdir_lwgeom ####
 
@@ -222,7 +222,7 @@ distdir_lwgeom <- function (input, origin, prefix = "") {
 }
 ```
 
-### [distdir using s2](r/distdir_sd.R)
+### [distdir using s2](r/distdir_s2.R)
 ```r
 # distdir_s2 --------------------------------------------------------------
 # this function calculates distance in meters and direction in degrees from an origin (origin) to a destination (input)
