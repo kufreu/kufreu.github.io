@@ -1,1 +1,1 @@
-[hansen forest loss in burkina faso](hansen_burkina.html)
+[hansen forest loss in burkina faso](hansen_burkina_faso.html)
