@@ -16,4 +16,4 @@
 
 [what's gis?](stuff/gis.md)
 
-[test](loss_Test.hml)
+[test](test/loss_Test.hml)
