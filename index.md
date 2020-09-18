@@ -16,4 +16,4 @@
 
 [what's gis?](stuff/gis.md)
 
-[geog 0351: remote sensing](remote/sensingremote_sensing.md)
+[geog 0351: remote sensing](remote_sensing/remote_sensing.md)
