@@ -1,19 +1,19 @@
 # open source geographic information science
 
-[study commentary](articles/articles.md)
+[study commentary](geog0323/articles/articles.md)
 
-[qgis](qgis/qgisModeling.md)
+[qgis](geog0323/qgis/qgisModeling.md)
 
-[saga](saga/saga.md)
+[saga](geog0323/saga/saga.md)
 
-[spatial sql](spatialSQL/spatialSQL.md)
+[spatial sql](geog0323/spatialSQL/spatialSQL.md)
 
-[reproducibility & replicability](r&r/r&r.md)
+[reproducibility & replicability](geog0323/r&r/r&r.md)
 
-[big data](twitter/twitter.md)
+[big data](geog0323/twitter/twitter.md)
 
-[final project](final/final.md)
+[final project](geog0323/final/final.md)
 
-[what's gis?](stuff/gis.md)
+[what's gis?](geog0323/stuff/gis.md)
 
 [geog 0351: remote sensing](geog0351/remote_sensing.md)
