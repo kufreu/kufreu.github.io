@@ -1,19 +1,4 @@
-# open source geographic information science
+# geography work by kufre u.
+[geog 0323: open source geographic information science](geog0323.md)
 
-[study commentary](geog0323/articles/articles.md)
-
-[qgis](geog0323/qgis/qgisModeling.md)
-
-[saga](geog0323/saga/saga.md)
-
-[spatial sql](geog0323/spatialSQL/spatialSQL.md)
-
-[reproducibility & replicability](geog0323/r&r/r&r.md)
-
-[big data](geog0323/twitter/twitter.md)
-
-[final project](geog0323/final/final.md)
-
-[what's gis?](geog0323/stuff/gis.md)
-
-[geog 0351: remote sensing](geog0351/remote_sensing.md)
+[geog 0351: remote sensing](geog0351/geog0351.md)
