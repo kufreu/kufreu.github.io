@@ -1,0 +1,333 @@
+---
+title: ""
+output: html_notebook
+---
+# st_segments
+Recently, I was doing work with pgRouting and ran into the problem of my network having not nearly enough nodes to get an accurate calculation for what I was doing, which at the time was creating catchment areas. I found a very helpful post by [Paul Ramsey](http://blog.cleverelephant.ca/2015/02/breaking-linestring-into-segments.html) where he shows different ways of breaking up linestrings into segments using PostGIS. I adapted his last example here with `st_segmentize` to add more vertices to the linestrings to ensure that the max length of the line segments was half a meter. 
+
+```{sql breaking up linestrings in postgis, eval = F}
+with routing as (
+  select row_number() over (order by geometry) as id,  
+  st_segmentize(geometry,.5) as geometry
+  from streets
+),
+segments as (
+  select id, 
+  st_astext(st_makeline(lag((pt).geom, 1, null) over (partition by id order by id, (pt).path), (pt).geom)) as geom
+  from (select id, st_dumppoints(geometry) as pt from routing) as dumps
+  )
+  select * from segments where geom is not null;
+```
+
+A recent update to [`sfnetworks`](https://github.com/luukvdmeer/sfnetworks) has made spatial network analysis in R significantly more straightforward and while working with this package, I encountered the same problem as I did with pgRouting: my network needed more nodes. Because of this, I thought it would be fun to try to implement Paul Ramsey's solution in R using `sf` and create a function called `st_segments` to do the job. There is an existing package named [`nngeo`](https://github.com/michaeldorman/nngeo) that has the function`st_segments`, though I found it to be slow and I wanted to create my own version of the function based on the SQL. Before getting started on anything, it would be best to get a small road network to work with. 
+
+```{r getting a road network, message=F, warning=F, fig.height=6, fig.width=9}
+library(sf)
+library(mapview)
+library(dplyr)
+library(tigris)
+
+midd = read_sf("https://opendata.arcgis.com/datasets/625b92329bb841cf8295d14553b67e1f_2.geojson") %>% 
+  filter(COLLEGE == "MIDDLEBURY COLLEGE") %>% 
+  st_transform(32145) %>% # Vermont State Plane Meters
+  st_union() %>% 
+  st_centroid() %>% 
+  st_buffer(5000) %>% 
+  st_bbox %>% 
+  st_as_sfc
+
+streets = roads("vt", "addison county", progress_bar = F) %>% st_transform(32145) %>% st_intersection(midd) %>%
+  filter(!grepl("MULTI", as.character(st_geometry_type(.))))
+
+mapview(streets, color = "#4C4B4C")
+```
+ 
+```{r first attempt}
+ first_attempt = function(x, max_length){
+  library(sf)
+  library(dplyr)
+  library(purrr)
+   
+  net = st_sf(x)
+  
+  if (!missing(max_length)) {
+    net = st_segmentize(net, max_length)
+  }
+  
+  net %>% 
+    mutate(id = row_number()) %>%
+    st_cast("POINT") %>%
+    group_by(id) %>%
+    mutate(geom2 = lead(geometry)) %>%
+    filter(!st_is_empty(geom2)) %>%
+    ungroup() %>% 
+    mutate(geom = map2(
+      geometry, geom2,
+      ~ st_combine(c(.x, .y)) %>% st_cast("LINESTRING")
+    )) %>%
+      {
+        do.call(c, .$geom)
+      }  %>%
+      st_set_crs(st_crs(x)) %>% 
+    st_sf()
+}
+```
+This was the first function I came up with and it is somewhat faithful to the original SQL. It utilizes `dplyr` and `purrr` and has similar steps and syntax. Just as in the SQL, the features are first given a unique ID and `st_segmentize` is used to add vertices. The linestrings are then cast to points and rather than using `lag`, `lead` is used is used to create a new geometry column with leading point geometries grouped by unique id. Either `lag` or `lead` could have been used here, but for whatever reason it was easier for me to wrap my head around using `lead`. The empty geometries in the new column are then removed, these being the last row of each group since `lead` was used. After this, `map2` is used to create a third geometry column where the points of the two existing geometry columns are combined and cast to a linestring by row. I also tried using `st_union` rather than `st_combine` here, though `st_combine` seemed to work better, and excluding either from the function created unfavorable results such as a very long multilinestring geometry. The new column created with `map2` was a not simple feature collection, but rather a list of geometry sets. Because of this, it was necessary to use `do.call` to combine the geometry sets into a single geometry set. This new set had no CRS, so it had to be reset and the set is subsequently converted into a simple feature collection.   
+
+```{r first benchmark, warning=F,message=F}
+bench::mark(
+  nngeo  =  st_geometry(nngeo::st_segments(streets, progress = F)),
+  "first attempt " = st_geometry(first_attempt(streets)),
+  iterations = 5
+) %>%
+  mutate(name = as.character(expression),
+         max = bench::as_bench_time(lapply(time, max))) %>%
+  select(name, min, median, max, iterations = n_itr, total_time)
+```
+This new function is undoubtedly faster than `nngeo::st_segments`, though its result has no fields and it relies on `dplyr` and `purrr`. 
+
+```{r second attempt}
+second_attempt = function(x, max_length) {
+  library(sf)
+  library(dplyr)
+  library(purrr)
+  
+  net = st_sf(x) %>% mutate(id = row_number())
+  no_geo = st_drop_geometry(net)
+  
+  if (!missing(max_length)) {
+    net = st_segmentize(net, max_length)
+  }
+  
+  net = net %>%
+    st_cast("POINT") %>%
+    group_by(id) %>%
+    mutate(geom2 = lead(geometry)) %>%
+    filter(!st_is_empty(geom2)) %>%
+    ungroup() %>%
+    suppressWarnings()
+  
+  id = net$id
+  
+  net %>%
+    mutate(geom = map2(geometry, geom2, ~ st_combine(c(.x, .y)) %>% st_cast("LINESTRING"))) %>%
+    {
+      do.call(c, .$geom)
+    }  %>%
+    st_set_crs(st_crs(x)) %>%
+    st_sf() %>%
+    mutate(fid = id) %>%
+    left_join(no_geo, by = c("fid" = "id")) %>%
+    select(-fid) 
+}
+```
+
+This second attempt at `st_segments` solves the problem of the function not retaining the fields of the input and suppresses a message from `st_cast`, though it still relies heavily on `dplyr` and `purrr`. 
+
+```{r second benchmark, warning=F,message=F}
+bench::mark(
+  nngeo  =  st_geometry(nngeo::st_segments(streets, progress = F)),
+  "first attempt " = st_geometry(first_attempt(streets)),
+  "second attempt" = st_geometry(second_attempt(streets)),
+  iterations = 5
+) %>%
+  mutate(name = as.character(expression),
+         max = bench::as_bench_time(lapply(time, max))) %>%
+  select(name, min, median, max, iterations = n_itr, total_time)
+```
+It is marginally slower than the first attempt, though this is expected since more is done here than the first attempt. `nngeo::st_segments` demonstrates that that it is possible to implement the function using `sf` and base R alone, but does this have to come at the cost of the function's speed?
+
+```{r using st_segments}
+st_segments = function(x, max_length) {
+  # x: layer with linestrings/polygons
+  # max_length: optional parameter, max length of segments, unit from crs
+  library(sf)
+  
+  net = st_sf(x)
+  net$fid = 1:nrow(net)
+  
+  if (!missing(max_length)) {
+    net = st_segmentize(net, max_length)
+  }
+  
+  coord = st_coordinates(net)
+  col = ncol(coord)
+  ids = coord[, col]
+  feat = unique(ids)
+  segments = list()
+  
+  for (i in feat) {
+    coords = coord[ids == i,]
+    for (j in 1:(nrow(coords) - 1)) {
+      segments[[length(segments) + 1]] = st_as_binary(st_linestring(coords[j:(j + 1), 1:2]))
+    }
+  }
+  
+  fid = matrix(nrow = (length(ids) - length(feat)), ncol = 1)
+  k = 0
+  
+  for (i in feat) {
+    id = ids[ids == i]
+    for (j in seq_along(id[1:(length(id) - 1)])) {
+      fid[k + 1, ] = id[j]
+      k = k + 1
+    }
+  }
+  
+  colnames(fid) = "fid"
+  fid = as.data.frame(fid)
+  fid = merge(fid,st_drop_geometry(net), all.x = T)[,-1, drop = F]
+  fid$geometry = st_set_crs(st_as_sfc(segments), st_crs(net))
+  st_sf(fid)
+}
+```
+
+With `st_segments`, my final(?) attempt at the function, I quickly found that this is not the case. `st_segments` loops through a matrix of coordinates created by `st_coordinates` and makes linestrings in similar fashion to how `lead` was used in the first.`st_coordinates` adds a unique ID for each feature and I used this ID in the loop to first filter the matrix and then create linestrings using the points that make up each feature in a nested loop. With each iteration of this nested loop, a line is created from the coordinates in one row and the row below it. And just as is done with `filter(!st_is_empty(geom2))`, the last row of each group are excluded as they essentially have empty geometries. The linestrings created in the loop are converted to well-known binary and stored in a list. This list can be easily made to a simple feature collection using [`st_as_sfc`](https://r-spatial.github.io/sf/reference/st_as_sfc.html). There were other versions of this where I made linestrings well-known text and stored them in either a matrix or a list, though WKB seemed be be the better choice and less was needed to be done to convert it to a simple feature collection. The second loop removes one value from each of the groups in a matrix of feature IDs taken from the coordinate matrix, which is also  similar to what is done with `filter(!st_is_empty(geom2))`. This ID matrix is then used to join fields. This function solves the pseudo problem of depending on `dplyr`  and `purrr`, and the result still has the original fields. `st_segments` is also able to break polygons into linestrings, something which my first two attempts at the function were unable to do. 
+
+```{r osm demonstration,message=F, warning=F, fig.height=6, fig.width=9}
+library(osmdata)
+
+bbox = st_bbox(st_transform(midd,4326))
+
+osm_bbox = matrix(data = bbox,nrow = 2,ncol = 2)
+
+buildings= osmdata::opq(bbox) %>% 
+  add_osm_feature(key = "building") %>% 
+  osmdata_sf() %>% 
+  .$osm_polygons %>% 
+  select(1:5) %>% 
+  filter(!is.na(name))
+
+mapview(buildings, layer.name = "Polygons", col.regions =  "#0D395F") + mapview(st_segments(buildings),layer.name = "Linestrings", color = "#4C4B4C")
+```
+
+Although `st_segments` is an improvement in my books, I still need to to see if using only `sf` and base R comes at cost. 
+```{r st_segements benchmark, message=F,warning=F}
+bench::mark(
+  nngeo =  st_geometry(nngeo::st_segments(streets, progress = F)),
+  "first attempt " = st_geometry(first_attempt(streets)),
+  "second attempt" = st_geometry(second_attempt(streets)),
+  final = st_geometry(st_segments(streets)),
+  iterations = 5
+) %>% 
+  mutate(name = as.character(expression),
+         max = bench::as_bench_time(lapply(time, max))) %>% 
+  select(name, min, median, max, iterations = n_itr, total_time)
+```
+as it turns out, `st_segements` is significantly faster than the function found in `nngeo` as well as my first two attempts, and this increase in speed does not come at the cost of the fields as was seen in the first attempt. One issue, however, is that `st_segments` can only take geometries that are either polygons or linestrings, though this can easily be fixed by using something like [`st_multipart_to_singleparts`](https://kufreu.github.io/musings/st_multipart_to_singleparts/st_multipart_to_singleparts.md) beforehand or by incorporating it in `st_segments`. I could call it quits here for now. Although I said that I was striving toward only using base R and `sf`, the last loop and `merge`  can easily be done with `dplyr`, `data.table`, or the function `by`, and possibly even done faster. Because of this, I went on to test if this was the case. 
+
+```{r the alternatives, message=F,warning=F}
+#### data.table ####
+st_segments_dt = function(x, max_length) {
+  library(data.table)
+  
+  net = x
+  net$id = 1:nrow(net)
+  
+  if (!missing(max_length)) {
+    net = st_segmentize(net, max_length)
+  }
+  
+  coord = st_coordinates(net)
+  col = ncol(coord)
+  ids = coord[, col]
+  feat = unique(ids)
+  segments = list()
+  
+  for (i in feat) {
+    coords = coord[ids == i, ]
+    for (j in 1:(nrow(coords) - 1)) {
+      segments[[length(segments) + 1]] = st_as_binary(st_linestring(coords[j:(j + 1), 1:2]))
+    }
+  }
+  
+  fid = as.data.table(ids)
+  colnames(fid) = "id"
+  setkey(fid, id)
+  fid = fid[fid[, .I[-1], by = id]$V1][as.data.table(st_drop_geometry(net)), on = "id"]
+  fid[, `:=`(geometry = st_as_sfc(segments, crs = st_crs(net)), id = NULL)]
+  st_sf(fid)
+}
+
+#### dplyr ####
+st_segments_tbl = function(x, max_length) {
+  library(sf)
+  library(dplyr)
+  
+  net = mutate(x, value = row_number())
+  
+  if (!missing(max_length)) {
+    net = st_segmentize(net, max_length)
+  }
+  
+  coord = st_coordinates(net)
+  col = ncol(coord)
+  ids = coord[, col]
+  feat = unique(ids)
+  segments = list()
+  
+  for (i in feat) {
+    coords = coord[ids == i, ]
+    for (j in 1:(nrow(coords) - 1)) {
+      segments[[length(segments) + 1]] = st_as_binary(st_linestring(coords[j:(j + 1), 1:2]))
+    }
+  }
+  
+  as_tibble(ids) %>%
+    group_by(value) %>%
+    slice(-1) %>%
+    ungroup %>%
+    left_join(st_drop_geometry(net), by = "value") %>%
+    select(-1) %>%
+    mutate(geometry = st_as_sfc(segments, crs = st_crs(net))) %>% st_sf()
+}
+
+#### using by ####
+st_segments_by = function(x, max_length) {
+  library(sf)
+  
+  net = x
+  net$fid = factor(1:nrow(net), levels = 1:nrow(net))
+  
+  if (!missing(max_length)) {
+    net = st_segmentize(net, max_length)
+  }
+  
+  coord = st_coordinates(net)
+  col = ncol(coord)
+  ids = coord[, col]
+  feat = unique(ids)
+  segments = list()
+  
+  for (i in feat) {
+    coords = coord[ids == i, ]
+    for (j in 1:(nrow(coords) - 1)) {
+      segments[[length(segments) + 1]] = st_as_binary(st_linestring(coords[j:(j + 1), 1:2]))
+    }
+  }
+  
+ fid = as.data.frame(ids)
+ colnames(fid) = "fid"
+ fid$fid = factor(fid$fid, levels = unique(fid$fid))
+ fid = do.call(rbind, by(fid, fid$fid, function(x) x[-1,, drop = F], simplify = F))
+ fid = merge(fid, st_drop_geometry(net), all.x = T)[, -1, drop = F]
+ fid$geometry = st_as_sfc(segments, crs = st_crs(net))
+ st_sf(fid)
+}
+```
+These three functions are essentially the same save for how they deal with the absence of the second loop. What is not the same, however, is their speed.
+```{r alts benchmark,message=F,warning=F}
+bench::mark(
+  "base (st_segments)" = st_geometry(st_segments(streets,1)),
+  "base (using by)" = st_geometry(st_segments_by(streets,1)),
+  data.table = st_geometry(st_segments_dt(streets,1)),
+  dplyr = st_geometry(st_segments_tbl(streets,1)),
+  iterations = 5
+) %>%
+  mutate(name = as.character(expression),
+         max = bench::as_bench_time(lapply(time, max))) %>%
+  select(name, min, median, max, iterations = n_itr, total_time)
+```
+
+This time around I used the second parameter to see how the functions handle somewhat larger datasets. Rather than breaking 790 linestrings into 7,423 line segments, the max length of each line segment is set to one meter in this benchmark and the number of features increases from 790 to 225,118. What is interesting to see with this benchmark is that `st_segments` is comparable in speed to both the `data.table` and `dplyr` versions of the function and is slightly faster than when the last loop is replaced by `by`. It is also surprising  that in this situation, `dplyr` is ever so slightly faster than `data.table`, though this may be due to my inexperience with the latter and what was being done. I could try to see what speed improvement could be had if the both loops were replaced with `data.table`, though that is for another time. I already saw with the first and second attempts that working completely within the `tidyverse` slowed things down. Given the results of the benchmarks, I could just use `st_segments` in its current state. In all, it was fun to take a break from things and spend time to solve a ["simple yet tricky"](http://blog.cleverelephant.ca/2015/02/breaking-linestring-into-segments.html) problem in R.    
+
