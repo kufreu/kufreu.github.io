@@ -1,8 +1,7 @@
 ---
-title: ""
+title: "st_segments"
 output: html_notebook
 ---
-# st_segments
 Recently, I was doing work with pgRouting and ran into the problem of my network having not nearly enough nodes to get an accurate calculation for what I was doing, which at the time was creating catchment areas. I found a very helpful post by [Paul Ramsey](http://blog.cleverelephant.ca/2015/02/breaking-linestring-into-segments.html) where he shows different ways of breaking up linestrings into segments using PostGIS. I adapted his last example here with `st_segmentize` to add more vertices to the linestrings to ensure that the max length of the line segments was half a meter. 
 
 ```{sql breaking up linestrings in postgis, eval = F}
