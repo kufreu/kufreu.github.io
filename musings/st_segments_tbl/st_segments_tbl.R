@@ -26,7 +26,7 @@ st_segments_tbl = function(x, max_length) {
         c(x, y), c(x2, y2)
       )))) %>%
     {
-      st_as_sfc(.[["geometry"]], crs = st_crs(layer))
+      st_sfc(.[["geometry"]], crs = st_crs(layer))
     }
   
   as_tibble(coord[, col]) %>%
