@@ -3,7 +3,7 @@ title: "speeding st_segments up with data.table"
 output: html_notebook
 ---
 
-Although I  already saw a drastic performance improvement with [`st_segments_tbl`](), I still wanted to go ahead and work with `data.table` to see if the function can be made faster and more efficient.
+Although I  already saw a drastic performance improvement with [`st_segments_tbl`](https://kufreu.github.io/musings/st_segments_tbl/st_segments_tbl.nb.html), I still wanted to go ahead and work with `data.table` to see if the function can be made faster and more efficient.
 
 ```{r getting a road network, message=F, warning=F,echo =F}
 library(sf)
