@@ -1766,9 +1766,8 @@ summary {
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuc3Rfc2VnbWVudHNfZHQgPSBmdW5jdGlvbih4LCBtYXhfbGVuZ3RoKSB7XG4gICMgYnJlYWtzIGxpbmVzdHJpbmdzL3BvbHlnb25zIGludG8gbGluZSBzZWdtZW50cywga2VlcHMgYXR0cmlidXRlc1xuICAjIHg6IGxheWVyIHdpdGggbGluZXN0cmluZ3NcbiAgIyBtYXhfbGVuZ3RoOiBvcHRpb25hbCBwYXJhbWV0ZXIsIG1heCBsZW5ndGggb2Ygc2VnbWVudHMsIHVuaXQgZnJvbSBjcnNcbiAgbGlicmFyeShzZilcbiAgbGlicmFyeShkYXRhLnRhYmxlKVxuICBsaWJyYXJ5KHRpYmJsZSlcbiAgXG4gIHgkaWQgPSAxOm5yb3coeClcbiAgXG4gIGlmICghbWlzc2luZyhtYXhfbGVuZ3RoKSkge1xuICAgIHggPSBzdF9zZWdtZW50aXplKHgsIG1heF9sZW5ndGgpXG4gIH1cbiAgXG4gIGNvb3JkID0gc3RfY29vcmRpbmF0ZXMoeClcbiAgY29sID0gbmNvbChjb29yZClcbiAgY29sbmFtZSA9IGNvbG5hbWVzKGNvb3JkKVtjb2xdXG4gIFxuICBnZW9tID0gYXMuZGF0YS50YWJsZShjb29yZClcbiAgZ2VvbVssIGA6PWAoeDIgPSBzaGlmdChYLCB0eXBlID0gXFxsZWFkXFwpLCB5MiA9IHNoaWZ0KFksIHR5cGUgPSBcXGxlYWRcXCkpLCBieSA9IGNvbG5hbWVdXG4gIGdlb20gPSBuYS5vbWl0KGdlb20pXG4gIGdlb21bLCByb3dzIDo9IC5JXVxuICBnZW9tWyxnZW9tZXRyeSA6PSAuKGxpc3Qoc3RfbGluZXN0cmluZyhyYmluZChjKFgsWSksYyh4Mix5MikpKSkpLCBieSA9IHJvd3NdXG4gIGdlb20gPSBzdF9zZmMoZ2VvbSRnZW9tZXRyeSwgY3JzID0gc3RfY3JzKHgpKVxuICBcbiAgZmlkID0gYXMuZGF0YS50YWJsZShjb29yZFssIGNvbF0pXG4gIGNvbG5hbWVzKGZpZCkgPSBcXGlkXFxcbiAgc2V0a2V5KGZpZCwgaWQpXG4gIGZpZCA9IGZpZFtmaWRbLCAuSVstMV0sIGJ5ID0gaWRdJFYxXVthcy5kYXRhLnRhYmxlKHN0X2Ryb3BfZ2VvbWV0cnkoeCkpLCBvbiA9IFxcaWRcXF1cbiAgZmlkWywgYDo9YChnZW9tZXRyeSA9IGdlb20sIGlkID0gTlVMTCldXG4gIHN0X3NmKGFzX3RpYmJsZShmaWQpKVxufVxuYGBgXG5gYGAifQ== -->
-<pre class="r"><code>```r
-st_segments_dt = function(x, max_length) {
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3Rfc2VnbWVudHNfZHQgPSBmdW5jdGlvbih4LCBtYXhfbGVuZ3RoKSB7XG4gICMgYnJlYWtzIGxpbmVzdHJpbmdzL3BvbHlnb25zIGludG8gbGluZSBzZWdtZW50cywga2VlcHMgYXR0cmlidXRlc1xuICAjIHg6IGxheWVyIHdpdGggbGluZXN0cmluZ3NcbiAgIyBtYXhfbGVuZ3RoOiBvcHRpb25hbCBwYXJhbWV0ZXIsIG1heCBsZW5ndGggb2Ygc2VnbWVudHMsIHVuaXQgZnJvbSBjcnNcbiAgbGlicmFyeShzZilcbiAgbGlicmFyeShkYXRhLnRhYmxlKVxuICBsaWJyYXJ5KHRpYmJsZSlcbiAgXG4gIHgkaWQgPSAxOm5yb3coeClcbiAgXG4gIGlmICghbWlzc2luZyhtYXhfbGVuZ3RoKSkge1xuICAgIHggPSBzdF9zZWdtZW50aXplKHgsIG1heF9sZW5ndGgpXG4gIH1cbiAgXG4gIGNvb3JkID0gc3RfY29vcmRpbmF0ZXMoeClcbiAgY29sID0gbmNvbChjb29yZClcbiAgY29sbmFtZSA9IGNvbG5hbWVzKGNvb3JkKVtjb2xdXG4gIFxuICBnZW9tID0gYXMuZGF0YS50YWJsZShjb29yZClcbiAgZ2VvbVssIGA6PWAoeDIgPSBzaGlmdChYLCB0eXBlID0gXCJsZWFkXCIpLCB5MiA9IHNoaWZ0KFksIHR5cGUgPSBcImxlYWRcIikpLCBieSA9IGNvbG5hbWVdXG4gIGdlb20gPSBuYS5vbWl0KGdlb20pXG4gIGdlb21bLCByb3dzIDo9IC5JXVxuICBnZW9tWyxnZW9tZXRyeSA6PSAuKGxpc3Qoc3RfbGluZXN0cmluZyhyYmluZChjKFgsWSksYyh4Mix5MikpKSkpLCBieSA9IHJvd3NdXG4gIGdlb20gPSBzdF9zZmMoZ2VvbSRnZW9tZXRyeSwgY3JzID0gc3RfY3JzKHgpKVxuICBcbiAgZmlkID0gYXMuZGF0YS50YWJsZShjb29yZFssIGNvbF0pXG4gIGNvbG5hbWVzKGZpZCkgPSBcImlkXCJcbiAgc2V0a2V5KGZpZCwgaWQpXG4gIGZpZCA9IGZpZFtmaWRbLCAuSVstMV0sIGJ5ID0gaWRdJFYxXVthcy5kYXRhLnRhYmxlKHN0X2Ryb3BfZ2VvbWV0cnkoeCkpLCBvbiA9IFwiaWRcIl1cbiAgZmlkWywgYDo9YChnZW9tZXRyeSA9IGdlb20sIGlkID0gTlVMTCldXG4gIHN0X3NmKGFzX3RpYmJsZShmaWQpKVxufVxuYGBgIn0= -->
+<pre class="r"><code>st_segments_dt = function(x, max_length) {
   # breaks linestrings/polygons into line segments, keeps attributes
   # x: layer with linestrings
   # max_length: optional parameter, max length of segments, unit from crs
@@ -1787,55 +1786,31 @@ st_segments_dt = function(x, max_length) {
   colname = colnames(coord)[col]
   
   geom = as.data.table(coord)
-  geom[, `:=`(x2 = shift(X, type = \lead\), y2 = shift(Y, type = \lead\)), by = colname]
+  geom[, `:=`(x2 = shift(X, type = &quot;lead&quot;), y2 = shift(Y, type = &quot;lead&quot;)), by = colname]
   geom = na.omit(geom)
   geom[, rows := .I]
   geom[,geometry := .(list(st_linestring(rbind(c(X,Y),c(x2,y2))))), by = rows]
   geom = st_sfc(geom$geometry, crs = st_crs(x))
   
   fid = as.data.table(coord[, col])
-  colnames(fid) = \id\
+  colnames(fid) = &quot;id&quot;
   setkey(fid, id)
-  fid = fid[fid[, .I[-1], by = id]$V1][as.data.table(st_drop_geometry(x)), on = \id\]
+  fid = fid[fid[, .I[-1], by = id]$V1][as.data.table(st_drop_geometry(x)), on = &quot;id&quot;]
   fid[, `:=`(geometry = geom, id = NULL)]
   st_sf(as_tibble(fid))
 }</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-chunk-end --&gt;
-
-
-&lt;!-- rnb-text-begin --&gt;
-
-
-`st_segments_dt` essentially has the same structure as `st_segments_tbl`, though everything save for the last line with `as_tibble` is done using either `data.table` or `sf`. `as_tibble` is not entirely necessary here but I prefer the print method of tibbles over data.tables and `sf` supports tibbles.
-
-
-&lt;!-- rnb-text-end --&gt;
-
-
-&lt;!-- rnb-chunk-begin --&gt;
-
-
-
-&lt;!-- rnb-chunk-end --&gt;
-
-
-&lt;!-- rnb-text-begin --&gt;
-
-
-
-&lt;!-- rnb-text-end --&gt;
-
-
-&lt;!-- rnb-chunk-begin --&gt;
-
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuYmVuY2g6Om1hcmsoXG4gIFxcZHBseXIvcHVycnJcXCA9IHN0X2dlb21ldHJ5KHN0X3NlZ21lbnRzX3RibChzdHJlZXRzLDEpKSxcbiAgZGF0YS50YWJsZSA9IHN0X2dlb21ldHJ5KHN0X3NlZ21lbnRzX2R0KHN0cmVldHMsMSkpLFxuICBpdGVyYXRpb25zID0gMTBcbikgJT4lXG4gIG11dGF0ZShuYW1lID0gYXMuY2hhcmFjdGVyKGV4cHJlc3Npb24pLFxuICAgICAgICAgbWF4ID0gYmVuY2g6OmFzX2JlbmNoX3RpbWUobGFwcGx5KHRpbWUsIG1heCkpKSAlPiVcbiAgc2VsZWN0KFxuICAgIG5hbWUsXG4gICAgbWluLFxuICAgIG1lZGlhbixcbiAgICBtYXgsXG4gICAgXFxtZW1vcnkgYWxsb2NhdGlvblxcID0gbWVtX2FsbG9jLFxuICAgIGl0ZXJhdGlvbnMgPSBuX2l0cixcbiAgICBcXHRvdGFsIHRpbWVcXCA9IHRvdGFsX3RpbWVcbiAgKVxuYGBgXG5gYGAifQ== --&gt;
-
-```r
-```r
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p><code>st_segments_dt</code> essentially has the same structure as <code>st_segments_tbl</code>, though everything save for the last line with <code>as_tibble</code> is done using either <code>data.table</code> or <code>sf</code>. <code>as_tibble</code> is not entirely necessary here but I prefer the print method of tibbles over data.tables and <code>sf</code> supports tibbles.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuYmVuY2g6Om1hcmsoXG4gIFxcZHBseXIvcHVycnJcXCA9IHN0X2dlb21ldHJ5KHN0X3NlZ21lbnRzX3RibChzdHJlZXRzLDEpKSxcbiAgZGF0YS50YWJsZSA9IHN0X2dlb21ldHJ5KHN0X3NlZ21lbnRzX2R0KHN0cmVldHMsMSkpLFxuICBpdGVyYXRpb25zID0gMTBcbikgJT4lXG4gIG11dGF0ZShuYW1lID0gYXMuY2hhcmFjdGVyKGV4cHJlc3Npb24pLFxuICAgICAgICAgbWF4ID0gYmVuY2g6OmFzX2JlbmNoX3RpbWUobGFwcGx5KHRpbWUsIG1heCkpKSAlPiVcbiAgc2VsZWN0KFxuICAgIG5hbWUsXG4gICAgbWluLFxuICAgIG1lZGlhbixcbiAgICBtYXgsXG4gICAgXFxtZW1vcnkgYWxsb2NhdGlvblxcID0gbWVtX2FsbG9jLFxuICAgIGl0ZXJhdGlvbnMgPSBuX2l0cixcbiAgICBcXHRvdGFsIHRpbWVcXCA9IHRvdGFsX3RpbWVcbiAgKVxuYGBgXG5gYGAifQ== -->
+<pre class="r"><code>```r
 bench::mark(
   \dplyr/purrr\ = st_geometry(st_segments_tbl(streets,1)),
   data.table = st_geometry(st_segments_dt(streets,1)),
