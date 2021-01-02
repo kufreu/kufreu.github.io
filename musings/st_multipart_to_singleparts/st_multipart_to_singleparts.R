@@ -2,7 +2,7 @@ st_multipart_to_singleparts = function(x) {
   # Replicates Multipart to Singleparts algorithm in QGIS
   library(sf)
   
-  mixed = x
+  mixed = st_sf(x)
   mixed$id = 1:nrow(mixed)
   geo_types = as.character(unique(st_geometry_type(mixed)))
   str_geo = grepl("MULTI", geo_types)
