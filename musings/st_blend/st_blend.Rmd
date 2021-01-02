@@ -1,0 +1,141 @@
+---
+title: "st_blend"
+output: html_notebook
+---
+
+I needed a way to add nodes to a network when using pgRouting but did not have the desire to do so in PostGIS, so I wrote  a function which I can use in R before writing the layer to the database. 
+```{r st_blend}
+st_blend = function(node, network) {
+  # blends node(s) into a network composed of linestrings
+  # node: point(s)
+  # network: network composed of linestrings
+  # returns: network with added node(s)
+  
+  library(sf)
+  library(lwgeom)
+  library(dplyr)
+  library(purrr)
+  
+  ncrs = st_crs(network)
+  blade = st_sf(node) %>%
+    mutate(geometry = st_geometry(.)) %>% # just in case geometry column isn't named geometry
+    st_set_geometry("geometry") %>%
+    mutate(
+      nf = st_nearest_feature(., network),
+      # nearest linestring
+      nl = do.call(c, map2(
+        geometry, nf,  ~ st_nearest_points(st_sfc(.x, crs = ncrs), network[.y, ])
+      )),
+      # nearest point to edge/linestring
+      np = do.call(c, map2(
+        nl, geometry, ~ st_cast(st_sfc(.x, crs = ncrs), "POINT") %>% .[. != st_sfc(.y, crs = ncrs)]
+      )),
+      # nearest point in nearest edge/linestring
+      ns = do.call(c, map2(
+        nf, np, ~ st_cast(st_geometry(network[.x, ]), "POINT") %>% .[st_nearest_feature(st_sfc(.y, crs = ncrs), .)]
+      )),
+      len = st_length(nl) %>% units::drop_units()
+    ) %>%
+    filter(np != ns) %>% # remove rows where nearest point is already in nearest edge/linestring
+    st_set_geometry("nl") %>%
+    select(nf, len) %>%
+    suppressWarnings()
+  
+  blade = st_geometry(blade) %>%
+    {
+      (. - st_centroid(.)) * (blade$len * 2 / blade$len) + st_centroid(.) # ensure line is long enough to split edge
+    } %>%
+    st_set_crs(ncrs) %>%
+    st_sf() %>%
+    mutate(nf = blade$nf)
+  
+  st_split(network[blade$nf, ], blade) %>%
+    st_collection_extract("LINESTRING") %>%
+    rbind(network[-blade$nf, ])
+}
+```
+`rowwise` from `dplyr` could have been used in place of the `purrr` functions here, though `map2` ended up being faster. 
+```{r multiparts to singlparts, echo=F}
+st_multipart_to_singleparts = function(x) {
+  # Replicates Multipart to Singleparts algorithm in QGIS
+  library(sf)
+  
+  mixed = st_sf(x)
+  mixed$id = 1:nrow(mixed)
+  geo_types = as.character(unique(st_geometry_type(mixed)))
+  str_geo = grepl("MULTI", geo_types)
+  
+  if (sum(str_geo) == 0) {
+    return(x)
+  }
+  
+  multi = geo_types[str_geo]
+  
+  if (sum(str_geo) == length(geo_types)) {
+    single = gsub("MULTI", "", multi)
+  } else {
+    single = geo_types[!str_geo]
+  }
+  
+  multipart = mixed[st_geometry_type(mixed) == multi,]
+  id = multipart$id
+  rows = 1:nrow(multipart)
+  
+  singlepart = do.call(rbind, lapply(rows, function(s)
+    suppressWarnings(st_cast(
+      multipart[s,], single
+    ))))
+  
+  col = colnames(mixed)
+  rbind(mixed[-id, ], singlepart)[,col[col!="id"]]
+}
+```
+
+```{r getting some data and splitting streets, message = F, warning =F,fig.height=6, fig.width=9}
+library(sf)
+library(dplyr)
+library(tigris)
+library(mapview)
+
+addison = counties("vt", progress = F) %>% filter(COUNTYFP == "001") %>% st_transform(32145)
+
+schools = read_sf(
+  "https://opendata.arcgis.com/datasets/efa79839b0f841ac92c821a7b8afeda5_3.geojson"
+) %>%
+  st_transform(32145) %>%
+  filter(lengths(st_intersects(., addison)) != 0)
+
+streets = read_sf(
+  "https://opendata.arcgis.com/datasets/1dee5cb935894f9abe1b8e7ccec1253e_39.geojson"
+) %>%
+  st_transform(32145) %>%
+  st_intersection(st_geometry(addison)) %>%
+  st_multipart_to_singleparts() %>% # need to make sure all features are linestrings  
+  mutate(id = row_number())
+
+blended = st_blend(schools, streets) %>%
+  group_by(id) %>%
+  mutate(cnt = n()) %>%
+  ungroup
+
+split_streets = filter(blended, cnt > 1) %>%
+  mutate(color = ifelse(as.numeric(row.names(.)) %% 2 != 0, "split", "street"))
+
+unsplit = filter(blended, cnt == 1)
+
+mapview(
+  select(split_streets, color),
+  layer.name = "Split Streets",
+  color = c("#F3D54E", "#69B3E7")
+) +
+  mapview(unsplit, layer.name = "Unsplit Streets", color = "#4C4B4C") +
+  mapview(
+    schools,
+    layer.name = "Addison County Schools",
+    col.regions = "#0D395F",
+    color = "#000000",
+    alpha = .2
+  )
+```
+
+In this example, the linestrings nearest to the schools are either split or are left untouched if the nearest point from the school already exists as a vertex in the linestring. I found that `sfneworks` has a function called [`st_network_blend`](https://luukvdmeer.github.io/sfnetworks/reference/st_network_blend.html) after writing this so I may use that in the future, though writing `st_blend` was still a fun exercise.
