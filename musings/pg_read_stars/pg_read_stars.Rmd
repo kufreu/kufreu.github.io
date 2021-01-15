@@ -1,0 +1,127 @@
+---
+title: "reading postgis rasters"
+output: html_notebook
+---
+I have been using a great package called [`rpostgis`](https://github.com/mablab/rpostgis) as an interface to my PostGIS database to read and write rasters. As much as I enjoy using the package, I do have one reservation with it: its use of `raster` and proj4strings. To better understand how the package works and to find a way to use `stars` objects in place of `raster` in the reading and writing of PostGIS rasters, I went on to find a way to read PostGIS rasters into R as `stars` objects with the function  `pg_read_stars`.
+ 
+```{r pg_read_stars}
+pg_read_stars = function(conn, layer, rast = "rast"){
+  # reads raster from postgis database
+  # conn: DBIConnection object
+  # layer: name of table with raster 
+  # rast: name of column that contains raster 
+  
+  library(stars)
+  library(purrr)
+  library(DBI)
+  library(glue)
+  
+  values = dbGetQuery(
+    conn,
+    glue(
+      "with ordered as (
+          select 
+          {rast} as rast, 
+          rid from {layer} 
+          order by rid asc)
+       select
+       unnest(st_dumpvalues(rast,1)) as values,
+       row_number() over (order by rid) as id
+       from ordered"
+    )
+  )
+  
+  srid = dbGetQuery(
+    conn,
+    glue(
+      "select distinct 
+       st_srid({rast}) as srid 
+       from {layer}"))$srid %>% 
+    st_crs
+  
+  boxes = dbGetQuery(
+    conn, 
+    glue(
+      "select 
+       st_asewkb(st_envelope({rast})) as geom 
+       from {layer}
+       order by rid asc"))$geom %>% 
+    st_as_sfc(EWKB = T) 
+  
+  res = dbGetQuery(
+    conn, 
+    glue(
+      "select  
+       st_pixelwidth({rast}) as x, 
+       st_pixelheight({rast}) as y 
+       from {layer}
+       limit 1"))
+  
+  map2(boxes, unique(values$id), function(x, y)
+    st_as_stars(
+      st_bbox(x),
+      dx = res$x,
+      dy = res$y,
+      values = values[values$id == y, ]$values,
+      crs = crs
+    ) %>% st_set_crs(srid)) %>%
+    do.call(what = st_mosaic)
+}
+```
+`pg_read_stars` is a simplification of `pgGetRast` from `rpostgis`. It can only read one band and a spatial filter cannot be used to limit what is read, though the latter should not be too difficult to implement. For example, this is one possible way of using a spatial filter. 
+
+```{r using a spatial filter, eval = F}
+# bounding box of sf object/sfc converted to well-known text to be used as a filter
+  ewkt = boundary %>%
+      st_transform(crs) %>%
+      st_bbox %>%
+      st_as_sfc() %>%
+      st_as_text(EWKT = T)
+    
+    values = dbGetQuery(
+      conn,
+      glue(
+        "with clip as
+          (select
+           st_clip({raster_column},st_geomfromewkt('{ewkt}')) as clipped,
+           rid
+           from {layer})
+         select unnest(st_dumpvalues(clipped,1)) as values,
+         row_number() over (order by rid) as id
+         from clip"
+      )
+    )
+    
+    boxes = dbGetQuery(
+      conn,
+      glue(
+        "with clip as
+            (select
+             st_clip({raster_column},st_geomfromewkt('{ewkt}')) as clipped
+             from {layer}
+             where st_intersects({raster_column},st_geomfromewkt('{ewkt}')))
+         select
+         st_asbinary(st_envelope(clipped)) as geom
+         from clip"
+      )
+    )$geom %>%
+      st_as_sfc(crs = srid)
+```
+
+`pg_read_stars` works by first obtaining the values of the raster and assigning an ID based on which tile the value is from. The bounding boxes of the tiles that compose the raster are then read into R as well as the raster's SRID and resolution. `map2` from `purrr` is then used to make each bounding box/tile into a `stars` object inputted with the appropriate values and the resulting objects are then mosaicked to create the complete raster.  
+
+
+```{r function example, message=F, warning=F, fig.height=6, fig.width=9}
+library(keyring)
+library(mapview)
+
+conn = DBI::dbConnect(
+  RPostgres::Postgres(),
+  dbname = key_list()[1, 1],
+  user = key_list()[1, 2],
+  password = key_get(key_list()[1, 1], key_list()[1, 2])
+)
+
+flood = pg_read_stars(conn,"floods")
+mapview(flood, col.regions = "#226CE0", layer.name = "Flooding in Houston")
+```
