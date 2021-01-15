@@ -10,3 +10,5 @@ I'm just trying to figure things out here and learn.
 [incorporating dplyr and purrr in st_segments](st_segments_tbl/st_segments_tbl.nb.html)
 
 [speeding st_segments up with data.table](st_segments_dt/st_segments_dt.nb.html)
+
+[reading postgis rasters into r as stars objects](pg_read_stars/pg_read_stars.nb.html)
