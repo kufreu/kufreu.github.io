@@ -1,4 +1,4 @@
-pg_read_stars = function(conn, layer, rast){
+pg_read_stars = function(conn, layer, rast = "rast"){
   # reads raster from postgis database
   # conn: DBIConnection object
   # layer: name of table with raster 
@@ -41,22 +41,27 @@ pg_read_stars = function(conn, layer, rast){
        order by rid asc"))$geom %>% 
     st_as_sfc(EWKB = T) 
   
-  res = dbGetQuery(
+  dims = dbGetQuery(
     conn, 
     glue(
       "select  
-       st_pixelwidth({rast}) as x, 
-       st_pixelheight({rast}) as y 
+       st_pixelwidth({rast}) as dx, 
+       st_pixelheight({rast}) as dy,
+       st_skewx({rast}) as sx,
+       st_skewy({rast}) as sy
        from {layer}
        limit 1"))
   
-  map2(boxes, unique(values$id), function(x, y)
+  result = map2(boxes, unique(values$id), function(x, y)
     st_as_stars(
       st_bbox(x),
-      dx = res$x,
-      dy = res$y,
-      values = values[values$id == y, ]$values,
-      crs = crs
+      dx = dims$dx,
+      dy = dims$dy,
+      values = values[values$id == y, ]$values
     ) %>% st_set_crs(srid)) %>%
     do.call(what = st_mosaic)
+  
+  attr(attr(result, "dimensions"), "raster")$affine = c(dims[[3]],dims[[4]])
+  
+  result
 }
