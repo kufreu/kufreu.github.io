@@ -12,3 +12,5 @@ I'm just trying to figure things out here and learn.
 [speeding st_segments up with data.table](st_segments_dt/st_segments_dt.nb.html)
 
 [reading postgis rasters into r as stars objects](pg_read_stars/pg_read_stars.nb.html)
+
+[writing stars objects to a postgis database](pg_write_stars/pg_write_stars.nb.html)
