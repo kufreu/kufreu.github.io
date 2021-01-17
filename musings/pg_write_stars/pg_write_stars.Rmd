@@ -1,0 +1,215 @@
+---
+title: "writing stars objects to a postgis database"
+output: html_notebook
+---
+
+Taking inspiration from [`pgWriteRast`](https://github.com/mablab/rpostgis/blob/master/R/pgWriteRast.R) in the`rpostgis` package, I attempted to write a function that can write a `stars` object to a PostGIS-enabled database.  
+```{r pg_write_stars}
+pg_write_stars =  function(conn, name, layer, tile_size = NULL,bit_depth = NULL) {
+  # writes raster (stars) to a postgis database
+  # conn: DBIConnection object
+  # name: name of table to hold raster
+  # layer: stars object 
+  # tile_size: size of tiles to split raster into specified as vector with length 1 or 2, expressed as pixel width by height 
+  # bit_depth: bit depth of raster
+  
+  library(stars)
+  library(tibble)
+  library(glue)
+  library(purrr)
+  library(DBI)
+  
+  if (!("postgis_raster" %in% dbGetQuery(conn, "select * FROM pg_available_extensions;")$name))
+    stop("PostGIS extension not available.")
+  
+  if (st_is_longlat(layer)) 
+    stop("Raster should have projected coordinates.")
+  
+  if (any(class(layer) != "stars")) 
+    stop("Object should be of class stars.")
+
+  crs = st_crs(layer)$epsg
+  if (is.na(crs)) {crs = 0; warning("SRID set to 0")}
+  
+  dims = st_dimensions(layer)
+  res = c(dims$x$delta, dims$y$delta)
+  bbox = st_bbox(layer)
+  val = c(dims$x$values,dims$y$values)
+  aff = attr(dims,"raster")$affine
+  
+  if (attr(dims, "raster")$curvilinear |
+      any(!is.null(val)) |
+      any(is.na(res))) {
+    stop("Raster must be regular.")
+  }
+  
+  # determine bit depth 
+  # from https://github.com/mablab/rpostgis/blob/master/R/pgWriteRast.R 
+  if (is.null(bit_depth)) {
+    if (is.integer(layer[[1]])) {
+      if (min(layer[[1]], na.rm = TRUE) >= 0) {
+        bit_depth = "32BUI"
+      } else {
+        bit_depth = "32BSI"
+      }
+    } else {
+      bit_depth = "32BF"
+    }
+  }
+  
+  # determine tile size
+  if (!is.null(tile_size)) {
+    if (length(tile_size) == 2) {
+      bx = tile_size[1]
+      by = tile_size[2]
+    } else {
+      bx = by = tile_size[1]
+    }
+  } else {
+    bx = by = 100
+  }
+  
+  tiles = st_as_stars(bbox, dx = res[1] * bx, dy = res[2] * by) %>%
+    st_as_sfc(as_points = F) %>%
+    st_intersection(st_as_sfc(bbox))
+  
+  # create a list with tile dimensions and values 
+  info = map(seq_along(tiles), function(x) {
+    tile = tiles[x]
+    inter = layer[tile]
+    dm = dim(inter)
+    list(dm, st_dimensions(st_as_stars(
+      st_bbox(tile), dx = res[1], dy = res[2]
+    )), as.vector(inter[[1]]))
+  })
+  
+  dbExecute(conn, glue("drop table if exists {name}"))
+  dbExecute(conn, glue("create table {name}(rid serial primary key, rast raster)"))
+  
+  for (i in seq_along(info)) {
+    xy = info[[i]][[1]]
+    # create table with each value assigned to a row 
+    dbWriteTable(conn,
+                 "rst_tile_val",
+                 tibble(val = info[[i]][[3]],
+                        y = sort(rep(
+                          1:xy[2], xy[1]
+                        ))),
+                 overwrite = T)
+    
+    dims = info[[i]][[2]]
+    
+    # use tile dimensions to create empty raster and populate raster with values from rst_tile_val
+    dbExecute(conn, glue(
+      "insert into {name}(rid, rast) 
+     values({i},
+     st_setvalues(
+        st_addband(
+            st_makeemptyraster({xy[1]}, {xy[2]},
+                               {dims$x$offset},{dims$y$offset},
+                               {res[1]},{res[2]},
+                               {aff[1]},{aff[2]},{crs}),
+            array[row(1,'{bit_depth}',0,-99999)]::addbandarg[]),
+        1, 1, 1, (select array(select array_agg(val) from rst_tile_val group by y order by y)::double precision[][])
+     ))"))
+  }
+  dbExecute(conn,"drop table if exists rst_tile_val")
+  dbExecute(conn, glue("drop index if exists {name}_rast_idx"))
+  # create spatial index
+  dbExecute(conn, glue("create index {name}_rast_idx on {name} using gist(st_convexhull(rast))")) 
+}
+```
+Similar to [`pg_read_stars`](https://kufreu.github.io/musings/pg_read_stars/pg_read_stars.nb.html), is a simplified version of a function in `rpostigis`. It can only write one band of a raster and it always overwrites existing files. First, information about the raster is collected such as its dimensions and bounding box. The bounding box of the raster is then split into tiles, with the default tile size being 100x100 pixels and each tile's dimensions and values are put into a list using `map`. In a subsequent loop, the raster is written to the PostGIS database tile by tile. In this loop, the values of a tile are first written to a table and then empty raster is created and populated using the values from this table. In order to be usable, the values in the table (`rst_tile_val`) need to be made into a nested array. The nested arrays need to be the same length as the width of their corresponding tile, so if a tile had a width of 100 pixels, each array should have 100 values. A spatial index is then created after the raster is written. 
+```{r pg_read_stars, echo=F}
+pg_read_stars = function(conn, layer, rast = "rast"){
+  # reads raster from postgis database
+  # conn: DBIConnection object
+  # layer: name of table with raster 
+  # rast: name of column that contains raster 
+  
+  library(stars)
+  library(purrr)
+  library(DBI)
+  library(glue)
+  
+  values = dbGetQuery(
+    conn,
+    glue(
+      "with ordered as (
+          select 
+          {rast} as rast, 
+          rid from {layer} 
+          order by rid asc)
+       select
+       unnest(st_dumpvalues(rast,1)) as values,
+       row_number() over (order by rid) as id
+       from ordered"
+    )
+  )
+  
+  srid = dbGetQuery(
+    conn,
+    glue(
+      "select distinct 
+       st_srid({rast}) as srid 
+       from {layer}"))$srid %>% 
+    st_crs
+  
+  boxes = dbGetQuery(
+    conn, 
+    glue(
+      "select 
+       st_asewkb(st_envelope({rast})) as geom 
+       from {layer}
+       order by rid asc"))$geom %>% 
+    st_as_sfc(EWKB = T) 
+  
+  dims = dbGetQuery(
+    conn, 
+    glue(
+      "select  
+       st_pixelwidth({rast}) as dx, 
+       st_pixelheight({rast}) as dy,
+       st_skewx({rast}) as sx,
+       st_skewy({rast}) as sy
+       from {layer}
+       limit 1"))
+  
+  result = map2(boxes, unique(values$id), function(x, y)
+    st_as_stars(
+      st_bbox(x),
+      dx = dims$dx,
+      dy = dims$dy,
+      values = values[values$id == y, ]$values
+    ) %>% st_set_crs(srid)) %>%
+    do.call(what = st_mosaic)
+  
+  attr(attr(result, "dimensions"), "raster")$affine = c(dims[[3]],dims[[4]])
+  
+  result
+}
+```
+
+```{r reading and writing, message=F, warning=F, fig.height=6, fig.width=9}
+library(keyring)
+library(mapview)
+library(stars)
+library(DBI)
+
+conn = DBI::dbConnect(
+  RPostgres::Postgres(),
+  dbname = key_list()[1, 1],
+  user = key_list()[1, 2],
+  password = key_get(key_list()[1, 1], key_list()[1, 2])
+)
+
+initial = read_stars("floodextent200.tif")
+
+pg_write_stars(conn,"pg_stars_test", initial)
+
+postgis = pg_read_stars(conn,"pg_stars_test")
+
+mapview(initial, col.regions = "#EA3546", layer.name = "Initial Raster") +mapview(postgis, col.regions = "#226CE0", layer.name = "PostGIS Raster") 
+```
+
+As can be seen in this map, there are still some kinks to work out in `pg_write_stars`, specifically the shifting of some pixels to the right, though I believe I have a good foundation to build on in order to fix this. All things considered, this was a fun exercise of integrating SQL in R.  
