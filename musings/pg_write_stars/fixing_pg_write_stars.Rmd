@@ -1,0 +1,302 @@
+---
+title: "fixing pg_write_stars"
+output: html_notebook
+---
+
+I found the cause of the shifting cells/pixels in some of the raster tiles was due an a function in `DBI`. When using `dbWriteTable` to write the values of each raster tile to the database, the table became unordered in some cases. 
+
+```{r examples, message = F,warnings= F}
+library(stars)
+library(dplyr)
+library(keyring)
+library(DBI)
+
+flood = read_stars("floodextent200.tif")
+
+xy = dim(flood)
+
+values = tibble(val = c(flood[[1]]), x = sort(rep(1:xy[2],xy[1])))
+
+conn = DBI::dbConnect(
+  RPostgres::Postgres(),
+  dbname = key_list()[1, 1],
+  user = key_list()[1, 2],
+  password = key_get(key_list()[1, 1], key_list()[1, 2])
+)
+
+dbWriteTable(conn,"value_test",values, overwrite =T)
+
+write_test = dbReadTable(conn,"value_test")
+
+dbRemoveTable(conn,"value_test")
+
+sum(write_test$x != values$x)
+
+cbind(write_test,values)[write_test$x != values$x,]
+```
+Here there are at least 70 rows in the written table where the values do not match the original table, resulting in the shifting of values. I believe this may be due to the many NAs in value column
+
+```{r}
+rm_na = flood
+
+rm_na[is.na(rm_na)] = 0
+
+zeros = tibble(val = c(rm_na[[1]]), x = sort(rep(1:xy[2],xy[1])))
+
+dbWriteTable(conn,"value_test",zeros, overwrite = T)
+
+write_test = dbReadTable(conn,"value_test")
+
+dbRemoveTable(conn,"value_test")
+
+cbind(write_test,values)[write_test$x != values$x,]
+```
+Removing the NAs from the raster before writing it to the database seems to solve the problem, though I think it would be best to refrain from altering the raster in this way. A better solution would be to add a column with row numbers to the values table and use this column to order the table after it is written to the database. I used this simple solution to fix `pg_write_stars`. 
+
+```{r fixed function}
+pg_write_stars =  function(conn, name, layer, tile_size = NULL,bit_depth = NULL) {
+  # writes raster (stars) to a postgis database
+  # conn: DBIConnection object
+  # name: name of table to hold raster
+  # layer: stars object 
+  # tile_size: size of tiles to split raster into specified as vector with length 1 or 2, expressed as pixel width by height 
+  # bit_depth: bit depth of raster
+  
+  library(stars)
+  library(tibble)
+  library(glue)
+  library(purrr)
+  library(DBI)
+  
+  if (!("postgis_raster" %in% dbGetQuery(conn, "select * FROM pg_available_extensions;")$name))
+    stop("PostGIS extension not available.")
+  
+  if (any(class(layer) != "stars")) 
+    stop("Object should be of class stars.")
+
+  crs = st_crs(layer)$epsg
+  if (is.na(crs)) {crs = 0; warning("SRID set to 0")}
+  
+  dims = st_dimensions(layer)
+  res = c(dims$x$delta, dims$y$delta)
+  bbox = st_bbox(layer)
+  val = c(dims$x$values,dims$y$values)
+  aff = attr(dims,"raster")$affine
+  
+  if (attr(dims, "raster")$curvilinear |
+      any(!is.null(val)) |
+      any(is.na(res))) {
+    stop("Raster must be regular.")
+  }
+  
+  # determine bit depth 
+  # from https://github.com/mablab/rpostgis/blob/master/R/pgWriteRast.R 
+  if (is.null(bit_depth)) {
+    if (is.integer(layer[[1]])) {
+      if (min(layer[[1]], na.rm = TRUE) >= 0) {
+        bit_depth = "32BUI"
+      } else {
+        bit_depth = "32BSI"
+      }
+    } else {
+      bit_depth = "32BF"
+    }
+  }
+  
+  # determine tile size
+  if (!is.null(tile_size)) {
+    if (length(tile_size) == 2) {
+      bx = tile_size[1]
+      by = tile_size[2]
+    } else {
+      bx = by = tile_size[1]
+    }
+  } else {
+    bx = by = 100
+  }
+  
+  to = dim(layer)
+  
+  x1 = seq(1,to[1],bx)
+  if (x1[length(x1)] != to[1]) x2 = c(x1[-1]-1,to[[1]])
+  width = map2(x1,x2,~c(.x,.y)) %>% do.call(what=rbind)
+ 
+  y1 = seq(1,to[2],by)
+  if (y1[length(y1)] != to[2]) y2 = c(y1[-1]-1,to[[2]])
+  height = map2(y1,y2,~c(.x,.y))
+  
+  tiles = map(height,~cbind(width,.x[1],.x[2])) %>% do.call(what=rbind)
+  
+  
+  # create a list with tile dimensions and values 
+  info = map(1:nrow(tiles), function(x) {
+    tile = tiles[x,]
+    tile = layer[1,tile[1]:tile[2],tile[3]:tile[4]]
+    list(dim(tile), st_bbox(tile)[c("xmin","ymax")], as.vector(tile[[1]]))
+  })
+  
+  dbExecute(conn, glue("drop table if exists {name}"))
+  dbExecute(conn, glue("create table {name}(rid serial primary key, rast raster)"))
+  
+  for (i in seq_along(info)) {
+    xy = info[[i]][[1]]
+    # create table with each value assigned to a row 
+    dbWriteTable(conn,
+                 "rst_tile_val",
+                 tibble(
+                   val = info[[i]][[3]],
+                   x = sort(rep(1:xy[2], xy[1])),
+                   row_n = 1:prod(xy)
+                 ) ,
+                 overwrite = T)
+    
+    offset = info[[i]][[2]]
+    
+    # use tile dimensions to create empty raster and populate raster with values from rst_tile_val
+    dbExecute(conn, glue(
+    "insert into {name}(rid, rast) 
+     values({i},
+     st_setvalues(
+        st_addband(
+            st_makeemptyraster({xy[1]}, {xy[2]}, {offset['xmin']},{offset['ymax']},{res[1]},{res[2]},{aff[1]},{aff[2]},{crs}),
+            array[row(1,'{bit_depth}',0,-99999)]::addbandarg[]),
+        1, 1, 1,(select array(select array_agg(val)from (select val, x from rst_tile_val order by row_n) as rst group by x order by x))::double precision[][]
+     ))"))
+  }
+  dbExecute(conn,"drop table if exists rst_tile_val") 
+  dbExecute(conn, glue("drop index if exists {name}_rast_idx"))
+  # create spatial index
+  dbExecute(conn, glue("create index {name}_rast_idx on {name} using gist(st_convexhull(rast))")) 
+}
+```
+
+To implement the ordering solution in `pg_write_stars`, I had to first add a column with row numbers to the table of values when they are being written to the database.
+```{r, eval = F}
+dbWriteTable(con,
+             "rst_tile_val",
+             tibble(
+               val = info[[i]][[3]], #tile values
+               x = sort(rep(1:xy[2], xy[1])), # raster row number
+               row_n = 1:prod(xy) # row number (new column)
+             ) ,
+             overwrite = T)
+```
+
+I then had to edit the SQL for inputting into an empty raster by adding a subquery to order the values by the new column with row numbers. This ensured that values of each column were ordered correctly before they were inputted in the raster. 
+
+```{sql, eval =F}
+select array(
+    select array_agg(val) 
+    from (
+        select val, x from rst_tile_val order by row_n) as rst
+        group by x order by x
+      ) 
+```
+
+I also changed how the tiles were created, using a matrix of indices to subset the raster rather relying on intersections to break it up. I have yet to test whether this method is faster, though I like it more. 
+```{r creating thet tiles, eval=F}
+  # creating a matrix with indices for subsetting 
+  x1 = seq(1,to[1],bx)
+  if (x1[length(x1)] != to[1]) x2 = c(x1[-1]-1,to[[1]])
+  width = map2(x1,x2,~c(.x,.y)) %>% do.call(what=rbind)
+ 
+  y1 = seq(1,to[2],by)
+  if (y1[length(y1)] != to[2]) y2 = c(y1[-1]-1,to[[2]])
+  height = map2(y1,y2,~c(.x,.y))
+  
+  tiles = map(height,~cbind(width,.x[1],.x[2])) %>% do.call(what=rbind)
+  
+  # creating a list with tile dimensions and values 
+  info = map(1:nrow(tiles), function(x) {
+    tile = tiles[x,]
+    tile = layer[1,tile[1]:tile[2],tile[3]:tile[4]]
+    list(dim(tile), st_bbox(tile)[c("xmin","ymax")], as.vector(tile[[1]]))
+  })
+```
+
+```{r pg_read_stars, echo=F}
+pg_read_stars = function(conn, layer, rast = "rast"){
+  # reads raster from postgis database
+  # conn: DBIConnection object
+  # layer: name of table with raster 
+  # rast: name of column that contains raster 
+  
+  library(stars)
+  library(purrr)
+  library(DBI)
+  library(glue)
+  
+  values = dbGetQuery(
+    conn,
+    glue(
+      "with ordered as (
+          select 
+          {rast} as rast, 
+          rid from {layer} 
+          order by rid asc)
+       select
+       unnest(st_dumpvalues(rast,1)) as values,
+       row_number() over (order by rid) as id
+       from ordered"
+    )
+  )
+  
+  srid = dbGetQuery(
+    conn,
+    glue(
+      "select distinct 
+       st_srid({rast}) as srid 
+       from {layer}"))$srid %>% 
+    st_crs
+  
+  boxes = dbGetQuery(
+    conn, 
+    glue(
+      "select 
+       st_asewkb(st_envelope({rast})) as geom 
+       from {layer}
+       order by rid asc"))$geom %>% 
+    st_as_sfc(EWKB = T) 
+  
+  dims = dbGetQuery(
+    conn, 
+    glue(
+      "select  
+       st_pixelwidth({rast}) as dx, 
+       st_pixelheight({rast}) as dy,
+       st_skewx({rast}) as sx,
+       st_skewy({rast}) as sy
+       from {layer}
+       limit 1"))
+  
+  result = map2(boxes, unique(values$id), function(x, y)
+    st_as_stars(
+      st_bbox(x),
+      dx = dims$dx,
+      dy = dims$dy,
+      values = values[values$id == y, ]$values
+    ) %>% st_set_crs(srid)) %>%
+    do.call(what = st_mosaic)
+  
+  attr(attr(result, "dimensions"), "raster")$affine = c(dims[[3]],dims[[4]])
+  
+  result
+}
+```
+
+```{r reading and writing, message=F, warning=F, fig.height=6, fig.width=9}
+library(mapview)
+
+
+initial = flood
+
+pg_write_stars(conn,"pg_stars_test", initial)
+
+postgis = pg_read_stars(conn,"pg_stars_test")
+
+sum((initial == postgis)[[1]],na.rm=T) == sum(!is.na(initial)[[1]])
+
+mapview(initial, col.regions = "#EA3546", layer.name = "Initial Raster") +mapview(postgis, col.regions = "#226CE0", layer.name = "PostGIS Raster") 
+```
+
+Unlike with the first version of `pg_write_stars`, there now is no longer any random shifting and the raster and the rasters appear to be the same based on a visual inspection and a logical test. Because of this,I would consider this fix to be a success, albeit a small one. 
