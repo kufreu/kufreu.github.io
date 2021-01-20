@@ -14,4 +14,4 @@ I'm just trying to figure things out here and learn.
 [reading postgis rasters into r as stars objects](pg_read_stars/pg_read_stars.nb.html)
 
 [writing stars objects to a postgis database](pg_write_stars/pg_write_stars.nb.html)
-  - [updates/fixing `pg_write_stars`](pg_write_stars/pg_write_stars.nb.html)
+  - [updates/fixing `pg_write_stars`](pg_write_stars/fixing_pg_write_stars.nb.html)
