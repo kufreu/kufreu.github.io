@@ -34,7 +34,7 @@ sum(write_test$x != values$x)
 
 cbind(write_test,values)[write_test$x != values$x,]
 ```
-Here there are at least 70 rows in the written table where the values do not match the original table, resulting in the shifting of values. I believe this may be due to the many NAs in value column
+Here there are at least 70 rows in the written table where the values do not match the original table, resulting in the shifting of values. ~~I believe this may be due to the many NAs in the value column.~~ This is not due to the NAs in the column as I had originally thought, but is by [design](https://github.com/r-dbi/odbc/issues/242).
 
 ```{r}
 rm_na = flood
