@@ -5,4 +5,6 @@
 
 [geog 0325: cartographic design](geog0325/geog0325.md)
 
+[geog 0700: senior research](geog0700/geog0700.md)
+
 [musings](musings/musings.md)
