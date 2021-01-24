@@ -1,5 +1,5 @@
 # week one: collecting data 
-This week I wrote a short script to streamline the collection of data used in the research of [Kang et al.](https://github.com/cybergis/COVID-19AccessibilityNotebook). Although the data is made available on their GitHub repository apart from the road network for Illinois obtained from OpentStreetMap through [osmnx](https://github.com/gboeing/osmnx), the script provides a simple framework to collect data at the state level to be used in the analysis.  
+This week I wrote a short script to streamline the collection of data used in the research of [Kang et al.](https://github.com/cybergis/COVID-19AccessibilityNotebook) Although the data is made available on their GitHub repository apart from the road network for Illinois obtained from OpentStreetMap through [osmnx](https://github.com/gboeing/osmnx), the script provides a simple framework to collect data at the state level to be used in the analysis.  
 
 ```r
 # collecting data  --------------------------------------------------------
