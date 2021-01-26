@@ -14,4 +14,4 @@ I'm just trying to figure things out here and learn.
 - [adding a spatial filter](pg_read_stars/pg_read_stars_filter.nb.html)
 
 [writing stars objects to a postgis database](pg_write_stars/pg_write_stars.nb.html)
-  - [updates/fixing `pg_write_stars`](pg_write_stars/fixing_pg_write_stars.nb.html)
+  - [fixing shifting pixels in `pg_write_stars`](pg_write_stars/fixing_pg_write_stars.nb.html)
