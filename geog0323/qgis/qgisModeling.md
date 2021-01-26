@@ -62,7 +62,7 @@ from input2) as distDir
 
 [partially uses sql to calculate distance and direction from a point](qgisModelSQL.md) **functional**
 
-[uses sql to caluclate distance and direction (cardinal and degrees) from a point](models/updatedDistDirSQL.model3) **functional**
+[uses sql to calculate distance and direction (cardinal and degrees) from a point](models/updatedDistDirSQL.model3) **functional**
 
 ### case study using sql model
 Using data from the Census, I analyzed the racial composition and gross median rent of census tracts in Wayne County, Michigan. The model aided in the brief study of the spatial distribution of ethnic enclaves within Michigan's most populous county.
@@ -75,7 +75,6 @@ Using data from the Census, I analyzed the racial composition and gross median r
 #### enclave classification 
 ![enclave fields](images/enclavesField.PNG)
 
-Poulsen, M., Johnston, R., & Forrest, J. (2001). Intraurban Ethnic Enclaves: Introducing a Knowledge-Based Classification Method. *Environment and Planning A: Economy and Space*, 33(11), 2071–2082. [https://doi.org/10.1068/a34124](https://doi.org/10.1068/a34124)
 
 
 #### graphs made using outputs of model
