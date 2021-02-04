@@ -13,3 +13,33 @@ hospitals = gpd.read_file('https://opendata.arcgis.com/datasets/6ac5e325468c4cb9
 icu  = gpd.read_file('https://opendata.arcgis.com/datasets/6ac5e325468c4cb9b905f1728d6fbf0f_0.geojson')
 ```
 Census data can be obtained using a package like [census](https://github.com/datamade/census) or directly through the Census Bureau's API. It may be best to review the tutorials provided by CyberGISX for working with spatial data in Python and Python basics before going this route, however. Although I am currently unable to import QGIS in CyberGISX, it may also be possible to create the hexagonal grid used in the research in a notebook. Alternatively, data collection and preparation can be done using [R](week_01.md).
+
+## more on running the notebook locally
+I had a little bit more success running the Jupyter Notebook locally on my laptop, so I will go through the steps of working with the notebook outside of CyberGISX. The whole process is rather straightforward. The first step is to download the [GitHub repository](https://github.com/cybergis/COVID-19AccessibilityNotebook) for the research. If not done already, either [Anaconda](https://www.anaconda.com/products/individual) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html) should be installed. In my case I am using Miniconda. The next step after downloading the notebook and installing Anaconda/Miniconda is to open the Anaconda Prompt and create a new environment for the project. I thought it would be appropriate to name the environment I am working in `illinois`.  
+
+```shell
+conda create -n illinois python=3.8
+```
+After this is done, the new environment should be activated to work within it.
+
+```shell
+conda activate illinois
+```
+With the new environment being created and activated, what comes next is to install the necessary packages. The repository contains a requirements.txt file which specifies what python packages are required to run notebook. This file can be used to install the required packages.
+
+```shell
+conda install --file requirments.txt
+```
+
+I did not do this here but the full file path of requirements.txt needs to be used. Although not listed in requirments.txt as being required packages, it is necessary to also install `jupyter-lab` to be able to work with Jupyter notebooks and ipywidgets to work with this specific notebook.
+
+```shell
+conda install ipywidgets jupyterlab
+```
+To open JupyterLab and work with the Jupyter notebook in a browser, you just need to type the name of the package. The environment the `jupyter-lab` is installed needs to be activated first before using the package.
+
+```shell
+jupyter-lab
+```
+
+Unlike on CyberGISX, I was able to download the GraphML file for Illinois within the Jupyter notebook, though it took a good amount of time to do so. Though as I said earlier, I was still unable to completely run the model on my laptop.
