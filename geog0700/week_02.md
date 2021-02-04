@@ -36,7 +36,7 @@ I did not do this here but the full file path of requirements.txt needs to be us
 ```shell
 conda install ipywidgets jupyterlab
 ```
-To open JupyterLab and work with the Jupyter notebook in a browser, you just need to type the name of the package. The environment the `jupyter-lab` is installed needs to be activated first before using the package.
+To open JupyterLab and work with the Jupyter notebook in a browser, you just need to type the name of the package. The environment JupyterLab is installed needs to be activated first before using the package.
 
 ```shell
 jupyter-lab
