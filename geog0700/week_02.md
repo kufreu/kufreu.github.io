@@ -28,7 +28,7 @@ conda activate illinois
 With the new environment being created and activated, what comes next is to install the necessary packages. The repository contains a requirements.txt file which specifies what python packages are required to run notebook. This file can be used to install the required packages.
 
 ```shell
-conda install --file requirments.txt
+conda install --file requirements.txt
 ```
 
 I did not do this here but the full file path of requirements.txt needs to be used. Although not listed in requirments.txt as being required packages, it is necessary to also install `jupyter-lab` to be able to work with Jupyter notebooks and ipywidgets to work with this specific notebook.
