@@ -1,4 +1,4 @@
-# delving more into kang et al. and looking beyond
+# delving more into kang et al. and looking elsewhere
 This week undoubtedly was a slow one for me. I had another go at running the [COVID-19 Accessibility Notebook](https://github.com/cybergis/COVID-19AccessibilityNotebook) locally and on CyberGISX though had limited success. I was able to download the network file for Illinois locally using a Jupyter Notebook but the code never completed running even after several days of waiting. I moved on from this notebook to look at the [Multiscale Dynamic Human Mobility Flow Dataset](https://github.com/GeoDS/COVID19USFlows). I followed the thorough instructions on the repository's README and had success getting data at the county level. I used two scripts from the repository to download the data and merge it into one file: [download_daily_data.py](https://github.com/GeoDS/COVID19USFlows/blob/master/codes/download_daily_data.py) and [merge_files.py](https://github.com/GeoDS/COVID19USFlows/blob/master/codes/merge_files.py).
 
 ```r
