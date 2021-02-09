@@ -1,5 +1,5 @@
-# week one: collecting data 
-This week I wrote a short script to streamline the collection of data used in the research of [Kang et al.](https://github.com/cybergis/COVID-19AccessibilityNotebook) Although the data is made available on their GitHub repository apart from the road network for Illinois obtained from OpentStreetMap through [osmnx](https://github.com/gboeing/osmnx), the script provides a simple framework to collect data at the state level to be used in the analysis.  
+# week one: collecting data
+This week I wrote a short script to streamline the collection of data used in the research of [Kang et al.](https://github.com/cybergis/COVID-19AccessibilityNotebook) Although the data is made available on their GitHub repository apart from the road network for Illinois obtained from OpentStreetMap through [OSMnx](https://github.com/gboeing/osmnx), the script provides a simple framework to collect data at the state level to be used in the analysis.  
 
 ```r
 # collecting data  --------------------------------------------------------
@@ -13,19 +13,19 @@ library(tidycensus)
 
 dt = 'data'
 
-# change if necessary 
-crs = 32616 
+# change if necessary
+crs = 32616
 net_file = here(dt,'il_network.graphml')
 gpkg = here(dt,'il_data.gpkg')  
 state_abbrv = 'IL'
 state_name = 'Illinois'
 covid_csv = 'https://idph.illinois.gov/DPHPublicInformation/api/COVIDExport/GetZip?format=csv'
-covid_fp = here(dt,'il_zip_covid.csv') 
+covid_fp = here(dt,'il_zip_covid.csv')
 
 read_csv(
-  covid_csv, 
+  covid_csv,
   skip = 1 # first line may not need to be skipped, check if necessary
-) %>% 
+) %>%
   write_csv(covid_fp)
 
 if(!dir.exists(dt)) dir.create(here(dt))
@@ -37,9 +37,9 @@ if (!('geo' %in% conda_list()$name)) {
 
 if (!file.exists(net_file)) {
   use_condaenv('geo')
-  
+
   ox = import('osmnx')
-  
+
   network = ox$graph_from_place(state_name, #
                                 buffer_dist = 15000,
                                 network_type = 'drive')
@@ -61,8 +61,8 @@ tracts = get_acs(
   rename(total = 'B01001_001E') %>%
   rowwise %>%
   mutate(above_50 = sum(c_across(paste0(vars, 'E')))) %>%
-  select(!contains(vars)) %>% 
-  st_transform(crs) 
+  select(!contains(vars)) %>%
+  st_transform(crs)
 
 state = mutate(tracts, state = state_abbrv) %>%
   group_by(state) %>%
