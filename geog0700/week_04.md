@@ -35,7 +35,7 @@ pseudocode:
         <i>catchment.time</i> <-- <i>driving_time</i>
 <pre>
 
-Python: ``**`for`**` `*`driving_time`*` in [10,20,30] `**`do`**``
+Python: <code> <b>for</b> <i>driving_time</i> in [10,20,30] <b>do</b> </code>
 
 ``` python
 # get ego-centric graph around hospital around nodes in g and calculate convex hull around nodes in g
@@ -48,7 +48,7 @@ def calculate_catchment_area(G, nearest_osm, distance, distance_unit = "time"):
     return polygon.copy(deep=True)
 ```
 
-Python: ``**`for`**` `*`centroid`*` in *`population_data`*` `**`do`**``
+Python: <code> <b>for</b> <i>centroid</i> in <i>population_data</i> <b>do</b> </code>
 - `calculate_catchment_area` used in this function
 - Comments with four hashes show nested loop and if statement from pseudocode.
 
@@ -118,6 +118,7 @@ def overlap_calc_unpacker(args):
 ```
 
 Python : for all grid cells, uses `overlap_calc`/`overlap_calc_unpacker`
+
 ``` python
 def overlapping_function (grid_file, catchments, service_type, weights, num_proc = 4):
     grid_file[service_type]=0
