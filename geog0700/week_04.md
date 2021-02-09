@@ -33,7 +33,7 @@ pseudocode:
       <b>if</b> <i>centroid in population_data</i> <b>do</b>
         <i>catchment.population</i> += <i>centroid.population</i> x <i>weights[driving_time]</i>
         <i>catchment.time</i> <-- <i>driving_time</i>
-<pre>
+</pre>
 
 Python: <code> <b>for</b> <i>driving_time</i> in [10,20,30] <b>do</b> </code>
 
