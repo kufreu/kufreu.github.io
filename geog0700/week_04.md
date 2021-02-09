@@ -91,7 +91,7 @@ pseudocode:
     <i>overlap</i> <i>area(intesect(hexagon,catchment))/area(catchment)</i>
     <b>if</b> <i>overlap</i> &ge 0.5 <b>then</b>
       <i>result[hexagon.id]</i>+= <i>catchment.population X weights[catchment.time]</i>
-<pre>
+</pre>
 
 Python: for one grid cell
 ``` python
