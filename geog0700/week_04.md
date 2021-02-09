@@ -89,7 +89,7 @@ pseudocode:
 <b>for</b> <i>catchment</i> in <i>catchments</i> <b>do</b>
   <b>for</b> <i>hexagon</i> in <i>hexagons</i> <b>do</b>
     <i>overlap</i> <i>area(intesect(hexagon,catchment))/area(catchment)</i>
-    <b>if</b> <i>overlap</i> &ge 0.5 <b>then</b>
+    <b>if</b> <i>overlap</i> &#8805; 0.5 <b>then</b>
       <i>result[hexagon.id]</i>+= <i>catchment.population X weights[catchment.time]</i>
 </pre>
 
