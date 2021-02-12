@@ -21,6 +21,7 @@ state_abbrv = 'IL'
 state_name = 'Illinois'
 covid_csv = 'https://idph.illinois.gov/DPHPublicInformation/api/COVIDExport/GetZip?format=csv'
 covid_fp = here(dt,'il_zip_covid.csv')
+packages = read_lines(here("requirements.txt")) # required packages
 
 read_csv(
   covid_csv,
@@ -32,7 +33,7 @@ if(!dir.exists(dt)) dir.create(here(dt))
 
 if (!('geo' %in% conda_list()$name)) {
   conda_create('geo', forge = T)
-  conda_install('geo', packages = 'osmnx',forge = T)
+  conda_install('geo', packages = packages,forge = T)
 }
 
 if (!file.exists(net_file)) {
@@ -40,9 +41,7 @@ if (!file.exists(net_file)) {
 
   ox = import('osmnx')
 
-  network = ox$graph_from_place(state_name, #
-                                buffer_dist = 15000,
-                                network_type = 'drive')
+  network = ox$graph_from_place(state_name, network_type = 'drive')
   ox$save_graphml(network, net_file)
 }
 
@@ -72,11 +71,11 @@ hospital = read_sf(
   'https://opendata.arcgis.com/datasets/6ac5e325468c4cb9b905f1728d6fbf0f_0.geojson'
 ) %>%
   st_transform(crs) %>%
-  filter(lengths(st_intersects(., st_buffer(state, 15000))) > 0  &
+  filter(lengths(st_intersects(., state)) > 0  &
            TYPE == 'GENERAL ACUTE CARE')
 
 icu = read_sf(
-  'https://healthdata.gov/sites/default/files/reported_hospital_capacity_admissions_facility_level_weekly_average_timeseries_20210117.csv'
+  'https://opendata.arcgis.com/datasets/6ac5e325468c4cb9b905f1728d6fbf0f_0.geojson'
 ) %>%
   st_drop_geometry() %>%
   select(1:13, total_icu_beds_7_day_avg) %>%
