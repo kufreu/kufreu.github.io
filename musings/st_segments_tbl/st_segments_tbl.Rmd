@@ -1,6 +1,6 @@
 ---
 title: "using dplyr and purrr in st_segments"
-output: html_notebook
+output: github_document
 ---
 
 Although I was originally reluctant to solely use `dplyr` and `purrr` because my first two slower, I went on to try to replace both loops in [`st_segments`](https://kufreu.github.io/musings/st_segments/st_segments.nb.html) with `tidyverse` functions. 
