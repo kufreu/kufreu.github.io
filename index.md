@@ -7,4 +7,6 @@
 
 [geog 0700: senior research](geog0700/geog0700.md)
 
+[urban tree canopy and race in chicago](chicago_trees/chicago_trees.md)
+
 [musings](musings/musings.md)
