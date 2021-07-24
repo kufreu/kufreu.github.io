@@ -168,7 +168,7 @@ chicago.plot(column='pct_canopy',
              )
 ```
 
-<img src="chicago_zonal_files/figure-gfm/getting chicago-1.png" width="768" />
+<img src="chicago_zonal_files/figure-gfm/getting chicago-1.png" width="672" />
 
 Although a pattern can be seen in the distribution of tree canopy in the
 city, such as there being less tree coverage in and around the loop,

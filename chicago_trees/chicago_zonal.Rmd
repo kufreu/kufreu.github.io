@@ -3,7 +3,7 @@ output : 'github_document'
 ---
 
 ```{r setup, include = F}
-knitr::opts_chunk$set(echo = T, fig.retina = 5, fig.width = 8,  warning = F, message = F)
+knitr::opts_chunk$set(echo = T, fig.retina = 5, warning = F, message = F)
 ```
 
 # zonal statistics and land cover in chicago
