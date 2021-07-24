@@ -10,6 +10,6 @@
 [geog 0700: senior research](geog0700/geog0700.md)
 
 ### other things
-[urban tree canopy and race in chicago](chicago_trees/chicago_trees.md)
+[zonal statistics and land cover in chicago](chicago_trees/chicago_zonal.md)
 
 [musings](musings/musings.md)
