@@ -24,7 +24,7 @@ classes = [str(x).lower().replace('/','_').replace(' ','_') for x in dbf['Class'
 # creating dictionary to be used in zonal_stats()
 land_cover = dict(zip(dbf['Value'].tolist(), classes))
 
-zonal = zonal_stats(chicago.iloc[0:1],raster,categorical = True,nodata = 0, category_map = land_cover)
+zonal = zonal_stats(chicago,raster,categorical = True,nodata = 0, category_map = land_cover)
 
 # blank DataFrame to be filled in with values from zonal_stats()
 zeros = [0] * len(chicago)
